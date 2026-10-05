@@ -133,27 +133,35 @@
   flex-shrink: 0;
 }
 
-.logo-emblem {
-  width: 2.5rem;
-  height: 2.5rem;
-  background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
-  border: 1px solid rgba(184, 151, 106, 0.35);
-  border-radius: 0.75rem;
+.logo-emblem-zn {
+  width: 2.6rem;
+  height: 2.6rem;
+  background: #111111;
+  border: 2px solid #C5A059;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #E2C48D;
-  font-size: 1.05rem;
-  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.12);
+  box-shadow: 0 0 16px rgba(197, 160, 89, 0.45);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.header-logo:hover .logo-emblem {
-  background: linear-gradient(135deg, #B8976A 0%, #9A7A50 100%);
-  color: #FFFFFF;
-  border-color: #B8976A;
-  transform: translateY(-1px) rotate(-2deg);
-  box-shadow: 0 6px 16px rgba(184, 151, 106, 0.3);
+.zn-circle-text {
+  color: #C5A059;
+  font-weight: 800;
+  font-size: 1.15rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.04em;
+}
+
+.header-logo:hover .logo-emblem-zn {
+  background: #C5A059;
+  border-color: #E6C875;
+  box-shadow: 0 0 24px rgba(197, 160, 89, 0.75);
+}
+
+.header-logo:hover .zn-circle-text {
+  color: #111111;
 }
 
 .logo-typography {
@@ -161,25 +169,31 @@
   flex-direction: column;
 }
 
-.logo-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.35rem;
+.logo-title-zn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.45rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: -0.02em;
   color: #111827;
   line-height: 1;
 }
 
-.logo-gold {
-  color: #B8976A;
+.zn-bold {
+  color: #111827;
+  font-weight: 800;
+}
+
+.zn-optic-text {
+  color: #C5A059;
+  font-weight: 700;
 }
 
 .logo-subtitle {
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #8A8884;
+  color: #9A7B35;
   margin-top: 3px;
 }
 
