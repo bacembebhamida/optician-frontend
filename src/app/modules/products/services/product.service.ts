@@ -345,7 +345,41 @@ export class ProductService {
     if (params.sortBy) httpParams = httpParams.set('sortBy', params.sortBy);
     if (params.sortDirection) httpParams = httpParams.set('sortDirection', params.sortDirection);
 
-    return this.http.get<PagedResult<Product>>(this.baseUrl, { params: httpParams }).pipe(
+    return this.http.get<any>(this.baseUrl, { params: httpParams }).pipe(
+      map((res: any) => {
+        let rawItems: any[] = [];
+        let totalItems = 0;
+        let page = params.page;
+        let pageSize = params.pageSize;
+        let totalPages = 1;
+
+        if (res && res.content) {
+          rawItems = res.content;
+          totalItems = res.totalElements != null ? res.totalElements : rawItems.length;
+          page = res.number != null ? res.number + 1 : params.page;
+          pageSize = res.size != null ? res.size : params.pageSize;
+          totalPages = res.totalPages != null ? res.totalPages : 1;
+        } else if (res && res.items) {
+          rawItems = res.items;
+          totalItems = res.totalItems || rawItems.length;
+          page = res.page || params.page;
+          pageSize = res.pageSize || params.pageSize;
+          totalPages = res.totalPages || 1;
+        } else if (Array.isArray(res)) {
+          rawItems = res;
+          totalItems = res.length;
+        }
+
+        const items = rawItems.map(item => this.mapProductFromBackend(item));
+
+        return {
+          items,
+          totalItems,
+          page,
+          pageSize,
+          totalPages
+        } as PagedResult<Product>;
+      }),
       catchError(() => {
         // Fallback filter over memory subject
         let filtered = [...this.productsSubject.value];
@@ -431,8 +465,73 @@ export class ProductService {
     );
   }
 
+  private mapProductFromBackend(raw: any): Product {
+    if (!raw) return raw;
+    const sellingPrice = raw.price != null ? raw.price : (raw.commercial?.sellingPriceTnd != null ? raw.commercial.sellingPriceTnd : 0);
+    const purchasePrice = raw.commercial?.purchasePriceTnd != null ? raw.commercial.purchasePriceTnd : (sellingPrice * 0.5);
+    const marginTnd = raw.commercial?.marginTnd != null ? raw.commercial.marginTnd : (sellingPrice - purchasePrice);
+    const marginPercentage = raw.commercial?.marginPercentage != null ? raw.commercial.marginPercentage : (sellingPrice > 0 ? (marginTnd / sellingPrice) * 100 : 0);
+
+    const images: ProductImage[] = (raw.images && raw.images.length > 0)
+      ? raw.images.map((img: any, idx: number) => ({
+          id: img.id ? String(img.id) : `img-${idx}`,
+          url: img.url || raw.imageUrl || 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80',
+          isPrimary: img.isPrimary ?? (idx === 0),
+          sortOrder: img.sortOrder || idx + 1,
+          filename: img.filename,
+          sizeBytes: img.sizeBytes
+        }))
+      : (raw.imageUrl ? [{ id: 'img-1', url: raw.imageUrl, isPrimary: true, sortOrder: 1 }] : [
+          { id: 'img-def', url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80', isPrimary: true, sortOrder: 1 }
+        ]);
+
+    return {
+      id: raw.id,
+      sku: raw.sku || raw.reference || `REF-${raw.id}`,
+      barcode: raw.barcode || raw.reference || '',
+      name: raw.name || 'Produit sans nom',
+      type: raw.type || raw.productType || 'MONTURE',
+      category: raw.category || raw.categoryName || 'LUNETTES_VUE',
+      subCategory: raw.subCategory || raw.subCategoryName || '',
+      brandId: raw.brandId || 0,
+      brandName: raw.brandName || raw.brand || 'OptiVision',
+      model: raw.model || '',
+      collection: raw.collection || '',
+      gender: raw.gender || 'UNISEX',
+      status: raw.status || (raw.active !== false ? 'ACTIF' : 'INACTIF'),
+      description: raw.description || '',
+      commercial: {
+        purchasePriceTnd: purchasePrice,
+        sellingPriceTnd: sellingPrice,
+        vatRate: 19,
+        marginTnd: marginTnd,
+        marginPercentage: marginPercentage
+      },
+      optical: {
+        shape: raw.frameShape || raw.optical?.shape || 'CARRE',
+        material: raw.material || raw.optical?.material || 'ACETATE',
+        color: raw.color || raw.optical?.color || '',
+        widthMm: raw.optical?.widthMm || 52,
+        heightMm: raw.optical?.heightMm || 40,
+        bridgeMm: raw.optical?.bridgeMm || 18,
+        templeLengthMm: raw.optical?.templeLengthMm || 140,
+        lensType: raw.optical?.lensType || 'UNIFOCAL',
+        uvProtection: true,
+        polarized: false
+      },
+      images,
+      variants: raw.variants || [],
+      tryOn3dAvailable: raw.tryOn3dAvailable,
+      model3dUrl: raw.model3dUrl,
+      model3dConfig: raw.model3dConfig,
+      createdAt: raw.createdAt || new Date().toISOString(),
+      updatedAt: raw.updatedAt || new Date().toISOString()
+    };
+  }
+
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.baseUrl}/${id}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/${id}`).pipe(
+      map(raw => this.mapProductFromBackend(raw)),
       catchError(() => {
         const found = this.productsSubject.value.find(p => p.id === Number(id));
         if (!found) {

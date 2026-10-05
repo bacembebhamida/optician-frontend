@@ -720,6 +720,12 @@ export class ProductDetailPageComponent implements OnInit {
     });
   }
 
+  /** Initialize calibration editing for a given 3D asset */
+  startCalibration(asset: any): void {
+    this.activeCalibrationId = asset.id;
+    this.editCalibration = { ...asset };
+  }
+
   /** Save calibration parameters for a given 3D asset */
   saveCalibration(assetId: number): void {
     if (!this.editCalibration) return;
@@ -741,12 +747,6 @@ export class ProductDetailPageComponent implements OnInit {
         this.notificationService.success('Calibration', 'Paramètres conservés localement.');
       }
     });
-  }
-
-  /** Start calibration mode for a 3D asset */
-  startCalibration(asset: any): void {
-    this.activeCalibrationId = asset.id;
-    this.editCalibration = Object.assign({}, asset);
   }
 
   /** Delete a 3D asset */
