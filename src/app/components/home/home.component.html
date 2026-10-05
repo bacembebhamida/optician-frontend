@@ -2,7 +2,7 @@
      OptiVision Haute Lunetterie — Luxury Home Interface
      ═══════════════════════════════════════════════════════════ -->
 
-<div class="space-y-8 pb-12">
+<div class="space-y-4 pb-8">
 
   <!-- 1. HERO SECTION (FULL WIDTH DYNAMIC ANIMATED SLIDER) -->
   <section class="relative w-full min-h-[580px] lg:min-h-[640px] bg-slate-950 overflow-hidden" 
@@ -136,22 +136,25 @@
   </section>
 
   <!-- 3. PRODUCT CATEGORIES GRID -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
     
-    <div class="text-center max-w-2xl mx-auto mb-6">
-      <span class="hero-badge-gold mb-2">Univers Optique</span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-serif-luxury tracking-tight mt-1">Explorez nos Catégories</h2>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 border-b border-slate-200/60 pb-3">
+      <div>
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200/50">Univers Optique</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-serif-luxury tracking-tight mt-1">Explorez nos Catégories</h2>
+      </div>
+      <span class="text-xs text-slate-500 hidden sm:inline">5 univers de haute lunetterie &amp; soins de vue</span>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       
       <a *ngFor="let cat of categoryCards" [routerLink]="cat.route" class="category-card-luxury group">
         <img [src]="cat.imageUrl" [alt]="cat.title" class="category-card-img">
         <div class="category-card-overlay">
           <span class="category-tag">{{ cat.tag }}</span>
-          <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition duration-300 font-serif-luxury">{{ cat.title }}</h3>
-          <p class="text-xs text-slate-300 mt-1 line-clamp-1">{{ cat.subtitle }}</p>
-          <span class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 mt-2 group-hover:translate-x-1 transition">
+          <h3 class="text-base font-bold text-white group-hover:text-amber-300 transition duration-300 font-serif-luxury">{{ cat.title }}</h3>
+          <p class="text-[11px] text-slate-300 mt-0.5 line-clamp-1">{{ cat.subtitle }}</p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 mt-1.5 group-hover:translate-x-1 transition">
             Découvrir <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </span>
         </div>
@@ -161,27 +164,27 @@
   </section>
 
   <!-- 4. FEATURED PRODUCTS GALLERY -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
     
-    <!-- Gallery Header & Style Filters -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 pb-4 border-b border-slate-200">
-      <div>
-        <span class="hero-badge-gold mb-1">Sélection Exclusivité</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-serif-luxury">Nos Montures d'Exception</h2>
+    <!-- Single Horizontal Line Header & Style Filter Pills -->
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 pb-3 border-b border-slate-200">
+      <div class="flex-shrink-0">
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200/50">Sélection Exclusivité</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-serif-luxury mt-0.5">Nos Montures d'Exception</h2>
       </div>
 
-      <!-- Filter Pills -->
-      <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+      <!-- Filter Pills (Compact Single Line Alignment) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto w-full lg:w-auto pb-1 lg:pb-0 scrollbar-none">
         <button (click)="selectedStyleFilter = 'ALL'" 
                 [class.active]="selectedStyleFilter === 'ALL'" 
-                class="filter-btn-luxury">
-          <i class="fa-solid fa-border-all"></i> Tous
+                class="filter-btn-luxury text-xs py-1.5 px-3 whitespace-nowrap">
+          <i class="fa-solid fa-border-all text-[11px]"></i> Tous
         </button>
         <button *ngFor="let cat of styleCategories" 
                 (click)="selectedStyleFilter = cat.name" 
                 [class.active]="selectedStyleFilter === cat.name" 
-                class="filter-btn-luxury">
-          <i [class]="cat.icon"></i> {{ cat.label }}
+                class="filter-btn-luxury text-xs py-1.5 px-3 whitespace-nowrap">
+          <i [class]="cat.icon + ' text-[11px]'"></i> {{ cat.label }}
         </button>
       </div>
     </div>
