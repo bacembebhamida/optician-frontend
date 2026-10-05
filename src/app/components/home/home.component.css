@@ -1,1 +1,408 @@
-/* Home Component Styles */
+/* ═══════════════════════════════════════════════════════════
+   OptiVision Luxury Home Page Design System
+   Haute Lunetterie & Eyewear Architecture
+   ═══════════════════════════════════════════════════════════ */
+
+:host {
+  display: block;
+  width: 100%;
+  background-color: #FAFAFB;
+  color: #0F172A;
+  overflow-x: hidden;
+}
+
+/* ── Typography & Gradient Text ─────────────────────────── */
+.font-serif-luxury {
+  font-family: 'Playfair Display', Georgia, Cambria, serif;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #D4AF37 50%, #9A7B2C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-slate {
+  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Hero Section ────────────────────────────────────────── */
+.hero-luxury-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, #090D16 0%, #111827 50%, #1A2333 100%);
+  color: #FFFFFF;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-glow-bg {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+
+.hero-glow-secondary {
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+
+.hero-badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #F59E0B;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(8px);
+}
+
+.btn-hero-primary {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+  color: #0F172A;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.btn-hero-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(212, 175, 55, 0.45);
+  background: linear-gradient(135deg, #E6C247 0%, #C99719 100%);
+}
+
+.btn-hero-secondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: #FFFFFF;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.btn-hero-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+  font-size: 0.8rem;
+  color: #CBD5E1;
+}
+
+/* ── Brand Marquee Ticker ───────────────────────────────── */
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 18px 0;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 48px;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-brand {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  transition: color 0.2s ease;
+}
+.marquee-brand:hover {
+  color: #0F172A;
+}
+
+/* ── Category Cards ─────────────────────────────────────── */
+.category-card-luxury {
+  position: relative;
+  height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+.category-card-luxury:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+  border-color: #D4AF37;
+}
+
+.category-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.category-card-luxury:hover .category-card-img {
+  transform: scale(1.08);
+}
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.85) 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #FFFFFF;
+}
+
+.category-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #F59E0B;
+  margin-bottom: 6px;
+}
+
+/* ── Filter Tabs ────────────────────────────────────────── */
+.filter-btn-luxury {
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-btn-luxury:hover {
+  border-color: #CBD5E1;
+  color: #0F172A;
+  background: #F8FAFC;
+}
+.filter-btn-luxury.active {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+}
+
+/* ── Product Card Luxury ────────────────────────────────── */
+.product-card-luxury {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E2E8F0;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.product-card-luxury:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+  border-color: #CBD5E1;
+}
+
+.product-img-wrapper {
+  position: relative;
+  height: 260px;
+  background: #F8FAFC;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.product-img-primary, .product-img-secondary {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-img-secondary {
+  position: absolute;
+  opacity: 0;
+}
+.product-card-luxury:hover .product-img-primary {
+  opacity: 0;
+  transform: scale(1.05);
+}
+.product-card-luxury:hover .product-img-secondary {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.badge-tryon-pill {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4F46E5;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  font-size: 0.675rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-add-cart-luxury {
+  background: #0F172A;
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-add-cart-luxury:hover {
+  background: #D4AF37;
+  color: #0F172A;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+}
+
+/* ── 3D Try-On Banner ────────────────────────────────────── */
+.tryon-banner-luxury {
+  background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%);
+  border-radius: 28px;
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3);
+}
+
+.ar-frame-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.25);
+}
+
+.ar-mesh-overlay {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(129, 140, 248, 0.6);
+  border-radius: 50%;
+  width: 70%;
+  height: 45%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseMesh 2s infinite ease-in-out;
+}
+
+@keyframes pulseMesh {
+  0%, 100% { opacity: 0.4; transform: scale(0.98); }
+  50% { opacity: 0.9; transform: scale(1.02); }
+}
+
+/* ── Guarantee Perks Grid ────────────────────────────────── */
+.perk-card-luxury {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 28px 24px;
+  border: 1px solid #E2E8F0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.perk-card-luxury:hover {
+  transform: translateY(-4px);
+  border-color: #D4AF37;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.perk-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #FDF8F0;
+  color: #D4AF37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* ── Testimonials ────────────────────────────────────────── */
+.testimonial-card-luxury {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+.testimonial-card-luxury:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}

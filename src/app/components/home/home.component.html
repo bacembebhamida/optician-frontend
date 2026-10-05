@@ -1,227 +1,235 @@
-<div class="space-y-16 pb-20">
-  
-  <!-- HERO SECTION -->
-  <section class="relative bg-slate-900 text-white rounded-3xl overflow-hidden max-w-7xl mx-auto my-6 shadow-2xl border border-slate-800">
-    <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+<!-- ═══════════════════════════════════════════════════════════
+     OptiVision Haute Lunetterie — Luxury Home Interface
+     ═══════════════════════════════════════════════════════════ -->
+
+<div class="space-y-16 pb-24">
+
+  <!-- 1. HERO SECTION -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <div class="hero-luxury-wrapper relative">
       
-      <!-- Text & CTAs (Col 7) -->
-      <div class="lg:col-span-7 p-8 lg:p-16 flex flex-col justify-center relative z-10">
-        <span class="badge badge-opti-gold w-max mb-4 animate-fade-in">
-          <i class="fa-solid fa-sparkles"></i> Nouvelle Collection OptiVision 2026
-        </span>
+      <!-- Background Ambient Glows -->
+      <div class="hero-glow-bg"></div>
+      <div class="hero-glow-secondary"></div>
 
-        <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-4 font-serif">
-          Voir le monde <span class="italic font-normal text-amber-300">autrement.</span>
-        </h1>
-
-        <p class="text-slate-300 text-base lg:text-lg max-w-xl font-normal mb-8 leading-relaxed">
-          Découvrez des lunettes pensées pour votre style, votre confort et votre vision. L'excellence optique internationale alliée aux meilleures technologies de surfaçage.
-        </p>
-
-        <!-- Hero CTAs -->
-        <div class="flex flex-wrap gap-4 items-center">
-          <a routerLink="/lunettes" class="btn-opti btn-opti-gold text-base py-3.5 px-8 shadow-lg">
-            <i class="fa-solid fa-glasses"></i> Découvrir les lunettes
-          </a>
-          <a routerLink="/try-on" class="btn-opti bg-white/10 hover:bg-white/20 text-white border border-white/20 text-base py-3.5 px-6 backdrop-blur-md">
-            <i class="fa-solid fa-camera text-indigo-400"></i> Essayer virtuellement 3D
-          </a>
-        </div>
-
-        <!-- 4 Hero Perks -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-slate-800 text-xs font-medium text-slate-300">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-eye text-amber-400 text-base"></i>
-            <span>Examen de vue offert</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-camera text-indigo-400 text-base"></i>
-            <span>Essayage virtuel 3D</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-user-doctor text-emerald-400 text-base"></i>
-            <span>Conseils d'experts</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-truck-fast text-sky-400 text-base"></i>
-            <span>Livraison express TND</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- High-res Lifestyle Photography (Col 5) -->
-      <div class="lg:col-span-5 relative min-h-[380px] lg:min-h-full">
-        <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1000&auto=format&fit=crop&q=80" 
-             alt="High-end optical eyewear fashion" 
-             class="absolute inset-0 w-full h-full object-cover object-center filter brightness-95">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent lg:bg-gradient-to-r lg:from-slate-900 lg:to-transparent"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[620px] items-center">
         
-        <!-- Badge Overlay -->
-        <div class="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-xl max-w-xs text-slate-900 hidden sm:block">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-lg">
-              <i class="fa-solid fa-award"></i>
+        <!-- Left Hero Content (Col 7) -->
+        <div class="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-center z-10">
+          
+          <div class="flex items-center gap-3 mb-6">
+            <span class="hero-badge-gold">
+              <i class="fa-solid fa-sparkles text-amber-400"></i> Collection Haute Lunetterie 2026
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-xs text-slate-300 font-medium bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              En Stock en Tunisie
+            </span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-6 font-serif-luxury">
+            Voir le monde <br class="hidden sm:inline">
+            <span class="text-gradient-gold italic">autrement.</span>
+          </h1>
+
+          <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal mb-10 leading-relaxed">
+            L'excellence de la haute lunetterie internationale alliée au taillage de précision suisse et à l'essai virtuel en temps réel 3D.
+          </p>
+
+          <!-- Hero Action Buttons -->
+          <div class="flex flex-wrap gap-4 items-center">
+            <a routerLink="/lunettes" class="btn-hero-primary text-base">
+              <i class="fa-solid fa-glasses"></i> Découvrir la Collection
+            </a>
+            <a routerLink="/try-on" class="btn-hero-secondary text-base">
+              <i class="fa-solid fa-camera text-amber-400"></i> Essayage Virtuel 3D
+            </a>
+          </div>
+
+          <!-- Hero 4 Perks Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-12 pt-8 border-t border-white/10">
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-eye text-amber-400"></i>
+              <span>Examen de vue offert</span>
             </div>
-            <div>
-              <span class="font-extrabold text-xs block text-slate-900">Verres Optiques Premium</span>
-              <span class="text-[11px] text-slate-500 block">Taillés avec précision en Tunisie</span>
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-bolt text-indigo-400"></i>
+              <span>Taillage Express 1h</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+              <span>Garantie 2 ans</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fa-solid fa-truck-fast text-sky-400"></i>
+              <span>Livraison Tunisie</span>
             </div>
           </div>
-        </div>
-      </div>
 
+        </div>
+
+        <!-- Right Hero Image (Col 5) -->
+        <div class="lg:col-span-5 relative min-h-[420px] lg:h-full overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1600&auto=format&fit=crop&q=85" 
+               alt="Haute lunetterie opticien luxe" 
+               class="absolute inset-0 w-full h-full object-cover object-center filter brightness-95 transform scale-105 hover:scale-100 transition duration-1000">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent lg:bg-gradient-to-r lg:from-slate-950 lg:via-transparent lg:to-transparent"></div>
+
+          <!-- Floating Luxury Badge Overlay -->
+          <div class="absolute bottom-8 right-8 bg-slate-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/15 shadow-2xl max-w-xs text-white hidden sm:block">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-xl shadow-lg">
+                <i class="fa-solid fa-gem"></i>
+              </div>
+              <div>
+                <span class="font-bold text-xs block text-amber-300 uppercase tracking-wider">Verres Optiques Premium</span>
+                <span class="text-xs text-slate-300 block">Surfaçage HD & Anti-Lumière Bleue</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <!-- PRODUCT CATEGORIES -->
-  <section class="max-w-7xl mx-auto px-4 lg:px-8">
-    <div class="text-center max-w-2xl mx-auto mb-10">
-      <span class="badge badge-opti-gold mb-2">Univers Optique</span>
-      <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Explorez nos Catégories</h2>
-      <p class="text-slate-500 text-sm mt-1">Des montures de créateurs conçues pour sublimer votre regard et garantir un confort inégalé.</p>
+  <!-- 2. BRAND MARQUEE TICKER -->
+  <section class="marquee-container my-8">
+    <div class="marquee-track">
+      <div *ngFor="let brand of luxuryBrands.concat(luxuryBrands)" class="marquee-brand">
+        <span>{{ brand }}</span>
+        <i class="fa-solid fa-diamond text-[8px] text-amber-500"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. PRODUCT CATEGORIES GRID -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="hero-badge-gold mb-3">Univers Optique</span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-serif-luxury tracking-tight mt-1">Explorez nos Catégories</h2>
+      <p class="text-slate-600 text-sm sm:text-base mt-2">Des montures et verres d'exception façonnés pour sublimer votre regard au quotidien.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
       
-      <!-- Cat 1: Lunettes de Vue -->
-      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
-        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&auto=format&fit=crop&q=80" alt="Lunettes de vue" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
-          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Essentielles</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes de Vue</h3>
-          <span class="text-xs text-slate-300 mt-1">Montures & Verres →</span>
-        </div>
-      </a>
-
-      <!-- Cat 2: Lunettes de Soleil -->
-      <a routerLink="/soleil" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
-        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80" alt="Lunettes de soleil" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
-          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Protection UV</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes de Soleil</h3>
-          <span class="text-xs text-slate-300 mt-1">Solaire & Polarisé →</span>
-        </div>
-      </a>
-
-      <!-- Cat 3: Lunettes Enfants -->
-      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
-        <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?w=600&auto=format&fit=crop&q=80" alt="Lunettes enfants" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
-          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Confort & Solidité</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes Enfants</h3>
-          <span class="text-xs text-slate-300 mt-1">Flexibles & Durables →</span>
-        </div>
-      </a>
-
-      <!-- Cat 4: Lentilles de Contact -->
-      <a routerLink="/lentilles" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
-        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80" alt="Lentilles de contact" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
-          <span class="text-[10px] uppercase font-bold text-teal-400 tracking-wider">Liberté Visuelle</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-teal-300 transition">Lentilles de Contact</h3>
-          <span class="text-xs text-slate-300 mt-1">Jour, Mois & Soins →</span>
-        </div>
-      </a>
-
-      <!-- Cat 5: Accessoires -->
-      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
-        <img src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=600&auto=format&fit=crop&q=80" alt="Accessoires optiques" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
-          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Entretien & Étuis</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Accessoires</h3>
-          <span class="text-xs text-slate-300 mt-1">Étuis, Cordons & Spray →</span>
+      <a *ngFor="let cat of categoryCards" [routerLink]="cat.route" class="category-card-luxury group">
+        <img [src]="cat.imageUrl" [alt]="cat.title" class="category-card-img">
+        <div class="category-card-overlay">
+          <span class="category-tag">{{ cat.tag }}</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition duration-300 font-serif-luxury">{{ cat.title }}</h3>
+          <p class="text-xs text-slate-300 mt-1 line-clamp-1">{{ cat.subtitle }}</p>
+          <span class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 mt-3 group-hover:translate-x-1 transition">
+            Découvrir <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </span>
         </div>
       </a>
 
     </div>
   </section>
 
-  <!-- STYLE RECOMMENDATIONS (#16) -->
-  <section class="max-w-7xl mx-auto px-4 lg:px-8 pt-8">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8">
-      <div>
-        <span class="badge badge-opti-gold mb-2">Inspiration</span>
-        <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Choisissez selon votre Style</h2>
-      </div>
-      <p class="text-slate-500 text-xs max-w-md mt-2 md:mt-0">Filtrez les modèles d'exception selon votre personnalité et vos préférences esthétiques.</p>
-    </div>
-
-    <div class="flex flex-wrap gap-3 mb-8">
-      <button (click)="selectedStyleFilter = 'ALL'" [class.btn-opti-dark]="selectedStyleFilter === 'ALL'" [class.btn-opti-outline]="selectedStyleFilter !== 'ALL'" class="btn-opti btn-opti-sm">
-        Tous les Styles
-      </button>
-      <button *ngFor="let cat of styleCategories" (click)="selectedStyleFilter = cat.name" [class.btn-opti-gold]="selectedStyleFilter === cat.name" [class.btn-opti-outline]="selectedStyleFilter !== cat.name" class="btn-opti btn-opti-sm">
-        <i [class]="cat.icon"></i> {{ cat.label }}
-      </button>
-    </div>
-  </section>
-
-  <!-- FEATURED PRODUCTS GRID (#5) -->
-  <section class="max-w-7xl mx-auto px-4 lg:px-8">
+  <!-- 4. FEATURED PRODUCTS GALLERY -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
     
+    <!-- Gallery Header & Style Filters -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-slate-200">
+      <div>
+        <span class="hero-badge-gold mb-2">Sélection Exclusivité</span>
+        <h2 class="text-3xl font-extrabold text-slate-900 font-serif-luxury">Nos Montures d'Exception</h2>
+        <p class="text-slate-500 text-sm mt-1">Trouvez le modèle parfait selon votre style et vos exigences visuelles.</p>
+      </div>
+
+      <!-- Filter Pills -->
+      <div class="flex flex-wrap gap-2.5 mt-6 md:mt-0">
+        <button (click)="selectedStyleFilter = 'ALL'" 
+                [class.active]="selectedStyleFilter === 'ALL'" 
+                class="filter-btn-luxury">
+          <i class="fa-solid fa-border-all"></i> Tous
+        </button>
+        <button *ngFor="let cat of styleCategories" 
+                (click)="selectedStyleFilter = cat.name" 
+                [class.active]="selectedStyleFilter === cat.name" 
+                class="filter-btn-luxury">
+          <i [class]="cat.icon"></i> {{ cat.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       
-      <div *ngFor="let product of filteredProducts" class="card-opti group relative flex flex-col overflow-hidden bg-white">
+      <div *ngFor="let product of filteredProducts" class="product-card-luxury group">
         
-        <!-- Image Stage with Secondary Hover Preview -->
-        <div class="relative h-72 bg-slate-50 overflow-hidden flex items-center justify-center p-6">
-          <img [src]="product.imageUrl" [alt]="product.name" class="max-h-full object-contain transition duration-500 group-hover:opacity-0 group-hover:scale-105">
-          <img [src]="product.secondaryImageUrl" [alt]="product.name" class="max-h-full object-contain absolute inset-0 m-auto opacity-0 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
+        <!-- Image Stage -->
+        <div class="product-img-wrapper">
+          <img [src]="product.imageUrl" [alt]="product.name" class="product-img-primary">
+          <img [src]="product.secondaryImageUrl" [alt]="product.name" class="product-img-secondary">
 
-          <!-- Badges Top -->
-          <div class="absolute top-4 left-4 flex flex-col gap-1 z-10">
-            <span *ngIf="product.isNewArrival" class="badge-opti badge-opti-gold">Nouveauté</span>
-            <span *ngIf="product.tryOn3dAvailable" class="badge-opti bg-indigo-100 text-indigo-800 border border-indigo-200">
-              <i class="fa-solid fa-camera text-[10px]"></i> 3D Try-On
+          <!-- Badges Top Left -->
+          <div class="absolute top-4 left-4 flex flex-col gap-1.5 z-10">
+            <span *ngIf="product.isNewArrival" class="bg-amber-500 text-slate-950 font-bold text-[10px] uppercase px-2.5 py-1 rounded-full shadow-sm tracking-wider">Nouveauté</span>
+            <span *ngIf="product.tryOn3dAvailable" class="badge-tryon-pill">
+              <i class="fa-solid fa-camera"></i> 3D Try-On
             </span>
           </div>
 
           <!-- Favorite Button Top Right -->
-          <button (click)="toggleFavorite(product.id)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/90 text-slate-600 hover:text-red-500 flex items-center justify-center shadow-md transition">
+          <button (click)="toggleFavorite(product.id)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-600 hover:text-red-500 flex items-center justify-center shadow-md transition transform hover:scale-110">
             <i class="fa-solid fa-heart text-sm" [class.text-red-500]="isFavorite(product.id)" [class.fa-regular]="!isFavorite(product.id)"></i>
           </button>
 
           <!-- Quick Action Bar on Hover -->
           <div class="absolute bottom-4 left-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition duration-300 flex gap-2">
-            <button (click)="openQuickView(product)" class="btn-opti btn-opti-dark text-xs py-2 flex-1 shadow-lg">
+            <button (click)="openQuickView(product)" class="bg-slate-900 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex-1 shadow-lg hover:bg-slate-800 transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-eye"></i> Aperçu Rapide
             </button>
-            <a routerLink="/try-on" [queryParams]="{productId: product.id}" class="btn-opti btn-opti-gold text-xs py-2 px-3 shadow-lg" title="Essayer en 3D">
+            <a routerLink="/try-on" [queryParams]="{productId: product.id}" class="bg-amber-500 text-slate-950 font-bold text-xs py-2.5 px-3.5 rounded-xl shadow-lg hover:bg-amber-400 transition flex items-center justify-center" title="Essayer en 3D">
               <i class="fa-solid fa-camera"></i>
             </a>
           </div>
         </div>
 
-        <!-- Content Info -->
+        <!-- Product Information -->
         <div class="p-6 flex-1 flex flex-col justify-between">
           <div>
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-bold text-amber-700 tracking-wider uppercase font-mono">{{ product.brand }}</span>
-              <div class="flex items-center gap-1 text-xs text-amber-500">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-extrabold text-amber-700 tracking-widest uppercase font-mono">{{ product.brand }}</span>
+              <div class="flex items-center gap-1 text-xs text-amber-500 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/50">
                 <i class="fa-solid fa-star text-[10px]"></i>
-                <span class="font-bold text-slate-700">{{ product.rating }}</span>
+                <span class="font-bold text-slate-800">{{ product.rating }}</span>
+                <span class="text-slate-400 text-[10px]">({{ product.reviewCount }})</span>
               </div>
             </div>
 
-            <h3 class="font-bold text-base text-slate-900 group-hover:text-amber-700 transition line-clamp-1 mb-1">
+            <h3 class="font-bold text-base text-slate-900 group-hover:text-amber-700 transition line-clamp-1 mb-2 font-serif-luxury">
               <a [routerLink]="['/produit', product.id]" class="text-slate-900 text-decoration-none hover:text-amber-700">{{ product.name }}</a>
             </h3>
-            
-            <p class="text-xs text-slate-500 line-clamp-2 mb-4">{{ product.description }}</p>
+
+            <p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">{{ product.description }}</p>
+
+            <!-- Color Variants preview dots -->
+            <div *ngIf="product.colorsAvailable && product.colorsAvailable.length > 0" class="flex items-center gap-1.5 mb-4">
+              <span class="text-[10px] text-slate-400 font-medium">Couleurs:</span>
+              <div *ngFor="let color of product.colorsAvailable" 
+                   class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-xs" 
+                   [style.background-color]="color.hex"
+                   [title]="color.name"></div>
+            </div>
           </div>
 
-          <!-- Price & Add to Cart Footer -->
+          <!-- Price & CTA -->
           <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
             <div>
-              <span class="text-[10px] uppercase text-slate-400 font-bold block">Prix TTC</span>
+              <span class="text-[10px] uppercase text-slate-400 font-bold block tracking-wider">Prix TTC</span>
               <div class="flex items-baseline gap-2">
-                <span class="text-xl font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-xs font-normal">DT</span></span>
+                <span class="text-xl font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-xs font-semibold text-amber-700">DT</span></span>
                 <span *ngIf="product.originalPriceTnd" class="text-xs text-slate-400 line-through font-mono">{{ product.originalPriceTnd }} DT</span>
               </div>
             </div>
 
-            <button (click)="addToCart(product)" class="btn-opti btn-opti-dark btn-opti-sm shadow-md">
+            <button (click)="addToCart(product)" class="btn-add-cart-luxury">
               <i class="fa-solid fa-bag-shopping"></i> Ajouter
             </button>
           </div>
@@ -233,37 +241,65 @@
     </div>
   </section>
 
-  <!-- VIRTUAL TRY-ON TEASER SECTION (#7) -->
-  <section class="max-w-7xl mx-auto px-4 lg:px-8 my-16">
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-8 lg:p-14 shadow-2xl border border-indigo-500/20 relative overflow-hidden">
+  <!-- 5. VIRTUAL TRY-ON 3D HIGHLIGHT BANNER -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
+    <div class="tryon-banner-luxury p-8 sm:p-12 lg:p-16">
       
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
         
-        <div class="lg:col-span-7 space-y-4">
-          <span class="badge badge-opti-gold"><i class="fa-solid fa-camera"></i> Réalité Augmentée 3D</span>
-          <h2 class="text-3xl lg:text-5xl font-extrabold font-serif text-white">Essayez vos lunettes avant de choisir.</h2>
-          <p class="text-slate-300 text-sm lg:text-base leading-relaxed max-w-xl">
-            Grâce à notre moteur de détection faciale en temps réel, visualisez instantanément le rendu des montures sur votre visage. Ajustez l'écartement, comparez les couleurs et partagez le résultat.
+        <!-- Left Banner Info -->
+        <div class="lg:col-span-7 space-y-6">
+          <span class="hero-badge-gold">
+            <i class="fa-solid fa-camera text-indigo-400"></i> Réalité Augmentée AI & 3D
+          </span>
+
+          <h2 class="text-3xl sm:text-5xl font-extrabold font-serif-luxury text-white leading-tight">
+            Essayez vos lunettes en temps réel avant d'acheter.
+          </h2>
+
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl">
+            Grâce à notre algorithme de tracking facial ultra-précis (60 FPS), visualisez l'ajustement exact des montures sur votre visage. Testez les teintes de verres et comparez vos styles préférés.
           </p>
 
+          <!-- 3 Technical bullets -->
+          <div class="space-y-3 pt-2">
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+              <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">✓</div>
+              <span>Tracking facial 68 points avec calcul automatique de l'écart pupillaire (IPD)</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+              <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">✓</div>
+              <span>Rendu 3D PBR réaliste des matériaux (Titane, Acétate, Verres polarisés)</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+              <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">✓</div>
+              <span>100% sécurisé et confidentiel : aucune image n'est enregistrée</span>
+            </div>
+          </div>
+
+          <!-- CTAs -->
           <div class="flex flex-wrap gap-4 pt-4">
-            <a routerLink="/try-on" class="btn-opti btn-opti-gold text-base py-3.5 px-8 shadow-lg">
-              <i class="fa-solid fa-camera"></i> Activer la caméra & Essayer
+            <a routerLink="/try-on" class="btn-hero-primary text-base">
+              <i class="fa-solid fa-camera"></i> Lancer l'Essayage Virtuel 3D
             </a>
-            <a routerLink="/rdv" class="btn-opti bg-white/10 hover:bg-white/20 text-white border border-white/20 text-sm py-3.5 px-6">
-              Prendre un RDV en Boutique
+            <a routerLink="/rdv" class="btn-hero-secondary text-sm">
+              <i class="fa-solid fa-calendar-check"></i> RDV en Boutique
             </a>
           </div>
         </div>
 
+        <!-- Right Simulated Camera Viewport -->
         <div class="lg:col-span-5 flex justify-center">
-          <div class="relative w-full max-w-sm rounded-3xl overflow-hidden border-2 border-indigo-500/40 shadow-2xl bg-slate-950 p-2">
-            <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=600&auto=format&fit=crop&q=80" alt="Virtual try-on preview" class="w-full h-80 object-cover rounded-2xl filter brightness-90">
+          <div class="ar-frame-container bg-slate-950 p-3">
+            <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=800&auto=format&fit=crop&q=80" 
+                 alt="Simulateur d'essayage 3D" 
+                 class="w-full h-88 object-cover rounded-2xl filter brightness-90">
             
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div class="w-64 h-28 border-2 border-indigo-400 border-dashed rounded-full flex items-center justify-center animate-pulse">
-                <span class="text-[10px] font-bold text-indigo-300 bg-slate-950/80 px-2 py-0.5 rounded font-mono">Face Landmark Detection Active</span>
-              </div>
+            <!-- Animated Facial Landmark Mesh Simulator -->
+            <div class="ar-mesh-overlay">
+              <span class="text-[10px] font-bold text-indigo-200 bg-slate-950/90 px-3 py-1 rounded-full font-mono border border-indigo-500/40">
+                <i class="fa-solid fa-circle text-emerald-400 text-[8px] animate-pulse"></i> Face Landmark Detection 60 FPS
+              </span>
             </div>
           </div>
         </div>
@@ -273,38 +309,129 @@
     </div>
   </section>
 
+  <!-- 6. VALUE PROPOSITION PERKS GRID -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <div class="perk-card-luxury">
+        <div class="perk-icon-wrapper">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900 font-serif-luxury">Bilan Optique Offert</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Examen de vue complet réalisé par nos opticiens diplômés d'État dans nos 4 boutiques en Tunisie.</p>
+      </div>
+
+      <div class="perk-card-luxury">
+        <div class="perk-icon-wrapper">
+          <i class="fa-solid fa-stopwatch"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900 font-serif-luxury">Taillage Express 1h</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Montage sur-mesure de vos verres de vue dans nos laboratoires optiques haute précision à Tunis, Sousse & Sfax.</p>
+      </div>
+
+      <div class="perk-card-luxury">
+        <div class="perk-icon-wrapper">
+          <i class="fa-solid fa-award"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900 font-serif-luxury">Garantie & SAV 2 An</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Remplacement gratuit en cas de casse monture et garantie adaptation 30 jours sur tous vos verres.</p>
+      </div>
+
+      <div class="perk-card-luxury">
+        <div class="perk-icon-wrapper">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900 font-serif-luxury">Livraison Tunisie</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Expédition sécurisée et livraison rapide à domicile partout en Tunisie avec possibilité d'essayage.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 7. CLIENT TESTIMONIALS -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="hero-badge-gold mb-3">Témoignages Clients</span>
+      <h2 class="text-3xl font-extrabold text-slate-900 font-serif-luxury">La Confiance de nos Clients</h2>
+      <p class="text-slate-500 text-sm mt-1">Découvrez l'expérience de nos porteurs de lunettes à travers la Tunisie.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <div *ngFor="let item of testimonials" class="testimonial-card-luxury">
+        <div>
+          <!-- Star Rating -->
+          <div class="flex items-center gap-1 text-amber-500 mb-4">
+            <i *ngFor="let star of [1,2,3,4,5]" class="fa-solid fa-star text-sm"></i>
+          </div>
+
+          <!-- Quote -->
+          <p class="text-slate-700 text-sm italic mb-6 leading-relaxed">
+            "{{ item.comment }}"
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
+          <div class="flex items-center gap-3">
+            <img [src]="item.avatar" [alt]="item.author" class="w-10 h-10 rounded-full object-cover border border-amber-300">
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">{{ item.author }}</h4>
+              <span class="text-[11px] text-slate-400 block">{{ item.city }}</span>
+            </div>
+          </div>
+          
+          <span class="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded-md border border-amber-200/60 font-mono">
+            {{ item.purchasedItem }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 </div>
 
-<!-- Quick View Modal -->
-<div *ngIf="selectedProductForModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
-  <div class="bg-white rounded-3xl max-w-3xl w-full p-6 lg:p-8 shadow-2xl relative border border-slate-200">
-    <button (click)="closeQuickView()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center">
-      <i class="fa-solid fa-xmark"></i>
+<!-- QUICK VIEW MODAL OVERLAY -->
+<div *ngIf="selectedProductForModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+  <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+    
+    <button (click)="closeQuickView()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center transition">
+      <i class="fa-solid fa-xmark text-base"></i>
     </button>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div class="bg-slate-50 p-6 rounded-2xl flex items-center justify-center h-72">
+      
+      <div class="bg-slate-50 p-6 rounded-2xl flex items-center justify-center h-72 relative">
         <img [src]="selectedProductForModal.imageUrl" [alt]="selectedProductForModal.name" class="max-h-full object-contain">
       </div>
 
       <div class="space-y-4">
-        <span class="badge badge-opti-gold">{{ selectedProductForModal.brand }}</span>
-        <h3 class="text-2xl font-bold text-slate-900 font-serif">{{ selectedProductForModal.name }}</h3>
+        <div class="flex items-center justify-between">
+          <span class="hero-badge-gold">{{ selectedProductForModal.brand }}</span>
+          <div class="flex items-center gap-1 text-xs text-amber-500">
+            <i class="fa-solid fa-star text-xs"></i>
+            <span class="font-bold text-slate-800">{{ selectedProductForModal.rating }}</span>
+          </div>
+        </div>
+
+        <h3 class="text-2xl font-bold text-slate-900 font-serif-luxury">{{ selectedProductForModal.name }}</h3>
         <p class="text-xs text-slate-500 leading-relaxed">{{ selectedProductForModal.description }}</p>
 
         <div class="text-2xl font-extrabold text-slate-900 font-mono">
-          {{ selectedProductForModal.priceTnd }} DT
+          {{ selectedProductForModal.priceTnd }} <span class="text-sm font-semibold text-amber-700">DT</span>
         </div>
 
-        <div class="flex gap-3 pt-2">
-          <button (click)="addToCart(selectedProductForModal); closeQuickView()" class="btn-opti btn-opti-dark flex-1">
+        <div class="flex gap-3 pt-4">
+          <button (click)="addToCart(selectedProductForModal); closeQuickView()" class="btn-add-cart-luxury flex-1 justify-center py-3">
             <i class="fa-solid fa-bag-shopping"></i> Ajouter au Panier
           </button>
-          <a routerLink="/try-on" [queryParams]="{productId: selectedProductForModal.id}" (click)="closeQuickView()" class="btn-opti btn-opti-gold">
+          <a routerLink="/try-on" [queryParams]="{productId: selectedProductForModal.id}" (click)="closeQuickView()" class="btn-hero-primary py-3 px-5 text-xs">
             <i class="fa-solid fa-camera"></i> Try-On
           </a>
         </div>
       </div>
+
     </div>
   </div>
 </div>
