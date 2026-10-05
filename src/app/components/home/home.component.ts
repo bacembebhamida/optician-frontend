@@ -209,7 +209,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: 'Lunettes de Vue',
       subtitle: 'Montures & Verres Sur-Mesure',
       tag: 'ESSENTIELLES',
-      route: '/lunettes',
+      route: '/lunettes-de-vue',
       imageUrl: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=800&auto=format&fit=crop&q=80',
       badgeColor: 'gold'
     },
@@ -217,7 +217,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: 'Lunettes de Soleil',
       subtitle: 'Haute Protection UV & Polarisées',
       tag: 'COLLECTION SOLAIRE',
-      route: '/soleil',
+      route: '/lunettes-de-soleil',
       imageUrl: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80',
       badgeColor: 'amber'
     },
@@ -225,8 +225,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: 'Lunettes Enfants',
       subtitle: 'Ergonomie, Flexibilité & Solidité',
       tag: 'JUNIOR & ADOS',
-      route: '/lunettes',
-      imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&auto=format&fit=crop&q=80',
+      route: '/lunettes-de-vue',
+      imageUrl: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=800&auto=format&fit=crop&q=80',
       badgeColor: 'sky'
     },
     {
@@ -234,14 +234,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       subtitle: 'Hydratation 24h & Haute Oxygénation',
       tag: 'SOINS & CONFORT',
       route: '/lentilles',
-      imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80',
       badgeColor: 'teal'
     },
     {
       title: 'Accessoires de Luxe',
       subtitle: 'Étuis Cuir, Cordons & Sprays',
       tag: 'ACCESSOIRES',
-      route: '/lunettes',
+      route: '/accessoires',
       imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80',
       badgeColor: 'rose'
     }
