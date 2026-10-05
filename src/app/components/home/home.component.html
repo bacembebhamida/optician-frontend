@@ -2,22 +2,22 @@
      OptiVision Haute Lunetterie — Luxury Home Interface
      ═══════════════════════════════════════════════════════════ -->
 
-<div class="space-y-16 pb-24">
+<div class="space-y-8 pb-12">
 
   <!-- 1. HERO SECTION -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
     <div class="hero-luxury-wrapper relative">
       
       <!-- Background Ambient Glows -->
       <div class="hero-glow-bg"></div>
       <div class="hero-glow-secondary"></div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[620px] items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[540px] items-center">
         
         <!-- Left Hero Content (Col 7) -->
-        <div class="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-center z-10">
+        <div class="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center z-10">
           
-          <div class="flex items-center gap-3 mb-6">
+          <div class="flex items-center gap-3 mb-4">
             <span class="hero-badge-gold">
               <i class="fa-solid fa-sparkles text-amber-400"></i> Collection Haute Lunetterie 2026
             </span>
@@ -27,12 +27,12 @@
             </span>
           </div>
 
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-6 font-serif-luxury">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-4 font-serif-luxury">
             Voir le monde <br class="hidden sm:inline">
             <span class="text-gradient-gold italic">autrement.</span>
           </h1>
 
-          <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal mb-10 leading-relaxed">
+          <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal mb-8 leading-relaxed">
             L'excellence de la haute lunetterie internationale alliée au taillage de précision suisse et à l'essai virtuel en temps réel 3D.
           </p>
 
@@ -47,14 +47,14 @@
           </div>
 
           <!-- Hero 4 Perks Bar -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-12 pt-8 border-t border-white/10">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 pt-6 border-t border-white/10">
             <div class="hero-feature-item">
               <i class="fa-solid fa-eye text-amber-400"></i>
-              <span>Examen de vue offert</span>
+              <span>Examen offert</span>
             </div>
             <div class="hero-feature-item">
               <i class="fa-solid fa-bolt text-indigo-400"></i>
-              <span>Taillage Express 1h</span>
+              <span>Taillage 1h</span>
             </div>
             <div class="hero-feature-item">
               <i class="fa-solid fa-shield-halved text-emerald-400"></i>
@@ -69,21 +69,21 @@
         </div>
 
         <!-- Right Hero Image (Col 5) -->
-        <div class="lg:col-span-5 relative min-h-[420px] lg:h-full overflow-hidden">
+        <div class="lg:col-span-5 relative min-h-[380px] lg:h-full overflow-hidden">
           <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1600&auto=format&fit=crop&q=85" 
                alt="Haute lunetterie opticien luxe" 
                class="absolute inset-0 w-full h-full object-cover object-center filter brightness-95 transform scale-105 hover:scale-100 transition duration-1000">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent lg:bg-gradient-to-r lg:from-slate-950 lg:via-transparent lg:to-transparent"></div>
 
           <!-- Floating Luxury Badge Overlay -->
-          <div class="absolute bottom-8 right-8 bg-slate-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/15 shadow-2xl max-w-xs text-white hidden sm:block">
+          <div class="absolute bottom-6 right-6 bg-slate-900/85 backdrop-blur-xl p-3.5 rounded-2xl border border-white/15 shadow-2xl max-w-xs text-white hidden sm:block">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-xl shadow-lg">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-lg shadow-lg">
                 <i class="fa-solid fa-gem"></i>
               </div>
               <div>
                 <span class="font-bold text-xs block text-amber-300 uppercase tracking-wider">Verres Optiques Premium</span>
-                <span class="text-xs text-slate-300 block">Surfaçage HD & Anti-Lumière Bleue</span>
+                <span class="text-[11px] text-slate-300 block">Surfaçage HD & Anti-Lumière Bleue</span>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@
   </section>
 
   <!-- 2. BRAND MARQUEE TICKER -->
-  <section class="marquee-container my-8">
+  <section class="marquee-container my-4">
     <div class="marquee-track">
       <div *ngFor="let brand of luxuryBrands.concat(luxuryBrands)" class="marquee-brand">
         <span>{{ brand }}</span>
@@ -107,21 +107,20 @@
   <!-- 3. PRODUCT CATEGORIES GRID -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <div class="text-center max-w-2xl mx-auto mb-12">
-      <span class="hero-badge-gold mb-3">Univers Optique</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-serif-luxury tracking-tight mt-1">Explorez nos Catégories</h2>
-      <p class="text-slate-600 text-sm sm:text-base mt-2">Des montures et verres d'exception façonnés pour sublimer votre regard au quotidien.</p>
+    <div class="text-center max-w-2xl mx-auto mb-6">
+      <span class="hero-badge-gold mb-2">Univers Optique</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-serif-luxury tracking-tight mt-1">Explorez nos Catégories</h2>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       
       <a *ngFor="let cat of categoryCards" [routerLink]="cat.route" class="category-card-luxury group">
         <img [src]="cat.imageUrl" [alt]="cat.title" class="category-card-img">
         <div class="category-card-overlay">
           <span class="category-tag">{{ cat.tag }}</span>
-          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition duration-300 font-serif-luxury">{{ cat.title }}</h3>
+          <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition duration-300 font-serif-luxury">{{ cat.title }}</h3>
           <p class="text-xs text-slate-300 mt-1 line-clamp-1">{{ cat.subtitle }}</p>
-          <span class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 mt-3 group-hover:translate-x-1 transition">
+          <span class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 mt-2 group-hover:translate-x-1 transition">
             Découvrir <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </span>
         </div>
@@ -131,18 +130,17 @@
   </section>
 
   <!-- 4. FEATURED PRODUCTS GALLERY -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
     
     <!-- Gallery Header & Style Filters -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-slate-200">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 pb-4 border-b border-slate-200">
       <div>
-        <span class="hero-badge-gold mb-2">Sélection Exclusivité</span>
-        <h2 class="text-3xl font-extrabold text-slate-900 font-serif-luxury">Nos Montures d'Exception</h2>
-        <p class="text-slate-500 text-sm mt-1">Trouvez le modèle parfait selon votre style et vos exigences visuelles.</p>
+        <span class="hero-badge-gold mb-1">Sélection Exclusivité</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-serif-luxury">Nos Montures d'Exception</h2>
       </div>
 
       <!-- Filter Pills -->
-      <div class="flex flex-wrap gap-2.5 mt-6 md:mt-0">
+      <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
         <button (click)="selectedStyleFilter = 'ALL'" 
                 [class.active]="selectedStyleFilter === 'ALL'" 
                 class="filter-btn-luxury">
@@ -242,8 +240,8 @@
   </section>
 
   <!-- 5. VIRTUAL TRY-ON 3D HIGHLIGHT BANNER -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
-    <div class="tryon-banner-luxury p-8 sm:p-12 lg:p-16">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+    <div class="tryon-banner-luxury p-6 sm:p-8 lg:p-10">
       
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
         
@@ -349,12 +347,11 @@
   </section>
 
   <!-- 7. CLIENT TESTIMONIALS -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
     
-    <div class="text-center max-w-2xl mx-auto mb-12">
-      <span class="hero-badge-gold mb-3">Témoignages Clients</span>
-      <h2 class="text-3xl font-extrabold text-slate-900 font-serif-luxury">La Confiance de nos Clients</h2>
-      <p class="text-slate-500 text-sm mt-1">Découvrez l'expérience de nos porteurs de lunettes à travers la Tunisie.</p>
+    <div class="text-center max-w-2xl mx-auto mb-5">
+      <span class="hero-badge-gold mb-2">Témoignages Clients</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-serif-luxury">La Confiance de nos Clients</h2>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

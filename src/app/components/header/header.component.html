@@ -16,7 +16,7 @@
   <!-- ── MAIN HEADER CONTAINER ──────────────────────────────────────── -->
   <div class="header-main">
 
-    <!-- Brand Logo -->
+    <!-- Brand Logo (Left) -->
     <a routerLink="/" class="header-logo" aria-label="OptiVision Haute Lunetterie — Accueil">
       <div class="logo-emblem">
         <i class="fa-solid fa-glasses"></i>
@@ -30,8 +30,9 @@
     <!-- Right Group: Navigation Menu + Action Utilities -->
     <div class="header-right-group">
 
-      <!-- Navigation Menu (Desktop) -->
+      <!-- Navigation Menu (Shifted Right) -->
       <nav class="header-nav" aria-label="Navigation principale">
+        
         <a routerLink="/"
            routerLinkActive="nav-active"
            [routerLinkActiveOptions]="{exact:true}"
@@ -39,29 +40,115 @@
           <span>Accueil</span>
         </a>
 
-        <a routerLink="/lunettes"
-           routerLinkActive="nav-active"
-           class="nav-item">
-          <span>Lunettes de Vue</span>
-        </a>
+        <!-- 1. LUNETTES DE VUE MEGA DROPDOWN -->
+        <div class="nav-dropdown-wrapper" (mouseenter)="openMega('VUE')" (mouseleave)="closeMega()">
+          <a routerLink="/lunettes" routerLinkActive="nav-active" class="nav-item">
+            <span>Lunettes de Vue</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+          </a>
 
-        <a routerLink="/soleil"
-           routerLinkActive="nav-active"
-           class="nav-item">
-          <span>Lunettes de Soleil</span>
-        </a>
+          <div *ngIf="activeMegaMenu === 'VUE'" class="mega-menu-panel">
+            <div class="mega-menu-container">
+              <div class="mega-column" *ngFor="let col of categoriesData.vue.columns">
+                <div class="mega-col-title">
+                  <i [class]="col.icon"></i> {{ col.name }}
+                </div>
+                <ul class="mega-item-list">
+                  <li *ngFor="let item of col.items">
+                    <a (click)="navigateToCategory(item.route, item.query)" class="mega-item-link">
+                      {{ item.label }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
 
-        <a routerLink="/lentilles"
-           routerLinkActive="nav-active"
-           class="nav-item">
-          <span>Lentilles</span>
-        </a>
+              <!-- Featured Try-on card -->
+              <div class="mega-featured-card">
+                <span class="badge-tryon-pill mb-2"><i class="fa-solid fa-camera"></i> Essayage 3D</span>
+                <h4 class="font-bold text-xs text-slate-900 mb-1">Testez en Temps Réel</h4>
+                <p class="text-[11px] text-slate-500 mb-3 leading-relaxed">Visualisez le rendu exact de 100+ montures sur votre visage.</p>
+                <a (click)="navigateToCategory('/try-on')" class="btn-hero-primary py-1.5 px-3 text-[11px] w-full justify-center text-center">
+                  Essayer Maintenant
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <a routerLink="/marques"
-           routerLinkActive="nav-active"
-           class="nav-item">
-          <span>Maisons &amp; Marques</span>
-        </a>
+        <!-- 2. LUNETTES DE SOLEIL MEGA DROPDOWN -->
+        <div class="nav-dropdown-wrapper" (mouseenter)="openMega('SOLEIL')" (mouseleave)="closeMega()">
+          <a routerLink="/soleil" routerLinkActive="nav-active" class="nav-item">
+            <span>Lunettes de Soleil</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+          </a>
+
+          <div *ngIf="activeMegaMenu === 'SOLEIL'" class="mega-menu-panel">
+            <div class="mega-menu-container">
+              <div class="mega-column" *ngFor="let col of categoriesData.soleil.columns">
+                <div class="mega-col-title">
+                  <i [class]="col.icon"></i> {{ col.name }}
+                </div>
+                <ul class="mega-item-list">
+                  <li *ngFor="let item of col.items">
+                    <a (click)="navigateToCategory(item.route, item.query)" class="mega-item-link">
+                      {{ item.label }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. LENTILLES MEGA DROPDOWN -->
+        <div class="nav-dropdown-wrapper" (mouseenter)="openMega('LENTILLES')" (mouseleave)="closeMega()">
+          <a routerLink="/lentilles" routerLinkActive="nav-active" class="nav-item">
+            <span>Lentilles</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+          </a>
+
+          <div *ngIf="activeMegaMenu === 'LENTILLES'" class="mega-menu-panel">
+            <div class="mega-menu-container">
+              <div class="mega-column" *ngFor="let col of categoriesData.lentilles.columns">
+                <div class="mega-col-title">
+                  <i [class]="col.icon"></i> {{ col.name }}
+                </div>
+                <ul class="mega-item-list">
+                  <li *ngFor="let item of col.items">
+                    <a (click)="navigateToCategory(item.route, item.query)" class="mega-item-link">
+                      {{ item.label }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. MAISONS & MARQUES MEGA DROPDOWN -->
+        <div class="nav-dropdown-wrapper" (mouseenter)="openMega('MARQUES')" (mouseleave)="closeMega()">
+          <a routerLink="/marques" routerLinkActive="nav-active" class="nav-item">
+            <span>Maison &amp; Marques</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+          </a>
+
+          <div *ngIf="activeMegaMenu === 'MARQUES'" class="mega-menu-panel">
+            <div class="mega-menu-container">
+              <div class="mega-column" *ngFor="let col of categoriesData.marques.columns">
+                <div class="mega-col-title">
+                  <i [class]="col.icon"></i> {{ col.name }}
+                </div>
+                <ul class="mega-item-list">
+                  <li *ngFor="let item of col.items">
+                    <a (click)="navigateToCategory(item.route, item.query)" class="mega-item-link">
+                      {{ item.label }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Virtual Try-On Badge -->
         <a routerLink="/try-on"
