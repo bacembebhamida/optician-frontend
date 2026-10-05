@@ -12,6 +12,17 @@ export interface ProductColorOption {
   imageUrl?: string;
 }
 
+export interface CategoryTreeItem {
+  id: number | string;
+  name: string;
+  slug: string;
+  count?: number;
+  route?: string;
+  queryParams?: Record<string, string>;
+  children?: CategoryTreeItem[];
+  isOpen?: boolean;
+}
+
 export interface Product {
   id: number;
   brand: string;

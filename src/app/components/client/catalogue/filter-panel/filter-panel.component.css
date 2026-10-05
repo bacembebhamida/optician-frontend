@@ -1,0 +1,23 @@
+.filter-panel-card {
+  transition: all 0.25s ease;
+}
+
+.form-label {
+  letter-spacing: 0.05em;
+}
+
+.form-control-opti {
+  width: 100%;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 8px 12px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: #0F172A;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-opti:focus {
+  border-color: #B8976A;
+  box-shadow: 0 0 0 3px rgba(184, 151, 106, 0.15);
+}

@@ -118,7 +118,13 @@
   gap: 1.5rem;
 }
 
-/* Brand Logo (Left) */
+/* Brand Logo & Left Nav Group */
+.header-left-group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .header-logo {
   display: flex;
   align-items: center;

@@ -1,175 +1,180 @@
-<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6">
   
-  <!-- Header Title -->
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-6">
+  <!-- 1. BREADCRUMB -->
+  <nav aria-label="Fil d'Ariane" class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+    <ng-container *ngFor="let item of breadcrumbItems; let last = last">
+      <a *ngIf="item.route && !last" [routerLink]="item.route" class="hover:text-amber-700 transition">
+        {{ item.label }}
+      </a>
+      <span *ngIf="!item.route || last" class="text-slate-900 font-semibold">
+        {{ item.label }}
+      </span>
+      <i *ngIf="!last" class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
+    </ng-container>
+  </nav>
+
+  <!-- 2. CATEGORY TITLE & SHORT DESCRIPTION -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 pb-5">
     <div>
-      <span class="badge badge-opti-gold mb-2"><i class="fa-solid fa-glasses"></i> Collection Haute Lunetterie</span>
-      <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif">Catalogue Optique & Solaires</h1>
-      <p class="text-slate-500 text-sm mt-1">Découvrez l'ensemble de nos montures haut de gamme et verres haute précision.</p>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/50 mb-2">
+        <i class="fa-solid fa-glasses"></i> Collection OptiVision Luxe
+      </span>
+      <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif-luxury tracking-tight">
+        {{ categoryTitle }}
+      </h1>
+      <p class="text-slate-500 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
+        {{ categoryDescription }}
+      </p>
     </div>
 
+    <!-- Right Quick Actions (Try-on studio link & Mobile Category Drawer Toggle) -->
     <div class="flex items-center gap-3">
-      <span class="text-xs text-slate-500 font-medium font-mono">{{ filteredProducts.length }} modèles disponibles</span>
-      <a routerLink="/try-on" class="btn-opti btn-opti-gold btn-opti-sm shadow-sm">
-        <i class="fa-solid fa-camera"></i> Essayage 3D Studio
+      <button (click)="toggleMobileDrawer()" class="lg:hidden btn-opti btn-opti-dark text-xs py-2 px-3 flex items-center gap-2">
+        <i class="fa-solid fa-bars"></i> Catégories
+      </button>
+
+      <a routerLink="/try-on" class="btn-hero-primary py-2 px-4 text-xs shadow-xs">
+        <i class="fa-solid fa-camera text-amber-400"></i> Studio 3D
       </a>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+  <!-- 3. CONTROL TOP BAR (Search + Filters Toggle + Sort + View Mode) -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
     
-    <!-- LEFT SIDEBAR: SMART FILTERS (#6) -->
-    <div class="lg:col-span-3 space-y-6">
+    <!-- Left: Search Box -->
+    <div class="relative flex-1 max-w-md">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+      <input type="text" 
+             [(ngModel)]="filters.searchQuery" 
+             (ngModelChange)="applyFilters()" 
+             placeholder="Rechercher une monture, marque, modèle..." 
+             class="w-full pl-9 pr-4 py-2 text-xs border border-slate-200 rounded-xl outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-500/10 transition">
+    </div>
+
+    <!-- Right Controls: Filter Toggle, Counter, Sort By, View Mode -->
+    <div class="flex flex-wrap items-center justify-between md:justify-end gap-3 text-xs">
       
-      <div class="card-opti p-6 space-y-6">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
-          <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-sliders text-amber-700"></i> Filtres Intelligents
-          </h3>
-          <button (click)="resetFilters()" class="text-xs text-amber-700 font-bold hover:underline">Réinitialiser</button>
-        </div>
+      <!-- Filter Panel Toggle Button -->
+      <button (click)="toggleFilterPanel()" 
+              [class.bg-amber-50]="showFilterPanel"
+              [class.border-amber-600]="showFilterPanel"
+              class="px-3 py-2 border border-slate-200 rounded-xl text-slate-700 font-semibold hover:border-amber-600 hover:text-amber-700 transition flex items-center gap-2">
+        <i class="fa-solid fa-sliders text-amber-600"></i>
+        <span>Filtres</span>
+        <i class="fa-solid" [class.fa-chevron-up]="showFilterPanel" [class.fa-chevron-down]="!showFilterPanel"></i>
+      </button>
 
-        <!-- Search Bar -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Recherche Marque / Modèle</label>
-          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" placeholder="Ex: Ray-Ban, Tom Ford..." class="form-control-opti text-xs">
-        </div>
+      <!-- Counter -->
+      <span class="text-slate-500 font-medium hidden sm:inline">
+        <strong class="text-slate-900 font-mono">{{ filteredProducts.length }}</strong> modèles
+      </span>
 
-        <!-- Category -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Catégorie</label>
-          <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="form-control-opti text-xs">
-            <option value="ALL">Toutes les Catégories</option>
-            <option value="LUNETTES_VUE">Lunettes de Vue</option>
-            <option value="LUNETTES_SOLEIL">Lunettes de Soleil</option>
-            <option value="LENTILLES">Lentilles de Contact</option>
-          </select>
-        </div>
+      <!-- Sort Dropdown -->
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 hidden xl:inline">Trier:</span>
+        <select [(ngModel)]="sortBy" (change)="applyFilters()" class="border border-slate-200 rounded-xl text-xs py-2 px-3 bg-white text-slate-800 font-semibold outline-none focus:border-amber-600">
+          <option value="POPULAR">Plus Populaires</option>
+          <option value="NEWEST">Nouveautés 2026</option>
+          <option value="PRICE_LOW">Prix : Croissant</option>
+          <option value="PRICE_HIGH">Prix : Décroissant</option>
+        </select>
+      </div>
 
-        <!-- Genre -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Genre</label>
-          <select [(ngModel)]="selectedGender" (change)="applyFilters()" class="form-control-opti text-xs">
-            <option value="ALL">Tous les Genres</option>
-            <option value="HOMME">Homme</option>
-            <option value="FEMME">Femme</option>
-            <option value="UNISEX">Unisex / Mixte</option>
-          </select>
-        </div>
-
-        <!-- Marque -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Marque</label>
-          <select [(ngModel)]="selectedBrand" (change)="applyFilters()" class="form-control-opti text-xs">
-            <option value="ALL">Toutes les Marques</option>
-            <option *ngFor="let brand of brandsList" [value]="brand">{{ brand }}</option>
-          </select>
-        </div>
-
-        <!-- Forme de Monture -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Forme de Monture</label>
-          <select [(ngModel)]="selectedShape" (change)="applyFilters()" class="form-control-opti text-xs">
-            <option value="ALL">Toutes les Formes</option>
-            <option value="CARRE">Carrée</option>
-            <option value="ROND">Ronde</option>
-            <option value="OVALE">Ovale</option>
-            <option value="PAPILLON">Papillon</option>
-            <option value="RECTANGLE">Rectangle</option>
-          </select>
-        </div>
-
-        <!-- Matière -->
-        <div>
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Matière</label>
-          <select [(ngModel)]="selectedMaterial" (change)="applyFilters()" class="form-control-opti text-xs">
-            <option value="ALL">Toutes les Matières</option>
-            <option value="TITANE">Titane Japonnais</option>
-            <option value="ACETATE">Acétate de Cellulose</option>
-            <option value="METAL">Métal Brossé</option>
-          </select>
-        </div>
-
-        <!-- Prix Max Filter -->
-        <div>
-          <div class="flex justify-between items-center mb-1 text-xs">
-            <span class="form-label uppercase font-bold text-slate-400">Prix Maximum</span>
-            <span class="font-bold text-slate-900 font-mono">{{ maxPrice }} DT</span>
-          </div>
-          <input type="range" min="150" max="1200" step="50" [(ngModel)]="maxPrice" (change)="applyFilters()" class="w-full accent-amber-700">
-        </div>
-
+      <!-- View Mode Buttons (Grid / List) -->
+      <div class="flex border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+        <button (click)="viewMode = 'GRID'" 
+                [class.bg-white]="viewMode === 'GRID'" 
+                [class.text-amber-700]="viewMode === 'GRID'"
+                [class.shadow-xs]="viewMode === 'GRID'"
+                class="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 transition" 
+                title="Vue Grille">
+          <i class="fa-solid fa-border-all"></i>
+        </button>
+        <button (click)="viewMode = 'LIST'" 
+                [class.bg-white]="viewMode === 'LIST'" 
+                [class.text-amber-700]="viewMode === 'LIST'"
+                [class.shadow-xs]="viewMode === 'LIST'"
+                class="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 transition" 
+                title="Vue Liste">
+          <i class="fa-solid fa-list"></i>
+        </button>
       </div>
 
     </div>
+  </div>
 
-    <!-- RIGHT: PRODUCTS GRID (Col 9) -->
-    <div class="lg:col-span-9 space-y-6">
+  <!-- 4. COLLAPSIBLE FILTER PANEL -->
+  <div *ngIf="showFilterPanel" class="animate-fade-in">
+    <app-filter-panel [filters]="filters" [brandsList]="brandsList" (filterChange)="onFilterChange($event)" (resetFilters)="resetFilters()"></app-filter-panel>
+  </div>
+
+  <!-- 5. MAIN CONTENT AREA: PRODUCTS (LEFT/CENTER) & CATEGORIES SIDEBAR (RIGHT) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT / CENTER: PRODUCTS GRID OR LIST (Col 9) -->
+    <main class="lg:col-span-9 space-y-6">
       
-      <!-- Sort Bar -->
-      <div class="card-opti p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-semibold text-slate-600">
-        <span class="text-slate-500">Affichage de <span class="text-slate-900 font-bold">{{ filteredProducts.length }}</span> résultats</span>
+      <!-- GRID VIEW -->
+      <div *ngIf="filteredProducts.length > 0 && viewMode === 'GRID'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <div class="flex items-center gap-2">
-          <span>Trier par :</span>
-          <select [(ngModel)]="sortBy" (change)="applyFilters()" class="form-control-opti text-xs py-1.5 px-3">
-            <option value="POPULAR">Les Plus Populaires</option>
-            <option value="NEWEST">Nouveautés 2026</option>
-            <option value="PRICE_LOW">Prix : Croissant</option>
-            <option value="PRICE_HIGH">Prix : Décroissant</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Products Grid -->
-      <div *ngIf="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <div *ngFor="let product of filteredProducts" class="card-opti group flex flex-col overflow-hidden bg-white">
+        <div *ngFor="let product of filteredProducts" class="product-card-luxury group">
           
-          <div class="relative h-64 bg-slate-50 overflow-hidden flex items-center justify-center p-6">
-            <img [src]="product.imageUrl" [alt]="product.name" class="max-h-full object-contain transition duration-500 group-hover:opacity-0 group-hover:scale-105">
-            <img [src]="product.secondaryImageUrl" [alt]="product.name" class="max-h-full object-contain absolute inset-0 m-auto opacity-0 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
+          <!-- Image Stage -->
+          <div class="product-img-wrapper">
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-img-primary">
+            <img [src]="product.secondaryImageUrl" [alt]="product.name" class="product-img-secondary">
 
-            <button (click)="toggleFavorite(product.id)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/90 text-slate-600 hover:text-red-500 flex items-center justify-center shadow-md transition">
-              <i class="fa-solid fa-heart text-sm" [class.text-red-500]="isFavorite(product.id)" [class.fa-regular]="!isFavorite(product.id)"></i>
+            <!-- Badges Top Left -->
+            <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+              <span *ngIf="product.isNewArrival" class="bg-amber-500 text-slate-950 font-bold text-[9px] uppercase px-2 py-0.5 rounded-full shadow-xs tracking-wider">Nouveau</span>
+              
+              <!-- 3D Try-On Badge based on Backend availability -->
+              <span *ngIf="product.tryOn3dAvailable" class="badge-tryon-pill">
+                <i class="fa-solid fa-camera"></i> 3D Try-On
+              </span>
+            </div>
+
+            <!-- Favorite Heart Button Top Right -->
+            <button (click)="toggleFavorite(product.id)" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-600 hover:text-red-500 flex items-center justify-center shadow-md transition transform hover:scale-110">
+              <i class="fa-solid fa-heart text-xs" [class.text-red-500]="isFavorite(product.id)" [class.fa-regular]="!isFavorite(product.id)"></i>
             </button>
 
-            <span *ngIf="product.tryOn3dAvailable" class="absolute top-4 left-4 z-10 badge-opti bg-indigo-100 text-indigo-800 border border-indigo-200">
-              <i class="fa-solid fa-camera text-[10px]"></i> 3D Try-On
-            </span>
-
-            <div class="absolute bottom-4 left-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition duration-300 flex gap-2">
-              <button (click)="openDetailModal(product)" class="btn-opti btn-opti-dark text-xs py-2 flex-1 shadow-lg">
+            <!-- Hover Quick Actions -->
+            <div class="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition duration-300 flex gap-2">
+              <button (click)="openDetailModal(product)" class="bg-slate-900 text-white text-xs font-semibold py-2 px-3 rounded-xl flex-1 shadow-lg hover:bg-slate-800 transition flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-eye"></i> Aperçu
               </button>
-              <a routerLink="/try-on" [queryParams]="{productId: product.id}" class="btn-opti btn-opti-gold text-xs py-2 px-3 shadow-lg" title="Essayer en 3D">
+              <a *ngIf="product.tryOn3dAvailable" routerLink="/try-on" [queryParams]="{productId: product.id}" class="bg-amber-500 text-slate-950 font-bold text-xs py-2 px-3 rounded-xl shadow-lg hover:bg-amber-400 transition flex items-center justify-center" title="Essayer en 3D">
                 <i class="fa-solid fa-camera"></i>
               </a>
             </div>
           </div>
 
+          <!-- Product Details -->
           <div class="p-5 flex-1 flex flex-col justify-between">
             <div>
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-bold text-amber-700 tracking-wider uppercase font-mono">{{ product.brand }}</span>
-                <span class="text-[11px] text-slate-400 font-mono">{{ product.shape }}</span>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-[11px] font-extrabold text-amber-700 tracking-widest uppercase font-mono">{{ product.brand }}</span>
+                <span class="text-[10px] text-slate-400 uppercase font-mono font-medium">{{ product.shape }}</span>
               </div>
 
-              <h3 class="font-bold text-base text-slate-900 group-hover:text-amber-700 transition line-clamp-1 mb-1">
-                <a [routerLink]="['/produit', product.id]" class="text-slate-900 text-decoration-none hover:text-amber-700">{{ product.name }}</a>
+              <h3 class="font-bold text-sm text-slate-900 group-hover:text-amber-700 transition line-clamp-1 mb-1 font-serif-luxury">
+                <a (click)="openDetailModal(product)" class="text-slate-900 text-decoration-none hover:text-amber-700 cursor-pointer">{{ product.name }}</a>
               </h3>
 
-              <p class="text-xs text-slate-500 line-clamp-2 mb-4">{{ product.description }}</p>
+              <p class="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">{{ product.description }}</p>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+            <!-- Price & CTA -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
               <div>
                 <span class="text-[10px] uppercase text-slate-400 font-bold block">Prix Monture</span>
-                <span class="text-lg font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-xs font-normal">DT</span></span>
+                <span class="text-lg font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-xs font-semibold text-amber-700">DT</span></span>
               </div>
 
-              <button (click)="openDetailModal(product)" class="btn-opti btn-opti-dark btn-opti-sm shadow-sm">
-                <i class="fa-solid fa-bag-shopping"></i> Choisir Verres
+              <button (click)="openDetailModal(product)" class="btn-add-cart-luxury">
+                <i class="fa-solid fa-bag-shopping text-xs"></i> Choisir Verres
               </button>
             </div>
           </div>
@@ -178,21 +183,106 @@
 
       </div>
 
-      <!-- Empty State -->
-      <div *ngIf="filteredProducts.length === 0" class="card-opti p-12 text-center my-8">
-        <i class="fa-solid fa-glasses text-5xl text-slate-300 mb-4"></i>
-        <h3 class="text-xl font-bold text-slate-900 mb-2">Aucun modèle ne correspond à vos filtres</h3>
-        <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">Essayez de modifier votre recherche ou de réinitialiser vos critères.</p>
-        <button (click)="resetFilters()" class="btn-opti btn-opti-gold">Réinitialiser les filtres</button>
+      <!-- LIST VIEW -->
+      <div *ngIf="filteredProducts.length > 0 && viewMode === 'LIST'" class="space-y-4">
+        
+        <div *ngFor="let product of filteredProducts" class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-6 hover:shadow-md transition">
+          
+          <div class="w-full sm:w-48 h-40 bg-slate-50 rounded-xl overflow-hidden relative flex items-center justify-center p-4">
+            <img [src]="product.imageUrl" [alt]="product.name" class="max-h-full object-contain">
+            <span *ngIf="product.tryOn3dAvailable" class="absolute top-2 left-2 badge-tryon-pill text-[10px]">
+              <i class="fa-solid fa-camera"></i> 3D
+            </span>
+          </div>
+
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-amber-700 font-mono uppercase">{{ product.brand }}</span>
+              <span class="text-slate-300">•</span>
+              <span class="text-xs text-slate-500 uppercase font-mono">{{ product.shape }}</span>
+            </div>
+
+            <h3 class="font-bold text-lg text-slate-900 font-serif-luxury">{{ product.name }}</h3>
+            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{{ product.description }}</p>
+
+            <div class="flex items-center gap-4 text-xs text-slate-400 pt-1">
+              <span>Matière: <strong class="text-slate-700">{{ product.material }}</strong></span>
+              <span>Genre: <strong class="text-slate-700">{{ product.gender }}</strong></span>
+            </div>
+          </div>
+
+          <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 gap-3">
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Prix Monture</span>
+              <span class="text-2xl font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-sm font-semibold text-amber-700">DT</span></span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button (click)="toggleFavorite(product.id)" class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-red-500 transition">
+                <i class="fa-solid fa-heart" [class.text-red-500]="isFavorite(product.id)" [class.fa-regular]="!isFavorite(product.id)"></i>
+              </button>
+              <button (click)="openDetailModal(product)" class="btn-add-cart-luxury py-2.5 px-4">
+                Choisir Verres
+              </button>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
+      <!-- EMPTY STATE -->
+      <div *ngIf="filteredProducts.length === 0" class="bg-white border border-slate-200 rounded-3xl p-12 text-center my-6 space-y-4">
+        <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-2xl shadow-xs">
+          <i class="fa-solid fa-glasses"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 font-serif-luxury">Aucun modèle ne correspond à vos filtres</h3>
+        <p class="text-slate-500 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
+          Essayez de modifier votre recherche textuelle ou de réinitialiser vos critères de sélection.
+        </p>
+        <button (click)="resetFilters()" class="btn-hero-primary py-2.5 px-5 text-xs inline-flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> Réinitialiser les filtres
+        </button>
+      </div>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR: CATEGORY SIDEBAR COMPONENT (DESKTOP ONLY lg:col-span-3) -->
+    <aside class="hidden lg:block lg:col-span-3 sticky top-24">
+      <app-category-sidebar [currentRoutePath]="currentRoutePath"
+                            [activeGender]="filters.gender"
+                            [activeBrand]="filters.brand">
+      </app-category-sidebar>
+    </aside>
+
+  </div>
+
+</div>
+
+<!-- MOBILE CATEGORY DRAWER / SHEET -->
+<div *ngIf="showMobileCategoryDrawer" class="fixed inset-0 z-50 lg:hidden flex">
+  <!-- Backdrop -->
+  <div (click)="toggleMobileDrawer()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs animate-fade-in"></div>
+
+  <!-- Drawer Body -->
+  <div class="relative w-80 max-w-full bg-white ml-auto h-full p-6 shadow-2xl overflow-y-auto animate-slide-left z-10">
+    <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-100">
+      <h3 class="font-bold text-sm text-slate-900 uppercase font-serif-luxury">Navigation Catégories</h3>
+      <button (click)="toggleMobileDrawer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
 
+    <app-category-sidebar [currentRoutePath]="currentRoutePath"
+                          [activeGender]="filters.gender"
+                          [activeBrand]="filters.brand"
+                          (categorySelected)="toggleMobileDrawer()">
+    </app-category-sidebar>
   </div>
 </div>
 
-<!-- Modal Optical Lens Selection -->
-<div *ngIf="selectedProductForModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
+<!-- LENS SELECTION MODAL -->
+<div *ngIf="selectedProductForModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
   <div class="bg-white rounded-3xl max-w-3xl w-full p-6 lg:p-8 shadow-2xl relative border border-slate-200">
     
     <button (click)="closeDetailModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center">
@@ -200,17 +290,27 @@
     </button>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div class="bg-slate-50 p-6 rounded-2xl flex items-center justify-center h-72">
+      
+      <div class="bg-slate-50 p-6 rounded-2xl flex items-center justify-center h-72 relative">
         <img [src]="selectedProductForModal.imageUrl" [alt]="selectedProductForModal.name" class="max-h-full object-contain">
+        
+        <span *ngIf="selectedProductForModal.tryOn3dAvailable" class="absolute top-3 left-3 badge-tryon-pill">
+          <i class="fa-solid fa-camera"></i> 3D Try-On
+        </span>
       </div>
 
       <div class="space-y-4">
-        <span class="badge badge-opti-gold">{{ selectedProductForModal.brand }}</span>
-        <h3 class="text-2xl font-bold text-slate-900 font-serif">{{ selectedProductForModal.name }}</h3>
-        
-        <div class="space-y-2">
-          <label class="form-label text-xs uppercase font-bold text-slate-400">Choix des Verres Optiques</label>
-          <div *ngFor="let opt of lensOptions" (click)="selectLens(opt)" [class.border-amber-600]="selectedLensType === opt.label" [class.bg-amber-50]="selectedLensType === opt.label" class="p-3 rounded-xl border border-slate-200 cursor-pointer text-xs flex justify-between items-center transition">
+        <span class="text-xs font-bold text-amber-700 uppercase tracking-widest font-mono">{{ selectedProductForModal.brand }}</span>
+        <h3 class="text-2xl font-bold text-slate-900 font-serif-luxury">{{ selectedProductForModal.name }}</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">{{ selectedProductForModal.description }}</p>
+
+        <div class="space-y-2 pt-2">
+          <label class="form-label text-[11px] uppercase font-bold text-slate-400 block">Choix des Verres Optiques</label>
+          <div *ngFor="let opt of lensOptions" 
+               (click)="selectLens(opt)" 
+               [class.border-amber-600]="selectedLensType === opt.label" 
+               [class.bg-amber-50]="selectedLensType === opt.label" 
+               class="p-3 rounded-xl border border-slate-200 cursor-pointer text-xs flex justify-between items-center transition">
             <span class="font-semibold text-slate-800">{{ opt.label }}</span>
             <span class="font-mono font-bold text-amber-700">+{{ opt.price }} DT</span>
           </div>
@@ -218,15 +318,21 @@
 
         <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
           <div>
-            <span class="text-xs text-slate-400 block">Total Équipement:</span>
-            <span class="text-2xl font-extrabold text-slate-900 font-mono">{{ selectedProductForModal.priceTnd + selectedLensPrice }} DT</span>
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Total Équipement:</span>
+            <span class="text-2xl font-extrabold text-slate-900 font-mono">{{ selectedProductForModal.priceTnd + selectedLensPrice }} <span class="text-sm font-semibold text-amber-700">DT</span></span>
           </div>
 
-          <button (click)="addToCart(selectedProductForModal)" class="btn-opti btn-opti-dark py-3 px-6 shadow-md">
-            <i class="fa-solid fa-bag-shopping"></i> Ajouter au Panier
-          </button>
+          <div class="flex gap-2">
+            <a *ngIf="selectedProductForModal.tryOn3dAvailable" routerLink="/try-on" [queryParams]="{productId: selectedProductForModal.id}" (click)="closeDetailModal()" class="btn-hero-primary py-2.5 px-3 text-xs" title="Essayer en 3D">
+              <i class="fa-solid fa-camera"></i>
+            </a>
+            <button (click)="addToCart(selectedProductForModal)" class="btn-add-cart-luxury py-2.5 px-5 shadow-md">
+              <i class="fa-solid fa-bag-shopping"></i> Ajouter au Panier
+            </button>
+          </div>
         </div>
       </div>
+
     </div>
 
   </div>

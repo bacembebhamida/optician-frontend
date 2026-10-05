@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { 
   Product, CartItem, Prescription, Appointment, Order, 
-  OptiStore, LoyaltyProfile, NotificationItem, LensSelection 
+  OptiStore, LoyaltyProfile, NotificationItem, LensSelection, CategoryTreeItem 
 } from '../models/optivision.models';
 
 @Injectable({
@@ -378,6 +378,79 @@ export class OptiVisionService {
   // --- PRODUCTS ---
   getProducts(): Observable<Product[]> {
     return of(this.mockProducts);
+  }
+
+  // --- CATEGORIES ---
+  getCategories(): Observable<CategoryTreeItem[]> {
+    return of([
+      {
+        id: 1,
+        name: 'Lunettes de vue',
+        slug: 'lunettes-de-vue',
+        route: '/lunettes-de-vue',
+        isOpen: true,
+        children: [
+          { id: 11, name: 'Hommes', slug: 'hommes', route: '/lunettes-de-vue', queryParams: { gender: 'HOMME' } },
+          { id: 12, name: 'Femmes', slug: 'femmes', route: '/lunettes-de-vue', queryParams: { gender: 'FEMME' } },
+          { id: 13, name: 'Enfants', slug: 'enfants', route: '/lunettes-de-vue', queryParams: { gender: 'ENFANT' } },
+          { id: 14, name: 'Unisexe', slug: 'unisexe', route: '/lunettes-de-vue', queryParams: { gender: 'UNISEX' } }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Lunettes de soleil',
+        slug: 'lunettes-de-soleil',
+        route: '/lunettes-de-soleil',
+        isOpen: true,
+        children: [
+          { id: 21, name: 'Hommes', slug: 'hommes', route: '/lunettes-de-soleil', queryParams: { gender: 'HOMME' } },
+          { id: 22, name: 'Femmes', slug: 'femmes', route: '/lunettes-de-soleil', queryParams: { gender: 'FEMME' } },
+          { id: 23, name: 'Enfants', slug: 'enfants', route: '/lunettes-de-soleil', queryParams: { gender: 'ENFANT' } },
+          { id: 24, name: 'Unisexe', slug: 'unisexe', route: '/lunettes-de-soleil', queryParams: { gender: 'UNISEX' } }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Lentilles',
+        slug: 'lentilles',
+        route: '/lentilles',
+        isOpen: true,
+        children: [
+          { id: 31, name: 'Journalières', slug: 'journalieres', route: '/lentilles', queryParams: { type: 'JOURNALIER' } },
+          { id: 32, name: 'Mensuelles', slug: 'mensuelles', route: '/lentilles', queryParams: { type: 'MENSUEL' } },
+          { id: 33, name: 'Lentilles couleur', slug: 'couleur', route: '/lentilles', queryParams: { type: 'COULEUR' } }
+        ]
+      },
+      {
+        id: 4,
+        name: 'Accessoires',
+        slug: 'accessoires',
+        route: '/accessoires',
+        isOpen: false,
+        children: [
+          { id: 41, name: 'Étuis', slug: 'etuis', route: '/accessoires', queryParams: { type: 'ETUI' } },
+          { id: 42, name: 'Produits d\'entretien', slug: 'entretien', route: '/accessoires', queryParams: { type: 'ENTRETIEN' } },
+          { id: 43, name: 'Cordons', slug: 'cordons', route: '/accessoires', queryParams: { type: 'CORDON' } },
+          { id: 44, name: 'Accessoires lunettes', slug: 'accessoires-optiques', route: '/accessoires', queryParams: { type: 'DIVERS' } }
+        ]
+      },
+      {
+        id: 5,
+        name: 'Marques',
+        slug: 'marques',
+        route: '/marques',
+        isOpen: true,
+        children: [
+          { id: 51, name: 'Ray-Ban', slug: 'ray-ban', route: '/marques', queryParams: { brand: 'Ray-Ban' } },
+          { id: 52, name: 'Oakley', slug: 'oakley', route: '/marques', queryParams: { brand: 'Oakley' } },
+          { id: 53, name: 'Tom Ford', slug: 'tom-ford', route: '/marques', queryParams: { brand: 'Tom Ford' } },
+          { id: 54, name: 'Gucci', slug: 'gucci', route: '/marques', queryParams: { brand: 'Gucci' } },
+          { id: 55, name: 'Prada', slug: 'prada', route: '/marques', queryParams: { brand: 'Prada' } },
+          { id: 56, name: 'Persol', slug: 'persol', route: '/marques', queryParams: { brand: 'Persol' } },
+          { id: 57, name: 'Air Optix', slug: 'air-optix', route: '/marques', queryParams: { brand: 'Air Optix' } }
+        ]
+      }
+    ]);
   }
 
   addProduct(product: Product): Observable<Product> {

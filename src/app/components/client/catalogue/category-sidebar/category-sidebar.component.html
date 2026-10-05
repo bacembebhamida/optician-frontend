@@ -1,0 +1,84 @@
+<aside class="category-sidebar-wrapper" aria-label="Navigation des catégories optiques">
+  
+  <div class="category-sidebar-card">
+    
+    <!-- Sidebar Header -->
+    <div class="sidebar-header flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-4 bg-amber-600 rounded-full"></span>
+        <h3 class="font-extrabold text-xs tracking-widest uppercase text-slate-900 font-serif-luxury">
+          Catégories
+        </h3>
+      </div>
+      <span class="text-[10px] text-amber-700 font-mono font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
+        OptiVision
+      </span>
+    </div>
+
+    <!-- Loading State Skeleton -->
+    <div *ngIf="isLoading" class="space-y-3 py-2 animate-pulse">
+      <div class="h-6 bg-slate-100 rounded-lg w-full"></div>
+      <div class="h-6 bg-slate-100 rounded-lg w-4/5"></div>
+      <div class="h-6 bg-slate-100 rounded-lg w-3/4"></div>
+    </div>
+
+    <!-- Category Tree List -->
+    <ul *ngIf="!isLoading" class="category-tree-list" role="tree">
+      <li *ngFor="let cat of categories" class="category-parent-node" role="treeitem" [attr.aria-expanded]="cat.isOpen">
+        
+        <!-- Parent Header Row -->
+        <div class="parent-row" 
+             [class.active-parent]="isParentActive(cat)"
+             (click)="onSelectCategory(cat, $event)">
+          
+          <span class="parent-label flex items-center gap-2">
+            <span *ngIf="isParentActive(cat)" class="active-dot"></span>
+            <span class="font-bold text-xs text-slate-800 hover:text-amber-700 transition font-serif-luxury">
+              {{ cat.name }}
+            </span>
+          </span>
+
+          <!-- Expand Toggle Button -->
+          <button *ngIf="cat.children && cat.children.length > 0" 
+                  type="button"
+                  (click)="toggleExpand(cat, $event)"
+                  class="toggle-expand-btn"
+                  [attr.aria-label]="'Toggle ' + cat.name">
+            <i class="fa-solid" [class.fa-chevron-down]="cat.isOpen" [class.fa-chevron-right]="!cat.isOpen"></i>
+          </button>
+        </div>
+
+        <!-- Subcategories Animated Container -->
+        <ul *ngIf="cat.children && cat.children.length > 0 && cat.isOpen" 
+            class="subcategory-list space-y-1 mt-1 mb-2 pl-3 border-l border-slate-100">
+          <li *ngFor="let sub of cat.children" role="treeitem">
+            <a (click)="onSelectCategory(sub, $event)" 
+               class="sub-item-link"
+               [class.active-sub]="isCategoryActive(sub)">
+              <i class="fa-solid fa-angle-right text-[10px] text-slate-300 transition-transform group-hover:translate-x-0.5"></i>
+              <span class="text-xs font-medium text-slate-600 hover:text-amber-700 transition">
+                {{ sub.name }}
+              </span>
+            </a>
+          </li>
+        </ul>
+
+      </li>
+    </ul>
+
+    <!-- Quick Optical Service Callout Box -->
+    <div class="mt-6 p-4 rounded-xl bg-slate-900 text-white text-xs space-y-2 border border-slate-800">
+      <div class="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
+        <i class="fa-solid fa-shield-halved"></i> Service Opticien Certifié
+      </div>
+      <p class="text-[11px] text-slate-300 leading-relaxed">
+        Besoin d'aide pour choisir la bonne réfraction ou monture ?
+      </p>
+      <a routerLink="/rdv" class="inline-flex items-center gap-1.5 text-xs text-amber-400 font-bold hover:underline pt-1">
+        Prendre rendez-vous <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      </a>
+    </div>
+
+  </div>
+
+</aside>

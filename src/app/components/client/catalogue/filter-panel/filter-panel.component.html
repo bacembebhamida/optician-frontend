@@ -1,0 +1,84 @@
+<div class="filter-panel-card p-5 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-5">
+  
+  <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-900 flex items-center gap-2 font-serif-luxury">
+      <i class="fa-solid fa-sliders text-amber-600"></i> Filtres Produits
+    </h3>
+    <button (click)="onReset()" class="text-xs text-amber-700 font-bold hover:underline">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    
+    <!-- Genre -->
+    <div>
+      <label class="form-label text-[11px] uppercase font-bold text-slate-400 block mb-1">Genre</label>
+      <select [(ngModel)]="filters.gender" (change)="onModelChange()" class="form-control-opti text-xs py-2">
+        <option value="ALL">Tous les Genres</option>
+        <option value="HOMME">Homme</option>
+        <option value="FEMME">Femme</option>
+        <option value="ENFANT">Enfant</option>
+        <option value="UNISEX">Unisexe / Mixte</option>
+      </select>
+    </div>
+
+    <!-- Marque -->
+    <div>
+      <label class="form-label text-[11px] uppercase font-bold text-slate-400 block mb-1">Marque</label>
+      <select [(ngModel)]="filters.brand" (change)="onModelChange()" class="form-control-opti text-xs py-2">
+        <option value="ALL">Toutes les Marques</option>
+        <option *ngFor="let b of brandsList" [value]="b">{{ b }}</option>
+      </select>
+    </div>
+
+    <!-- Forme -->
+    <div>
+      <label class="form-label text-[11px] uppercase font-bold text-slate-400 block mb-1">Forme Monture</label>
+      <select [(ngModel)]="filters.shape" (change)="onModelChange()" class="form-control-opti text-xs py-2">
+        <option value="ALL">Toutes les Formes</option>
+        <option value="CARRE">Carrée</option>
+        <option value="ROND">Ronde</option>
+        <option value="OVALE">Ovale</option>
+        <option value="PAPILLON">Papillon</option>
+        <option value="AVIATEUR">Aviateur</option>
+        <option value="RECTANGLE">Rectangle</option>
+      </select>
+    </div>
+
+    <!-- Matière -->
+    <div>
+      <label class="form-label text-[11px] uppercase font-bold text-slate-400 block mb-1">Matière</label>
+      <select [(ngModel)]="filters.material" (change)="onModelChange()" class="form-control-opti text-xs py-2">
+        <option value="ALL">Toutes les Matières</option>
+        <option value="TITANE">Titane Pure Ultra-Léger</option>
+        <option value="ACETATE">Acétate Fait Main</option>
+        <option value="METAL">Métal Brossé</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-center pt-2 border-t border-slate-100">
+    
+    <!-- Prix Max Slider -->
+    <div class="lg:col-span-6">
+      <div class="flex justify-between items-center text-xs mb-1">
+        <span class="font-bold text-slate-500 uppercase text-[10px]">Prix Max</span>
+        <span class="font-bold text-slate-900 font-mono text-xs">{{ filters.maxPrice }} DT</span>
+      </div>
+      <input type="range" min="150" max="1500" step="50" [(ngModel)]="filters.maxPrice" (change)="onModelChange()" class="w-full accent-amber-600">
+    </div>
+
+    <!-- 3D Try-On Toggle -->
+    <div class="lg:col-span-6 flex items-center justify-end gap-3 pt-2 sm:pt-0">
+      <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 bg-indigo-50/70 border border-indigo-200/60 px-3 py-1.5 rounded-xl">
+        <input type="checkbox" [(ngModel)]="filters.only3dAvailable" (change)="onModelChange()" class="rounded text-amber-600 focus:ring-amber-500">
+        <i class="fa-solid fa-camera text-indigo-600 text-xs"></i>
+        <span>3D Try-On Uniquement</span>
+      </label>
+    </div>
+
+  </div>
+
+</div>
