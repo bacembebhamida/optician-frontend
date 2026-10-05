@@ -1,0 +1,226 @@
+<header class="opti-header" role="banner">
+
+  <!-- ── LUXURY ANNOUNCEMENT BAR ────────────────────────────────────── -->
+  <div class="announce-bar">
+    <div class="announce-content">
+      <span class="announce-sparkle">✦</span>
+      <span class="announce-text">Livraison offerte en Tunisie &nbsp;·&nbsp; Essayage virtuel 3D disponible &nbsp;·&nbsp;</span>
+      <a routerLink="/rdv" class="announce-link">Prendre rendez-vous en boutique</a>
+    </div>
+    <a routerLink="/magasins" class="announce-stores">
+      <i class="fa-solid fa-compass"></i>
+      <span>Nos Boutiques</span>
+    </a>
+  </div>
+
+  <!-- ── MAIN HEADER CONTAINER ──────────────────────────────────────── -->
+  <div class="header-main">
+
+    <!-- Brand Logo -->
+    <a routerLink="/" class="header-logo" aria-label="OptiVision Haute Lunetterie — Accueil">
+      <div class="logo-emblem">
+        <i class="fa-solid fa-glasses"></i>
+      </div>
+      <div class="logo-typography">
+        <span class="logo-title">OPTI<span class="logo-gold">VISION</span></span>
+        <span class="logo-subtitle">HAUTE LUNETTERIE</span>
+      </div>
+    </a>
+
+    <!-- Navigation Menu (Desktop) -->
+    <nav class="header-nav" aria-label="Navigation principale">
+      <a routerLink="/"
+         routerLinkActive="nav-active"
+         [routerLinkActiveOptions]="{exact:true}"
+         class="nav-item">
+        <span>Accueil</span>
+      </a>
+
+      <a routerLink="/lunettes"
+         routerLinkActive="nav-active"
+         class="nav-item">
+        <span>Lunettes de Vue</span>
+      </a>
+
+      <a routerLink="/soleil"
+         routerLinkActive="nav-active"
+         class="nav-item">
+        <span>Lunettes de Soleil</span>
+      </a>
+
+      <a routerLink="/lentilles"
+         routerLinkActive="nav-item--active"
+         class="nav-item">
+        <span>Lentilles</span>
+      </a>
+
+      <a routerLink="/marques"
+         routerLinkActive="nav-active"
+         class="nav-item">
+        <span>Maison &amp; Marques</span>
+      </a>
+
+      <!-- Virtual Try-On Badge -->
+      <a routerLink="/try-on"
+         routerLinkActive="tryon-active"
+         class="nav-item nav-tryon">
+        <span class="tryon-pulse"></span>
+        <i class="fa-solid fa-camera"></i>
+        <span>Essayage Virtuel 3D</span>
+      </a>
+
+      <a routerLink="/rdv"
+         routerLinkActive="nav-active"
+         class="nav-item">
+        <span>Rendez-vous</span>
+      </a>
+    </nav>
+
+    <!-- Header Actions Right -->
+    <div class="header-actions">
+
+      <!-- Search Trigger -->
+      <button class="icon-action-btn"
+              (click)="isSearchOpen = !isSearchOpen"
+              [class.action-active]="isSearchOpen"
+              aria-label="Rechercher"
+              title="Rechercher un modèle ou une marque">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <!-- Wishlist / Favorites -->
+      <a routerLink="/mon-compte"
+         class="icon-action-btn"
+         aria-label="Mes Favoris"
+         title="Mes Favoris">
+        <i class="fa-regular fa-heart"></i>
+        <span *ngIf="favoriteCount > 0" class="badge-count">{{ favoriteCount }}</span>
+      </a>
+
+      <!-- Shopping Cart -->
+      <a routerLink="/panier"
+         class="icon-action-btn cart-btn"
+         aria-label="Panier"
+         title="Mon Panier">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span *ngIf="cartCount > 0" class="badge-count badge-cart">{{ cartCount }}</span>
+      </a>
+
+      <div class="action-divider"></div>
+
+      <!-- Account State -->
+      <ng-container *ngIf="currentUser; else guestAccount">
+        <div class="user-menu-wrap">
+          <a [routerLink]="accountLink" class="user-chip" [title]="'Espace ' + displayName">
+            <div class="user-avatar-small">
+              <i class="fa-regular fa-user"></i>
+            </div>
+            <span class="user-name-text">{{ displayName }}</span>
+          </a>
+          <button class="logout-btn" (click)="logout()" title="Se déconnecter">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #guestAccount>
+        <a routerLink="/connexion" class="login-cta-btn">
+          <i class="fa-regular fa-user"></i>
+          <span>Connexion</span>
+        </a>
+      </ng-template>
+
+      <!-- Language Selector -->
+      <div class="lang-picker">
+        <button class="lang-btn-trigger" (click)="isLangOpen = !isLangOpen" [class.open]="isLangOpen">
+          <span class="lang-code">{{ currentLang }}</span>
+          <i class="fa-solid fa-chevron-down lang-icon"></i>
+        </button>
+
+        <div *ngIf="isLangOpen" class="lang-dropdown-menu">
+          <button class="lang-menu-item" [class.active]="currentLang === 'FR'" (click)="setLang('FR'); isLangOpen=false">
+            <span class="flag">🇫🇷</span>
+            <span>Français</span>
+          </button>
+          <button class="lang-menu-item" [class.active]="currentLang === 'EN'" (click)="setLang('EN'); isLangOpen=false">
+            <span class="flag">🇬🇧</span>
+            <span>English</span>
+          </button>
+          <button class="lang-menu-item" [class.active]="currentLang === 'AR'" (click)="setLang('AR'); isLangOpen=false">
+            <span class="flag">🇹🇳</span>
+            <span>العربية</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-hamburger-btn"
+              (click)="toggleMobileMenu()"
+              [class.active]="isMobileMenuOpen"
+              aria-label="Menu Mobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ── SEARCH DRAWER BAR ───────────────────────────────────────────── -->
+  <div *ngIf="isSearchOpen" class="search-drawer-overlay">
+    <div class="search-drawer-content">
+      <i class="fa-solid fa-magnifying-glass search-leading-icon"></i>
+      <input type="text"
+             [(ngModel)]="searchQuery"
+             placeholder="Rechercher une monture, une marque (Ray-Ban, Tom Ford, Chanel...)..."
+             class="search-input-field"
+             autofocus>
+      <button class="search-close-btn" (click)="isSearchOpen = false">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── MOBILE MENU DRAWER ──────────────────────────────────────────── -->
+  <div *ngIf="isMobileMenuOpen" class="mobile-menu-drawer">
+    <div class="mobile-nav-list">
+      <a routerLink="/" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Accueil</a>
+      <a routerLink="/lunettes" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Lunettes de Vue</a>
+      <a routerLink="/soleil" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Lunettes de Soleil</a>
+      <a routerLink="/lentilles" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Lentilles de Contact</a>
+      <a routerLink="/marques" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Maison &amp; Marques</a>
+      <a routerLink="/try-on" (click)="isMobileMenuOpen=false" class="mobile-nav-item mobile-tryon-item">
+        <i class="fa-solid fa-camera"></i>
+        <span>Essayage Virtuel 3D</span>
+      </a>
+      <a routerLink="/rdv" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Prendre Rendez-vous</a>
+      <a routerLink="/magasins" (click)="isMobileMenuOpen=false" class="mobile-nav-item">Nos Boutiques</a>
+
+      <div class="mobile-divider"></div>
+
+      <div class="mobile-user-section">
+        <a *ngIf="!currentUser" routerLink="/connexion" (click)="isMobileMenuOpen=false" class="mobile-login-btn">
+          <i class="fa-regular fa-user"></i>
+          <span>Se connecter / Créer un compte</span>
+        </a>
+        <div *ngIf="currentUser" class="mobile-logged-user">
+          <a [routerLink]="accountLink" (click)="isMobileMenuOpen=false" class="mobile-user-link">
+            <i class="fa-regular fa-user"></i>
+            <span>Mon Espace ({{ displayName }})</span>
+          </a>
+          <button (click)="logout()" class="mobile-logout-btn">Déconnexion</button>
+        </div>
+      </div>
+
+      <div class="mobile-lang-row">
+        <span class="mobile-lang-title">Langue:</span>
+        <div class="mobile-lang-pills">
+          <button [class.active]="currentLang === 'FR'" (click)="setLang('FR')">FR</button>
+          <button [class.active]="currentLang === 'EN'" (click)="setLang('EN')">EN</button>
+          <button [class.active]="currentLang === 'AR'" (click)="setLang('AR')">AR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>

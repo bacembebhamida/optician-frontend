@@ -1,0 +1,256 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+  
+  <!-- Header Title -->
+  <div class="flex justify-between items-center border-b border-slate-200 pb-4">
+    <div>
+      <span class="badge badge-opti-gold mb-1"><i class="fa-solid fa-bag-shopping"></i> Mon Panier Optique</span>
+      <h1 class="text-3xl font-extrabold text-slate-900 font-serif">Votre Commande & Recapitulatif</h1>
+    </div>
+    
+    <a routerLink="/lunettes" class="text-xs text-amber-700 font-bold hover:underline">
+      ← Continuer mes achats
+    </a>
+  </div>
+
+  <!-- ORDER SUCCESS SCREEN -->
+  <div *ngIf="orderSuccess" class="card-opti p-10 bg-white text-center space-y-6 max-w-xl mx-auto animate-fade-in">
+    <div class="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-4xl mx-auto">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+
+    <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Commande Validee !</h2>
+    <span class="badge badge-opti-gold font-mono text-sm">Référence : {{ placedOrder?.orderReference }}</span>
+
+    <p class="text-slate-600 text-sm">
+      Merci pour votre commande chez OptiVision. Nos opticiens entament le taillage de vos verres. Vous serez notifié par SMS à chaque étape de la livraison.
+    </p>
+
+    <div class="pt-4 flex justify-center gap-4">
+      <a routerLink="/mon-compte" class="btn-opti btn-opti-dark">
+        Suivre ma commande dans l'Espace Client
+      </a>
+    </div>
+  </div>
+
+  <!-- CART VIEW (WHEN NOT IN CHECKOUT & CART HAS ITEMS) -->
+  <div *ngIf="!isCheckoutStep && !orderSuccess && cartItems.length > 0" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Cart Items Table (Col 8) -->
+    <div class="lg:col-span-8 space-y-4">
+      
+      <div *ngFor="let item of cartItems" class="card-opti p-5 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-4 w-full sm:w-auto">
+          <img [src]="item.product.imageUrl" [alt]="item.product.name" class="w-20 h-20 object-contain bg-slate-50 p-2 rounded-2xl border border-slate-200 shrink-0">
+          <div>
+            <span class="text-[10px] font-bold text-amber-700 uppercase font-mono">{{ item.product.brand }}</span>
+            <h3 class="font-bold text-base text-slate-900">{{ item.product.name }}</h3>
+            
+            <div *ngIf="item.lensSelection" class="text-xs text-slate-500 mt-1">
+              • Verres : <span class="font-semibold text-slate-800">{{ item.lensSelection.type }}</span> (+{{ item.lensSelection.priceTnd }} DT)
+            </div>
+            
+            <span class="text-xs text-slate-400 block font-mono">Couleur : {{ item.selectedColor }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-0 border-slate-100">
+          <span class="text-lg font-extrabold text-slate-900 font-mono">{{ item.totalPriceTnd }} <span class="text-xs font-normal">DT</span></span>
+          <button (click)="removeItem(item.id)" class="text-slate-400 hover:text-red-500 text-sm p-2">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Order Summary Box (Col 4) -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <div class="card-opti p-6 bg-white space-y-5">
+        <h3 class="font-bold text-base text-slate-900 border-b border-slate-100 pb-3">Récapitulatif de la Commande</h3>
+
+        <!-- Promo Code Field -->
+        <div class="flex gap-2">
+          <input type="text" [(ngModel)]="promoCode" placeholder="Code Promo (Ex: OPTI10)" class="form-control-opti text-xs uppercase">
+          <button (click)="applyPromo()" class="btn-opti btn-opti-dark text-xs py-2">Appliquer</button>
+        </div>
+        <span *ngIf="promoApplied" class="text-xs text-emerald-600 font-bold block"><i class="fa-solid fa-check"></i> Code OPTI10 appliqué (-10%)</span>
+
+        <div class="space-y-2 text-xs text-slate-600 border-t border-slate-100 pt-4">
+          <div class="flex justify-between">
+            <span>Sous-total articles :</span>
+            <span class="font-bold text-slate-900 font-mono">{{ subtotalTnd }} DT</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Frais de Livraison (Tunisie) :</span>
+            <span class="font-bold text-slate-900 font-mono">{{ shippingTnd === 0 ? 'GRATUIT' : shippingTnd + ' DT' }}</span>
+          </div>
+          <div *ngIf="discountTnd > 0" class="flex justify-between text-emerald-600 font-bold">
+            <span>Remise Promo :</span>
+            <span class="font-mono">-{{ discountTnd }} DT</span>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex justify-between items-baseline">
+          <span class="font-extrabold text-base text-slate-900">Total à Payer :</span>
+          <span class="text-2xl font-black text-amber-700 font-mono">{{ grandTotalTnd }} <span class="text-sm font-normal text-slate-700">DT</span></span>
+        </div>
+
+        <button (click)="startCheckout()" class="btn-opti btn-opti-gold w-full text-base py-3.5 shadow-lg">
+          Passer la commande <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- EMPTY CART STATE -->
+  <div *ngIf="!isCheckoutStep && !orderSuccess && cartItems.length === 0" class="card-opti p-12 text-center max-w-lg mx-auto space-y-4">
+    <i class="fa-solid fa-bag-shopping text-5xl text-slate-300"></i>
+    <h2 class="text-2xl font-bold text-slate-900">Votre panier est vide</h2>
+    <p class="text-slate-500 text-sm">Découvrez nos collections de lunettes de vue et de soleil haut de gamme.</p>
+    <a routerLink="/lunettes" class="btn-opti btn-opti-gold">Explorer le Catalogue</a>
+  </div>
+
+  <!-- 3-STEP CHECKOUT WIZARD (#13) -->
+  <div *ngIf="isCheckoutStep && !orderSuccess" class="space-y-8 animate-fade-in max-w-4xl mx-auto">
+    
+    <!-- Steps Header -->
+    <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold font-mono py-2">
+      <div [class.text-amber-700]="checkoutStep >= 1">
+        <div [class.bg-amber-600]="checkoutStep >= 1" class="w-8 h-8 rounded-full text-white flex items-center justify-center mx-auto mb-1">1</div>
+        <span>1. Informations</span>
+      </div>
+
+      <div [class.text-amber-700]="checkoutStep >= 2" [class.text-slate-400]="checkoutStep < 2">
+        <div [class.bg-amber-600]="checkoutStep >= 2" [class.text-white]="checkoutStep >= 2" [class.bg-slate-200]="checkoutStep < 2" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1">2</div>
+        <span>2. Ordonnance</span>
+      </div>
+
+      <div [class.text-amber-700]="checkoutStep >= 3" [class.text-slate-400]="checkoutStep < 3">
+        <div [class.bg-amber-600]="checkoutStep >= 3" [class.text-white]="checkoutStep >= 3" [class.bg-slate-200]="checkoutStep < 3" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1">3</div>
+        <span>3. Paiement</span>
+      </div>
+    </div>
+
+    <div class="card-opti p-6 lg:p-8 bg-white">
+      
+      <!-- CHECKOUT STEP 1: INFORMATIONS -->
+      <div *ngIf="checkoutStep === 1" class="space-y-4">
+        <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">1. Informations de Livraison & Contact</h3>
+
+        <div>
+          <label class="form-label text-xs uppercase font-bold text-slate-400">Nom & Prénom</label>
+          <input type="text" [(ngModel)]="fullName" class="form-control-opti text-sm">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label text-xs uppercase font-bold text-slate-400">Adresse Email</label>
+            <input type="email" [(ngModel)]="email" class="form-control-opti text-sm">
+          </div>
+          <div>
+            <label class="form-label text-xs uppercase font-bold text-slate-400">Numéro Téléphone</label>
+            <input type="text" [(ngModel)]="phone" class="form-control-opti text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label text-xs uppercase font-bold text-slate-400">Adresse Complète de Livraison (Tunisie)</label>
+          <textarea [(ngModel)]="address" rows="2" class="form-control-opti text-sm"></textarea>
+        </div>
+      </div>
+
+      <!-- CHECKOUT STEP 2: PRESCRIPTION LINKING -->
+      <div *ngIf="checkoutStep === 2" class="space-y-4">
+        <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">2. Lier une Ordonnance Médicale</h3>
+
+        <div *ngIf="prescriptions.length > 0" class="space-y-3">
+          <label class="form-label text-xs uppercase font-bold text-slate-400">Sélectionner une ordonnance existante :</label>
+          <div *ngFor="let p of prescriptions" (click)="selectedPrescriptionId = p.id" [class.border-amber-600]="selectedPrescriptionId === p.id" [class.bg-amber-50]="selectedPrescriptionId === p.id" class="p-4 rounded-2xl border border-slate-200 cursor-pointer flex justify-between items-center text-xs">
+            <div>
+              <span class="font-bold text-slate-900 text-sm block">{{ p.prescriberName }}</span>
+              <span class="text-slate-500">Date : {{ p.prescriptionDate }} | OD: Sph {{ p.odSphere }} | OG: Sph {{ p.ogSphere }}</span>
+            </div>
+            <i *ngIf="selectedPrescriptionId === p.id" class="fa-solid fa-circle-check text-amber-700 text-xl"></i>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <a routerLink="/ordonnance" target="_blank" class="text-xs text-amber-700 font-bold hover:underline">
+            + Téléverser une nouvelle ordonnance en PDF →
+          </a>
+        </div>
+      </div>
+
+      <!-- CHECKOUT STEP 3: PAYMENT METHOD -->
+      <div *ngIf="checkoutStep === 3" class="space-y-4">
+        <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">3. Mode de Paiement (TND)</h3>
+
+        <div class="space-y-3">
+          <!-- Option 1: Cash on Delivery -->
+          <div (click)="paymentMethod = 'PAIEMENT_LIVRAISON'" [class.border-amber-600]="paymentMethod === 'PAIEMENT_LIVRAISON'" [class.bg-amber-50]="paymentMethod === 'PAIEMENT_LIVRAISON'" class="p-4 rounded-2xl border border-slate-200 cursor-pointer flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-money-bill-wave text-emerald-600 text-xl"></i>
+              <div>
+                <span class="font-bold text-slate-900 text-sm block">Paiement à la Livraison (Espèces DT)</span>
+                <span class="text-slate-500">Payez directement au livreur à la réception de votre colis.</span>
+              </div>
+            </div>
+            <i *ngIf="paymentMethod === 'PAIEMENT_LIVRAISON'" class="fa-solid fa-circle-check text-amber-700 text-xl"></i>
+          </div>
+
+          <!-- Option 2: Carte Bancaire -->
+          <div (click)="paymentMethod = 'CARTE_BANCAIRE'" [class.border-amber-600]="paymentMethod === 'CARTE_BANCAIRE'" [class.bg-amber-50]="paymentMethod === 'CARTE_BANCAIRE'" class="p-4 rounded-2xl border border-slate-200 cursor-pointer flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-credit-card text-sky-600 text-xl"></i>
+              <div>
+                <span class="font-bold text-slate-900 text-sm block">Carte Bancaire Tunisienne ou Internationale</span>
+                <span class="text-slate-500">Paiement 100% sécurisé via passerelle cryptée.</span>
+              </div>
+            </div>
+            <i *ngIf="paymentMethod === 'CARTE_BANCAIRE'" class="fa-solid fa-circle-check text-amber-700 text-xl"></i>
+          </div>
+
+          <!-- Option 3: Konnect / Flouci -->
+          <div (click)="paymentMethod = 'KONNECT_FLOUCI'" [class.border-amber-600]="paymentMethod === 'KONNECT_FLOUCI'" [class.bg-amber-50]="paymentMethod === 'KONNECT_FLOUCI'" class="p-4 rounded-2xl border border-slate-200 cursor-pointer flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-wallet text-indigo-600 text-xl"></i>
+              <div>
+                <span class="font-bold text-slate-900 text-sm block">Portefeuille Konnect / Flouci</span>
+                <span class="text-slate-500">Paiement mobile instantané par QR Code.</span>
+              </div>
+            </div>
+            <i *ngIf="paymentMethod === 'KONNECT_FLOUCI'" class="fa-solid fa-circle-check text-amber-700 text-xl"></i>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs flex justify-between items-center mt-4">
+          <span>Montant Total Final :</span>
+          <span class="text-2xl font-black text-amber-700 font-mono">{{ grandTotalTnd }} DT</span>
+        </div>
+      </div>
+
+      <!-- Checkout Actions -->
+      <div class="pt-6 border-t border-slate-100 flex justify-between items-center mt-6">
+        <button *ngIf="checkoutStep > 1" (click)="prevCheckoutStep()" class="btn-opti btn-opti-outline">
+          ← Précédent
+        </button>
+
+        <button *ngIf="checkoutStep < 3" (click)="nextCheckoutStep()" class="btn-opti btn-opti-gold ml-auto">
+          Continuer →
+        </button>
+
+        <button *ngIf="checkoutStep === 3" (click)="confirmOrder()" class="btn-opti btn-opti-dark ml-auto py-3.5 px-8 shadow-lg">
+          <i class="fa-solid fa-lock"></i> Valider & Payer {{ grandTotalTnd }} DT
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

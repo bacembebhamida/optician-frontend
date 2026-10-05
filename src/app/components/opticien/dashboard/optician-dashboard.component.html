@@ -1,0 +1,157 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+  
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <div>
+      <span class="badge badge-success mb-2">
+        <i class="fa-solid fa-glasses"></i> Espace Professionnel Opticien
+      </span>
+      <h1 class="text-3xl font-extrabold text-white">Tableau de Bord Opticien Diplômé</h1>
+      <p class="text-slate-400 text-sm">Gestion des rendez-vous clients, validation des ordonnances et suivi de façonnage en atelier.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button (click)="loadAllData()" class="btn btn-secondary text-xs">
+        <i class="fa-solid fa-rotate-right"></i> Actualiser les Données
+      </button>
+    </div>
+  </div>
+
+  <!-- Key Metrics Counter Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    
+    <div class="glass-panel p-5 border-teal-500/30">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">RDV du Jour</span>
+        <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg">
+          <i class="fa-regular fa-calendar-check"></i>
+        </div>
+      </div>
+      <span class="text-3xl font-black text-white block mb-1">{{ appointments.length }}</span>
+      <span class="text-[11px] text-teal-400 font-medium"><i class="fa-solid fa-circle-dot mr-1"></i> Examens & Essayages</span>
+    </div>
+
+    <div class="glass-panel p-5 border-amber-500/30">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Commandes Atelier</span>
+        <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+      </div>
+      <span class="text-3xl font-black text-white block mb-1">{{ orders.length }}</span>
+      <span class="text-[11px] text-amber-400 font-medium"><i class="fa-solid fa-clock mr-1"></i> Taillage & Surfaçage</span>
+    </div>
+
+    <div class="glass-panel p-5 border-blue-500/30">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ordonnances à Traiter</span>
+        <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-file-prescription"></i>
+        </div>
+      </div>
+      <span class="text-3xl font-black text-white block mb-1">{{ prescriptions.length }}</span>
+      <span class="text-[11px] text-blue-400 font-medium"><i class="fa-solid fa-shield-check mr-1"></i> Vérifications de sphère</span>
+    </div>
+
+    <div class="glass-panel p-5 border-purple-500/30">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Stock Montures Magasin</span>
+        <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+      </div>
+      <span class="text-3xl font-black text-white block mb-1">{{ products.length }} réfs</span>
+      <span class="text-[11px] text-purple-400 font-medium"><i class="fa-solid fa-check mr-1"></i> Ray-Ban, Oakley, Gucci...</span>
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Appointments Queue (Col 6) -->
+    <div class="lg:col-span-6 space-y-4">
+      <div class="glass-panel p-6">
+        <h3 class="font-bold text-lg text-white mb-4 flex items-center justify-between">
+          <span><i class="fa-regular fa-calendar-check text-teal-400 mr-2"></i> Rendez-Vous Patients</span>
+          <span class="text-xs text-slate-400 font-mono">{{ appointments.length }} inscrits</span>
+        </h3>
+
+        <div class="space-y-3">
+          <div *ngFor="let app of appointments" class="glass-card p-4 rounded-xl border border-slate-700">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h4 class="font-bold text-sm text-white">{{ app.clientName }}</h4>
+                <p class="text-xs text-slate-400"><i class="fa-solid fa-envelope mr-1"></i> {{ app.clientEmail }} | <i class="fa-solid fa-phone mr-1"></i> {{ app.clientPhone }}</p>
+              </div>
+              <span class="badge" [ngClass]="{
+                'badge-warning': app.status === 'EN_ATTENTE',
+                'badge-success': app.status === 'CONFIRME' || app.status === 'TERMINE',
+                'badge-primary': app.status === 'ANNULE'
+              }">{{ app.status }}</span>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-lg text-xs font-mono space-y-1 mb-3 border border-slate-800">
+              <div class="text-teal-300"><i class="fa-solid fa-stethoscope mr-1"></i> Prestation : {{ app.serviceType }}</div>
+              <div class="text-slate-300"><i class="fa-solid fa-clock mr-1"></i> Date : {{ app.appointmentDateTime | date:'medium' }}</div>
+              <div class="text-slate-400"><i class="fa-solid fa-store mr-1"></i> {{ app.storeLocation }}</div>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <button (click)="updateAppointmentStatus(app, 'CONFIRME')" class="btn btn-secondary btn-sm text-[11px]">
+                <i class="fa-solid fa-check text-emerald-400"></i> Confirmer
+              </button>
+              <button (click)="updateAppointmentStatus(app, 'TERMINE')" class="btn btn-primary btn-sm text-[11px]">
+                <i class="fa-solid fa-flag-checkered"></i> Marquer Terminé
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lab Orders Queue (Col 6) -->
+    <div class="lg:col-span-6 space-y-4">
+      <div class="glass-panel p-6">
+        <h3 class="font-bold text-lg text-white mb-4 flex items-center justify-between">
+          <span><i class="fa-solid fa-screwdriver-wrench text-amber-400 mr-2"></i> Commandes & Surfaçage Verres</span>
+          <span class="text-xs text-slate-400 font-mono">{{ orders.length }} en cours</span>
+        </h3>
+
+        <div class="space-y-3">
+          <div *ngFor="let order of orders" class="glass-card p-4 rounded-xl border border-slate-700">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="font-mono font-bold text-amber-400 text-sm mr-2">{{ order.orderReference }}</span>
+                <span class="text-xs text-slate-300 font-semibold">{{ order.clientName }}</span>
+              </div>
+              <span class="badge badge-warning">{{ order.status }}</span>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-lg text-xs space-y-1 mb-3 border border-slate-800">
+              <div *ngFor="let item of order.items" class="text-slate-300 flex justify-between">
+                <span>• {{ item.productName }} ({{ item.lensType }})</span>
+                <span class="font-mono text-emerald-400">{{ item.unitPrice | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Changer le statut labo :</span>
+              <div class="flex gap-1">
+                <button (click)="updateOrderStatus(order, 'EN_PREPARATION')" class="px-2 py-1 bg-amber-950 text-amber-300 text-[10px] font-bold rounded border border-amber-800 hover:bg-amber-900">
+                  En Taillage
+                </button>
+                <button (click)="updateOrderStatus(order, 'EXPEDIEE')" class="px-2 py-1 bg-blue-950 text-blue-300 text-[10px] font-bold rounded border border-blue-800 hover:bg-blue-900">
+                  Expédiée
+                </button>
+                <button (click)="updateOrderStatus(order, 'LIVREE')" class="px-2 py-1 bg-emerald-950 text-emerald-300 text-[10px] font-bold rounded border border-emerald-800 hover:bg-emerald-900">
+                  Prête Magasin
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

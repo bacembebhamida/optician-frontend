@@ -1,0 +1,206 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+  
+  <!-- Title -->
+  <div class="mb-8">
+    <span class="badge badge-primary mb-2"><i class="fa-solid fa-bag-shopping"></i> E-Commerce & Suivi Commandes</span>
+    <h1 class="text-3xl font-bold text-white mb-2">Mon Panier Optique & Historique de Commandes</h1>
+    <p class="text-slate-400 text-sm">Vérifiez vos équipements, appliquez un code réduction et suivez la préparation de vos lunettes en laboratoire.</p>
+  </div>
+
+  <!-- Order Success Alert -->
+  <div *ngIf="orderSubmitted" class="glass-panel p-8 text-center animate-fade-in mb-8 border-emerald-500/40">
+    <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-4 text-3xl border border-emerald-500/40">
+      <i class="fa-solid fa-check-double"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-white mb-2">Commande Enregistrée avec Succès !</h2>
+    <p class="text-slate-300 text-sm mb-6">Référence de votre commande : <span class="font-mono font-bold text-emerald-400">{{ createdOrder?.orderReference }}</span></p>
+
+    <div class="glass-card p-6 max-w-lg mx-auto text-left mb-6 space-y-2 border-slate-700 text-xs">
+      <div class="flex justify-between border-b border-slate-800 pb-2">
+        <span class="text-slate-400">Montant Total Réglé:</span>
+        <span class="font-bold text-emerald-400">{{ createdOrder?.totalAmount | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+      </div>
+      <div class="flex justify-between border-b border-slate-800 pb-2">
+        <span class="text-slate-400">Statut Atelier:</span>
+        <span class="badge badge-warning">EN_PREPARATION (Montage des verres)</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-slate-400">Livraison à:</span>
+        <span class="font-bold text-white">{{ createdOrder?.shippingAddress }}</span>
+      </div>
+    </div>
+
+    <button (click)="orderSubmitted=false" class="btn btn-primary">
+      Continuer Mes Achats
+    </button>
+  </div>
+
+  <!-- Main Cart Layout -->
+  <div *ngIf="!orderSubmitted" class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+    
+    <!-- Items Column (Col 8) -->
+    <div class="lg:col-span-8 space-y-4">
+      
+      <!-- Empty Cart State -->
+      <div *ngIf="cartItems.length === 0" class="glass-panel p-12 text-center">
+        <i class="fa-solid fa-bag-shopping text-5xl text-slate-600 mb-4"></i>
+        <h3 class="text-xl font-bold text-white mb-2">Votre panier est actuellement vide</h3>
+        <p class="text-slate-400 text-sm mb-6">Parcourez notre catalogue pour découvrir nos lunettes et lentilles de contact.</p>
+        <a routerLink="/client/catalogue" class="btn btn-primary">
+          <i class="fa-solid fa-store"></i> Explorer le Catalogue
+        </a>
+      </div>
+
+      <!-- Cart Item Cards -->
+      <div *ngFor="let item of cartItems; let i = index" class="glass-panel p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-4 w-full md:w-auto">
+          <img [src]="item.product.imageUrl" [alt]="item.product.name" class="w-20 h-16 object-contain bg-slate-950 p-2 rounded-xl border border-slate-800">
+          
+          <div>
+            <span class="text-[10px] font-bold text-blue-400 uppercase block tracking-wider">{{ item.product.brand }}</span>
+            <h4 class="font-bold text-base text-white">{{ item.product.name }}</h4>
+            <p class="text-xs text-slate-400"><i class="fa-solid fa-bullseye text-blue-400 mr-1"></i> {{ item.lensType }}</p>
+          </div>
+        </div>
+
+        <!-- Quantity & Price controls -->
+        <div class="flex items-center justify-between w-full md:w-auto gap-6 border-t md:border-t-0 border-slate-800 pt-3 md:pt-0">
+          
+          <!-- Quantity Stepper -->
+          <div class="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <button (click)="updateQuantity(i, item.quantity - 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm flex items-center justify-center">-</button>
+            <span class="w-8 text-center text-xs font-bold text-white font-mono">{{ item.quantity }}</span>
+            <button (click)="updateQuantity(i, item.quantity + 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm flex items-center justify-center">+</button>
+          </div>
+
+          <!-- Total Price per Item -->
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block">Total</span>
+            <span class="text-lg font-extrabold text-emerald-400">
+              {{ ((item.product.price + item.lensPrice) * item.quantity) | currency:'EUR':'symbol':'1.2-2':'fr' }}
+            </span>
+          </div>
+
+          <!-- Delete -->
+          <button (click)="removeItem(i)" class="text-slate-400 hover:text-red-400 p-2 transition">
+            <i class="fa-solid fa-trash-can text-sm"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Summary & Checkout Sidebar (Col 4) -->
+    <div *ngIf="cartItems.length > 0" class="lg:col-span-4 space-y-6">
+      
+      <!-- Promo Code Card -->
+      <div class="glass-panel p-5">
+        <h4 class="font-bold text-sm text-white mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-tag text-purple-400"></i> Code Promotionnel
+        </h4>
+        <div class="flex gap-2 mb-2">
+          <input type="text" [(ngModel)]="promoCode" placeholder="ex: ETI2026, SOLEIL15" class="form-control text-xs uppercase font-mono">
+          <button (click)="applyPromo()" class="btn btn-secondary text-xs">Appliquer</button>
+        </div>
+        <p *ngIf="promoSuccess" class="text-[11px] text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> {{ promoSuccess }}</p>
+        <p *ngIf="promoError" class="text-[11px] text-red-400 font-medium"><i class="fa-solid fa-triangle-exclamation"></i> {{ promoError }}</p>
+      </div>
+
+      <!-- Checkout Summary -->
+      <div class="glass-panel p-6 space-y-4">
+        <h3 class="font-bold text-base text-white border-b border-slate-800 pb-3">Récapitulatif de Commande</h3>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-slate-400">
+            <span>Sous-total Équipements:</span>
+            <span class="font-bold text-white">{{ cartService.getSubtotal() | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+          </div>
+
+          <div *ngIf="discountPercentage > 0" class="flex justify-between text-emerald-400 font-bold">
+            <span>Remise Promo ({{ discountPercentage }}%):</span>
+            <span>-{{ ((cartService.getSubtotal() * discountPercentage) / 100) | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+          </div>
+
+          <div class="flex justify-between text-slate-400">
+            <span>Frais de Livraison:</span>
+            <span class="text-emerald-400 font-bold">OFFERTS</span>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+          <span class="text-sm font-bold text-slate-200">Total à Régler:</span>
+          <span class="text-2xl font-black text-emerald-400">{{ cartService.getTotal() | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+        </div>
+
+        <!-- Address & Contact -->
+        <div class="space-y-3 pt-3 border-t border-slate-800">
+          <div class="form-group">
+            <label class="form-label text-[11px]">Adresse de Livraison</label>
+            <input type="text" [(ngModel)]="shippingAddress" class="form-control text-xs">
+          </div>
+        </div>
+
+        <button (click)="submitOrder()" class="btn btn-primary w-full py-3">
+          <i class="fa-solid fa-credit-card text-lg"></i> Valider & Payer la Commande
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Order Tracking Section -->
+  <div class="glass-panel p-6 lg:p-8">
+    <h3 class="font-bold text-xl text-white mb-6 flex items-center justify-between">
+      <span><i class="fa-solid fa-truck-fast text-blue-400 mr-2"></i> Suivi des Commandes en Atelier</span>
+      <span class="text-xs text-slate-400 font-mono">{{ ordersList.length }} commandes</span>
+    </h3>
+
+    <div class="space-y-4">
+      <div *ngFor="let order of ordersList" class="glass-card p-5 rounded-2xl border border-slate-700">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4 pb-3 border-b border-slate-800">
+          <div>
+            <span class="font-mono font-bold text-blue-400 text-sm mr-2">{{ order.orderReference }}</span>
+            <span class="text-xs text-slate-400 font-mono">{{ order.orderDate | date:'short' }}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-300 font-bold">Client: {{ order.clientName }}</span>
+            <span class="badge" [ngClass]="{
+              'badge-warning': order.status === 'EN_PREPARATION',
+              'badge-primary': order.status === 'EXPEDIEE',
+              'badge-success': order.status === 'LIVREE' || order.status === 'PAYEE'
+            }">{{ order.status }}</span>
+          </div>
+        </div>
+
+        <!-- Progress Timeline -->
+        <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-bold py-2 mb-4 bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <div [class.text-emerald-400]="order.status === 'PAYEE' || order.status === 'EN_PREPARATION' || order.status === 'EXPEDIEE' || order.status === 'LIVREE'">
+            <i class="fa-solid fa-receipt text-base block mb-1"></i> Commande Payée
+          </div>
+          <div [class.text-amber-400]="order.status === 'EN_PREPARATION' || order.status === 'EXPEDIEE' || order.status === 'LIVREE'" [class.text-slate-600]="order.status === 'PAYEE'">
+            <i class="fa-solid fa-screwdriver-wrench text-base block mb-1"></i> Taille & Taillage Verres
+          </div>
+          <div [class.text-blue-400]="order.status === 'EXPEDIEE' || order.status === 'LIVREE'" [class.text-slate-600]="order.status === 'PAYEE' || order.status === 'EN_PREPARATION'">
+            <i class="fa-solid fa-box text-base block mb-1"></i> Expédiée / En Transit
+          </div>
+          <div [class.text-emerald-400]="order.status === 'LIVREE'" [class.text-slate-600]="order.status !== 'LIVREE'">
+            <i class="fa-solid fa-house-chimney-check text-base block mb-1"></i> Livrée / Prête Magasin
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="space-y-1">
+          <div *ngFor="let item of order.items" class="flex justify-between items-center text-xs text-slate-300">
+            <span>• {{ item.productName }} ({{ item.lensType }}) x{{ item.quantity }}</span>
+            <span class="font-mono text-emerald-400 font-bold">{{ item.unitPrice | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,85 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+  
+  <!-- Header Title -->
+  <div class="text-center max-w-2xl mx-auto space-y-2">
+    <span class="badge badge-opti-gold"><i class="fa-solid fa-location-dot"></i> Réseau OptiVision Tunisie</span>
+    <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif">Nos Magasins & Boutiques Optiques</h1>
+    <p class="text-slate-500 text-sm">Retrouvez nos opticiens diplômés à Tunis Ennasr, La Marsa, Sousse et Sfax.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- STORES LIST (Col 5) -->
+    <div class="lg:col-span-5 space-y-4">
+      <div *ngFor="let store of stores" (click)="selectStore(store)" [class.border-amber-600]="selectedStore?.id === store.id" [class.bg-amber-50]="selectedStore?.id === store.id" class="card-opti p-6 bg-white cursor-pointer transition space-y-4">
+        <div class="flex items-start gap-4">
+          <img [src]="store.imageUrl" [alt]="store.name" class="w-20 h-20 rounded-2xl object-cover border border-slate-200 shrink-0">
+          <div>
+            <span class="text-xs font-bold text-amber-700 uppercase font-mono">{{ store.city }}</span>
+            <h3 class="font-bold text-lg text-slate-900">{{ store.name }}</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ store.address }}</p>
+          </div>
+        </div>
+
+        <div class="space-y-1 text-xs text-slate-600 pt-2 border-t border-slate-100 font-medium">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-phone text-emerald-600"></i> {{ store.phone }}</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-amber-600"></i> {{ store.openingHours }}</div>
+        </div>
+
+        <!-- Services Tags -->
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          <span *ngFor="let s of store.services" class="badge-opti bg-slate-100 text-slate-700 text-[10px]">
+            • {{ s }}
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-3 border-t border-slate-100 flex gap-2">
+          <a routerLink="/rdv" class="btn-opti btn-opti-gold btn-opti-sm flex-1">
+            <i class="fa-regular fa-calendar-check"></i> Prendre RDV
+          </a>
+          <a [href]="'https://maps.google.com/?q=' + store.lat + ',' + store.lng" target="_blank" class="btn-opti btn-opti-outline btn-opti-sm">
+            <i class="fa-solid fa-diamond-turn-right"></i> Itinéraire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP INTERACTIVE CONTAINER (Col 7) -->
+    <div class="lg:col-span-7">
+      <div class="card-opti p-4 bg-white h-full min-h-[500px] flex flex-col justify-between relative overflow-hidden">
+        
+        <div class="bg-slate-900 text-white p-4 rounded-2xl flex justify-between items-center z-10 shadow-md">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-map-pin text-amber-400 text-lg"></i>
+            <div>
+              <h4 class="font-bold text-sm text-white">{{ selectedStore?.name }}</h4>
+              <span class="text-[11px] text-slate-300 block">{{ selectedStore?.address }}</span>
+            </div>
+          </div>
+          <a routerLink="/rdv" class="btn-opti btn-opti-gold btn-opti-sm">Prendre RDV en magasin</a>
+        </div>
+
+        <!-- Visual Map Background Simulation -->
+        <div class="relative flex-1 my-4 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200">
+          <iframe 
+            width="100%" 
+            height="400" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            [src]="'https://maps.google.com/maps?q=' + (selectedStore?.lat || 36.8584) + ',' + (selectedStore?.lng || 10.1627) + '&hl=fr&z=14&output=embed'">
+          </iframe>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-500 flex justify-between items-center font-mono">
+          <span>Coordonnées GPS: {{ selectedStore?.lat }}, {{ selectedStore?.lng }}</span>
+          <span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Magasin Ouvert Aujourd'hui</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

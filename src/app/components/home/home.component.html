@@ -1,0 +1,310 @@
+<div class="space-y-16 pb-20">
+  
+  <!-- HERO SECTION -->
+  <section class="relative bg-slate-900 text-white rounded-3xl overflow-hidden max-w-7xl mx-auto my-6 shadow-2xl border border-slate-800">
+    <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+      
+      <!-- Text & CTAs (Col 7) -->
+      <div class="lg:col-span-7 p-8 lg:p-16 flex flex-col justify-center relative z-10">
+        <span class="badge badge-opti-gold w-max mb-4 animate-fade-in">
+          <i class="fa-solid fa-sparkles"></i> Nouvelle Collection OptiVision 2026
+        </span>
+
+        <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-4 font-serif">
+          Voir le monde <span class="italic font-normal text-amber-300">autrement.</span>
+        </h1>
+
+        <p class="text-slate-300 text-base lg:text-lg max-w-xl font-normal mb-8 leading-relaxed">
+          Découvrez des lunettes pensées pour votre style, votre confort et votre vision. L'excellence optique internationale alliée aux meilleures technologies de surfaçage.
+        </p>
+
+        <!-- Hero CTAs -->
+        <div class="flex flex-wrap gap-4 items-center">
+          <a routerLink="/lunettes" class="btn-opti btn-opti-gold text-base py-3.5 px-8 shadow-lg">
+            <i class="fa-solid fa-glasses"></i> Découvrir les lunettes
+          </a>
+          <a routerLink="/try-on" class="btn-opti bg-white/10 hover:bg-white/20 text-white border border-white/20 text-base py-3.5 px-6 backdrop-blur-md">
+            <i class="fa-solid fa-camera text-indigo-400"></i> Essayer virtuellement 3D
+          </a>
+        </div>
+
+        <!-- 4 Hero Perks -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-slate-800 text-xs font-medium text-slate-300">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-eye text-amber-400 text-base"></i>
+            <span>Examen de vue offert</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-camera text-indigo-400 text-base"></i>
+            <span>Essayage virtuel 3D</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-user-doctor text-emerald-400 text-base"></i>
+            <span>Conseils d'experts</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-truck-fast text-sky-400 text-base"></i>
+            <span>Livraison express TND</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- High-res Lifestyle Photography (Col 5) -->
+      <div class="lg:col-span-5 relative min-h-[380px] lg:min-h-full">
+        <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1000&auto=format&fit=crop&q=80" 
+             alt="High-end optical eyewear fashion" 
+             class="absolute inset-0 w-full h-full object-cover object-center filter brightness-95">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent lg:bg-gradient-to-r lg:from-slate-900 lg:to-transparent"></div>
+        
+        <!-- Badge Overlay -->
+        <div class="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-xl max-w-xs text-slate-900 hidden sm:block">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-lg">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+              <span class="font-extrabold text-xs block text-slate-900">Verres Optiques Premium</span>
+              <span class="text-[11px] text-slate-500 block">Taillés avec précision en Tunisie</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRODUCT CATEGORIES -->
+  <section class="max-w-7xl mx-auto px-4 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <span class="badge badge-opti-gold mb-2">Univers Optique</span>
+      <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Explorez nos Catégories</h2>
+      <p class="text-slate-500 text-sm mt-1">Des montures de créateurs conçues pour sublimer votre regard et garantir un confort inégalé.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      
+      <!-- Cat 1: Lunettes de Vue -->
+      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
+        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&auto=format&fit=crop&q=80" alt="Lunettes de vue" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Essentielles</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes de Vue</h3>
+          <span class="text-xs text-slate-300 mt-1">Montures & Verres →</span>
+        </div>
+      </a>
+
+      <!-- Cat 2: Lunettes de Soleil -->
+      <a routerLink="/soleil" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
+        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80" alt="Lunettes de soleil" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Protection UV</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes de Soleil</h3>
+          <span class="text-xs text-slate-300 mt-1">Solaire & Polarisé →</span>
+        </div>
+      </a>
+
+      <!-- Cat 3: Lunettes Enfants -->
+      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
+        <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?w=600&auto=format&fit=crop&q=80" alt="Lunettes enfants" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Confort & Solidité</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Lunettes Enfants</h3>
+          <span class="text-xs text-slate-300 mt-1">Flexibles & Durables →</span>
+        </div>
+      </a>
+
+      <!-- Cat 4: Lentilles de Contact -->
+      <a routerLink="/lentilles" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80" alt="Lentilles de contact" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+          <span class="text-[10px] uppercase font-bold text-teal-400 tracking-wider">Liberté Visuelle</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-teal-300 transition">Lentilles de Contact</h3>
+          <span class="text-xs text-slate-300 mt-1">Jour, Mois & Soins →</span>
+        </div>
+      </a>
+
+      <!-- Cat 5: Accessoires -->
+      <a routerLink="/lunettes" class="group relative rounded-3xl overflow-hidden h-72 border border-slate-200 shadow-sm hover:shadow-xl transition text-decoration-none">
+        <img src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=600&auto=format&fit=crop&q=80" alt="Accessoires optiques" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Entretien & Étuis</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition">Accessoires</h3>
+          <span class="text-xs text-slate-300 mt-1">Étuis, Cordons & Spray →</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- STYLE RECOMMENDATIONS (#16) -->
+  <section class="max-w-7xl mx-auto px-4 lg:px-8 pt-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8">
+      <div>
+        <span class="badge badge-opti-gold mb-2">Inspiration</span>
+        <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Choisissez selon votre Style</h2>
+      </div>
+      <p class="text-slate-500 text-xs max-w-md mt-2 md:mt-0">Filtrez les modèles d'exception selon votre personnalité et vos préférences esthétiques.</p>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-8">
+      <button (click)="selectedStyleFilter = 'ALL'" [class.btn-opti-dark]="selectedStyleFilter === 'ALL'" [class.btn-opti-outline]="selectedStyleFilter !== 'ALL'" class="btn-opti btn-opti-sm">
+        Tous les Styles
+      </button>
+      <button *ngFor="let cat of styleCategories" (click)="selectedStyleFilter = cat.name" [class.btn-opti-gold]="selectedStyleFilter === cat.name" [class.btn-opti-outline]="selectedStyleFilter !== cat.name" class="btn-opti btn-opti-sm">
+        <i [class]="cat.icon"></i> {{ cat.label }}
+      </button>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS GRID (#5) -->
+  <section class="max-w-7xl mx-auto px-4 lg:px-8">
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <div *ngFor="let product of filteredProducts" class="card-opti group relative flex flex-col overflow-hidden bg-white">
+        
+        <!-- Image Stage with Secondary Hover Preview -->
+        <div class="relative h-72 bg-slate-50 overflow-hidden flex items-center justify-center p-6">
+          <img [src]="product.imageUrl" [alt]="product.name" class="max-h-full object-contain transition duration-500 group-hover:opacity-0 group-hover:scale-105">
+          <img [src]="product.secondaryImageUrl" [alt]="product.name" class="max-h-full object-contain absolute inset-0 m-auto opacity-0 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
+
+          <!-- Badges Top -->
+          <div class="absolute top-4 left-4 flex flex-col gap-1 z-10">
+            <span *ngIf="product.isNewArrival" class="badge-opti badge-opti-gold">Nouveauté</span>
+            <span *ngIf="product.tryOn3dAvailable" class="badge-opti bg-indigo-100 text-indigo-800 border border-indigo-200">
+              <i class="fa-solid fa-camera text-[10px]"></i> 3D Try-On
+            </span>
+          </div>
+
+          <!-- Favorite Button Top Right -->
+          <button (click)="toggleFavorite(product.id)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/90 text-slate-600 hover:text-red-500 flex items-center justify-center shadow-md transition">
+            <i class="fa-solid fa-heart text-sm" [class.text-red-500]="isFavorite(product.id)" [class.fa-regular]="!isFavorite(product.id)"></i>
+          </button>
+
+          <!-- Quick Action Bar on Hover -->
+          <div class="absolute bottom-4 left-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition duration-300 flex gap-2">
+            <button (click)="openQuickView(product)" class="btn-opti btn-opti-dark text-xs py-2 flex-1 shadow-lg">
+              <i class="fa-solid fa-eye"></i> Aperçu Rapide
+            </button>
+            <a routerLink="/try-on" [queryParams]="{productId: product.id}" class="btn-opti btn-opti-gold text-xs py-2 px-3 shadow-lg" title="Essayer en 3D">
+              <i class="fa-solid fa-camera"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Content Info -->
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold text-amber-700 tracking-wider uppercase font-mono">{{ product.brand }}</span>
+              <div class="flex items-center gap-1 text-xs text-amber-500">
+                <i class="fa-solid fa-star text-[10px]"></i>
+                <span class="font-bold text-slate-700">{{ product.rating }}</span>
+              </div>
+            </div>
+
+            <h3 class="font-bold text-base text-slate-900 group-hover:text-amber-700 transition line-clamp-1 mb-1">
+              <a [routerLink]="['/produit', product.id]" class="text-slate-900 text-decoration-none hover:text-amber-700">{{ product.name }}</a>
+            </h3>
+            
+            <p class="text-xs text-slate-500 line-clamp-2 mb-4">{{ product.description }}</p>
+          </div>
+
+          <!-- Price & Add to Cart Footer -->
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+            <div>
+              <span class="text-[10px] uppercase text-slate-400 font-bold block">Prix TTC</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-xl font-extrabold text-slate-900 font-mono">{{ product.priceTnd }} <span class="text-xs font-normal">DT</span></span>
+                <span *ngIf="product.originalPriceTnd" class="text-xs text-slate-400 line-through font-mono">{{ product.originalPriceTnd }} DT</span>
+              </div>
+            </div>
+
+            <button (click)="addToCart(product)" class="btn-opti btn-opti-dark btn-opti-sm shadow-md">
+              <i class="fa-solid fa-bag-shopping"></i> Ajouter
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIRTUAL TRY-ON TEASER SECTION (#7) -->
+  <section class="max-w-7xl mx-auto px-4 lg:px-8 my-16">
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-8 lg:p-14 shadow-2xl border border-indigo-500/20 relative overflow-hidden">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+        
+        <div class="lg:col-span-7 space-y-4">
+          <span class="badge badge-opti-gold"><i class="fa-solid fa-camera"></i> Réalité Augmentée 3D</span>
+          <h2 class="text-3xl lg:text-5xl font-extrabold font-serif text-white">Essayez vos lunettes avant de choisir.</h2>
+          <p class="text-slate-300 text-sm lg:text-base leading-relaxed max-w-xl">
+            Grâce à notre moteur de détection faciale en temps réel, visualisez instantanément le rendu des montures sur votre visage. Ajustez l'écartement, comparez les couleurs et partagez le résultat.
+          </p>
+
+          <div class="flex flex-wrap gap-4 pt-4">
+            <a routerLink="/try-on" class="btn-opti btn-opti-gold text-base py-3.5 px-8 shadow-lg">
+              <i class="fa-solid fa-camera"></i> Activer la caméra & Essayer
+            </a>
+            <a routerLink="/rdv" class="btn-opti bg-white/10 hover:bg-white/20 text-white border border-white/20 text-sm py-3.5 px-6">
+              Prendre un RDV en Boutique
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative w-full max-w-sm rounded-3xl overflow-hidden border-2 border-indigo-500/40 shadow-2xl bg-slate-950 p-2">
+            <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=600&auto=format&fit=crop&q=80" alt="Virtual try-on preview" class="w-full h-80 object-cover rounded-2xl filter brightness-90">
+            
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="w-64 h-28 border-2 border-indigo-400 border-dashed rounded-full flex items-center justify-center animate-pulse">
+                <span class="text-[10px] font-bold text-indigo-300 bg-slate-950/80 px-2 py-0.5 rounded font-mono">Face Landmark Detection Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Quick View Modal -->
+<div *ngIf="selectedProductForModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
+  <div class="bg-white rounded-3xl max-w-3xl w-full p-6 lg:p-8 shadow-2xl relative border border-slate-200">
+    <button (click)="closeQuickView()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div class="bg-slate-50 p-6 rounded-2xl flex items-center justify-center h-72">
+        <img [src]="selectedProductForModal.imageUrl" [alt]="selectedProductForModal.name" class="max-h-full object-contain">
+      </div>
+
+      <div class="space-y-4">
+        <span class="badge badge-opti-gold">{{ selectedProductForModal.brand }}</span>
+        <h3 class="text-2xl font-bold text-slate-900 font-serif">{{ selectedProductForModal.name }}</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">{{ selectedProductForModal.description }}</p>
+
+        <div class="text-2xl font-extrabold text-slate-900 font-mono">
+          {{ selectedProductForModal.priceTnd }} DT
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button (click)="addToCart(selectedProductForModal); closeQuickView()" class="btn-opti btn-opti-dark flex-1">
+            <i class="fa-solid fa-bag-shopping"></i> Ajouter au Panier
+          </button>
+          <a routerLink="/try-on" [queryParams]="{productId: selectedProductForModal.id}" (click)="closeQuickView()" class="btn-opti btn-opti-gold">
+            <i class="fa-solid fa-camera"></i> Try-On
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

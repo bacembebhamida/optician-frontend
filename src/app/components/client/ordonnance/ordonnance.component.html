@@ -1,0 +1,177 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+  
+  <!-- Title -->
+  <div class="mb-8">
+    <span class="badge badge-warning mb-2"><i class="fa-solid fa-file-prescription"></i> Service Ordonnance Numérique</span>
+    <h1 class="text-3xl font-bold text-white mb-2">Dépôt & Transcriptions d'Ordonnances</h1>
+    <p class="text-slate-400 text-sm">Téléversez votre document ophtalmologique (PDF ou photo) et vérifiez les mesures de correction optique.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Upload & Form Column (Col 8) -->
+    <div class="lg:col-span-8 space-y-6">
+      
+      <!-- Upload Box -->
+      <div class="glass-panel p-8 text-center border-dashed border-2 border-slate-700 hover:border-amber-500/50 transition">
+        <i class="fa-solid fa-cloud-arrow-up text-5xl text-amber-400 mb-3"></i>
+        <h3 class="font-bold text-lg text-white mb-1">Téléversez Votre Ordonnance Ophtalmologique</h3>
+        <p class="text-xs text-slate-400 mb-4">Formats acceptés : PDF, JPG, PNG (Taille max 10 Mo)</p>
+        
+        <input type="file" id="prescriptionFile" (change)="onFileSelected($event)" class="hidden">
+        <label for="prescriptionFile" class="btn btn-secondary cursor-pointer">
+          <i class="fa-solid fa-folder-open"></i> {{ fileName || 'Parcourir Mes Fichiers' }}
+        </label>
+
+        <div *ngIf="fileUploaded && !isScanning" class="mt-4 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check"></i> Fichier joint : {{ fileName }}
+          </span>
+          <span *ngIf="aiScanVerified" class="badge badge-accent">
+            <i class="fa-solid fa-sparkles"></i> Extrait par IA Vision (100% Détecté)
+          </span>
+        </div>
+
+        <!-- AI Scanning State Animation -->
+        <div *ngIf="isScanning" class="mt-4 p-4 bg-slate-900 border border-purple-500/40 rounded-xl text-left animate-fade-in">
+          <div class="flex justify-between items-center text-xs font-bold text-purple-300 mb-2">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-brain-circuit fa-spin text-purple-400"></i> Scanner IA OCR Ophtalmique
+            </span>
+            <span class="font-mono text-purple-400">{{ scanProgress }}%</span>
+          </div>
+          
+          <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 mb-2">
+            <div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-full transition-all duration-300 rounded-full" [style.width.%]="scanProgress"></div>
+          </div>
+          
+          <p class="text-[11px] text-slate-400 font-mono">{{ scanStepText }}</p>
+        </div>
+      </div>
+
+      <!-- Optical Correction Values Form -->
+      <div class="glass-panel p-6 lg:p-8">
+        <h3 class="font-bold text-lg text-white mb-6 flex items-center justify-between">
+          <span><i class="fa-solid fa-sliders text-amber-400 mr-2"></i> Correction Optique (Œil Droit / Œil Gauche)</span>
+          <span class="text-xs text-slate-400">Écart Pupillaire (EP)</span>
+        </h3>
+
+        <!-- General Info -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="form-group">
+            <label class="form-label">Nom du Patient</label>
+            <input type="text" [(ngModel)]="patientName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Médecin Ophtalmologiste</label>
+            <input type="text" [(ngModel)]="prescriberName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date de l'Ordonnance</label>
+            <input type="date" [(ngModel)]="prescriptionDate" class="form-control">
+          </div>
+        </div>
+
+        <!-- OD (Right Eye) Card -->
+        <div class="glass-card p-5 rounded-2xl mb-4 border-slate-700 bg-slate-900/80">
+          <div class="flex items-center gap-2 mb-3 text-blue-400 font-bold text-sm">
+            <i class="fa-solid fa-eye"></i> Œil Droit (OD)
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div>
+              <label class="form-label text-[11px]">Sphère (S)</label>
+              <input type="number" step="0.25" [(ngModel)]="odSphere" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Cylindre (C)</label>
+              <input type="number" step="0.25" [(ngModel)]="odCylinder" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Axe (°)</label>
+              <input type="number" [(ngModel)]="odAxis" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Addition (Add)</label>
+              <input type="number" step="0.25" [(ngModel)]="odAddition" class="form-control font-mono text-center">
+            </div>
+          </div>
+        </div>
+
+        <!-- OG (Left Eye) Card -->
+        <div class="glass-card p-5 rounded-2xl mb-6 border-slate-700 bg-slate-900/80">
+          <div class="flex items-center gap-2 mb-3 text-teal-400 font-bold text-sm">
+            <i class="fa-solid fa-eye"></i> Œil Gauche (OG)
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div>
+              <label class="form-label text-[11px]">Sphère (S)</label>
+              <input type="number" step="0.25" [(ngModel)]="ogSphere" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Cylindre (C)</label>
+              <input type="number" step="0.25" [(ngModel)]="ogCylinder" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Axe (°)</label>
+              <input type="number" [(ngModel)]="ogAxis" class="form-control font-mono text-center">
+            </div>
+            <div>
+              <label class="form-label text-[11px]">Addition (Add)</label>
+              <input type="number" step="0.25" [(ngModel)]="ogAddition" class="form-control font-mono text-center">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pupillary Distance & Notes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="form-label">Écart Pupillaire (mm)</label>
+            <input type="number" step="0.5" [(ngModel)]="pupillaryDistance" class="form-control font-mono text-center">
+          </div>
+          <div class="md:col-span-2">
+            <label class="form-label">Notes de l'Opticien / Conseils Verres</label>
+            <input type="text" [(ngModel)]="notes" class="form-control">
+          </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div *ngIf="successMessage" class="p-4 mb-4 bg-emerald-900/60 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs flex items-center gap-2 animate-fade-in">
+          <i class="fa-solid fa-circle-check text-lg"></i> Ordonnance enregistrée avec succès dans la base de données REST Spring Boot !
+        </div>
+
+        <button (click)="savePrescription()" [disabled]="isSubmitting" class="btn btn-primary w-full py-3">
+          <i class="fa-solid fa-floppy-disk"></i> {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer cette Ordonnance' }}
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- History Sidebar (Col 4) -->
+    <div class="lg:col-span-4">
+      <div class="glass-panel p-5">
+        <h3 class="font-bold text-sm text-white mb-4 flex items-center justify-between">
+          <span><i class="fa-solid fa-clock-rotate-left text-amber-400 mr-2"></i> Ordonnances Archivées</span>
+          <span class="text-xs text-slate-400 font-mono">{{ prescriptionsList.length }}</span>
+        </h3>
+
+        <div class="space-y-3">
+          <div *ngFor="let pres of prescriptionsList" class="glass-card p-4 rounded-xl border border-slate-700 text-xs">
+            <div class="flex justify-between items-start mb-2">
+              <span class="font-bold text-white">{{ pres.patientName }}</span>
+              <span class="text-[10px] text-slate-400 font-mono">{{ pres.prescriptionDate }}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mb-2">{{ pres.prescriberName }}</p>
+
+            <div class="bg-slate-950 p-2 rounded-lg text-[10px] font-mono space-y-1 border border-slate-800">
+              <div class="text-blue-300">OD: Sph {{ pres.odSphere }} | Cyl {{ pres.odCylinder }} | Axe {{ pres.odAxis }}°</div>
+              <div class="text-teal-300">OG: Sph {{ pres.ogSphere }} | Cyl {{ pres.ogCylinder }} | Axe {{ pres.ogAxis }}°</div>
+              <div class="text-slate-400">Écart Pupillaire: {{ pres.pupillaryDistance }} mm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

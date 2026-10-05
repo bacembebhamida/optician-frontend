@@ -1,0 +1,220 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+  
+  <!-- Welcome Banner -->
+  <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-8 rounded-3xl shadow-xl border border-slate-700/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-2xl bg-amber-600 text-white flex items-center justify-center font-extrabold text-2xl shadow-md border-2 border-white/20">
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <div>
+        <span class="badge badge-opti-gold mb-1">Espace Client Membre Gold</span>
+        <h1 class="text-2xl lg:text-3xl font-extrabold text-white font-serif">Bienvenue, {{ currentUser.fullName }} 👋</h1>
+        <p class="text-slate-300 text-xs mt-0.5">{{ currentUser.email }}<span *ngIf="currentUser.phone"> • {{ currentUser.phone }}</span></p>
+      </div>
+    </div>
+
+    <!-- Loyalty Quick Counter (#17) -->
+    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-right min-w-[200px]">
+      <span class="text-[10px] text-amber-300 uppercase font-bold tracking-wider block">Solde Points OptiVision</span>
+      <span class="text-2xl font-black text-white font-mono">{{ loyalty.points }} <span class="text-xs font-normal">pts</span></span>
+      <span class="text-[10px] text-slate-300 block mt-1">+{{ loyalty.pointsToNextReward }} pts avant votre bon de 50 DT</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- SIDEBAR NAVIGATION (#11) -->
+    <div class="lg:col-span-3 space-y-2">
+      <div class="card-opti p-3 bg-white space-y-1 text-xs font-bold text-slate-700">
+        <button (click)="activeTab = 'DASHBOARD'" [class.bg-slate-900]="activeTab === 'DASHBOARD'" [class.text-white]="activeTab === 'DASHBOARD'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-solid fa-house text-sm"></i> Tableau de bord
+        </button>
+
+        <button (click)="activeTab = 'COMMANDES'" [class.bg-slate-900]="activeTab === 'COMMANDES'" [class.text-white]="activeTab === 'COMMANDES'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-solid fa-box text-sm"></i> Mes Commandes
+        </button>
+
+        <button (click)="activeTab = 'RDV'" [class.bg-slate-900]="activeTab === 'RDV'" [class.text-white]="activeTab === 'RDV'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-regular fa-calendar-check text-sm"></i> Mes Rendez-vous
+        </button>
+
+        <button (click)="activeTab = 'ORDONNANCES'" [class.bg-slate-900]="activeTab === 'ORDONNANCES'" [class.text-white]="activeTab === 'ORDONNANCES'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-solid fa-file-prescription text-sm"></i> Mes Ordonnances
+        </button>
+
+        <button (click)="activeTab = 'FAVORIS'" [class.bg-slate-900]="activeTab === 'FAVORIS'" [class.text-white]="activeTab === 'FAVORIS'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-regular fa-heart text-sm"></i> Mes Favoris ({{ favoriteProducts.length }})
+        </button>
+
+        <button (click)="activeTab = 'LOYALTY'" [class.bg-slate-900]="activeTab === 'LOYALTY'" [class.text-white]="activeTab === 'LOYALTY'" class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition">
+          <i class="fa-solid fa-award text-sm text-amber-500"></i> Programme Fidélité
+        </button>
+
+        <button (click)="activeTab = 'NOTIFS'" [class.bg-slate-900]="activeTab === 'NOTIFS'" [class.text-white]="activeTab === 'NOTIFS'" class="w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition">
+          <span class="flex items-center gap-3"><i class="fa-regular fa-bell text-sm"></i> Notifications</span>
+          <span class="badge badge-opti-gold font-mono text-[10px]">2</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN TAB CONTENT (Col 9) -->
+    <div class="lg:col-span-9 space-y-6">
+      
+      <!-- TAB 1: DASHBOARD OVERVIEW CARDS (#11) -->
+      <div *ngIf="activeTab === 'DASHBOARD'" class="space-y-6 animate-fade-in">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Card 1: Prochain RDV -->
+          <div class="card-opti p-6 bg-white space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase">
+              <span>Prochain RDV</span>
+              <i class="fa-regular fa-calendar-check text-amber-700 text-lg"></i>
+            </div>
+
+            <div *ngIf="upcomingAppointment">
+              <span class="font-extrabold text-lg text-slate-900 block font-serif">{{ upcomingAppointment.date }}</span>
+              <span class="text-xs text-amber-700 font-semibold block mt-1"><i class="fa-solid fa-clock"></i> {{ upcomingAppointment.timeSlot }} • {{ upcomingAppointment.storeName }}</span>
+            </div>
+            <div *ngIf="!upcomingAppointment">
+              <span class="text-xs text-slate-400 block">Aucun RDV à venir</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Commande en Cours -->
+          <div class="card-opti p-6 bg-white space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase">
+              <span>Commande Active</span>
+              <i class="fa-solid fa-truck-fast text-sky-600 text-lg"></i>
+            </div>
+
+            <div *ngIf="activeOrder">
+              <span class="font-bold text-base text-slate-900 font-mono block">{{ activeOrder.orderReference }}</span>
+              <span class="inline-block bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full mt-1">{{ activeOrder.status }}</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Ordonnance Active -->
+          <div class="card-opti p-6 bg-white space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase">
+              <span>Dernière Ordonnance</span>
+              <i class="fa-solid fa-file-prescription text-emerald-600 text-lg"></i>
+            </div>
+
+            <div *ngIf="latestPrescription">
+              <span class="font-bold text-sm text-slate-900 block truncate">{{ latestPrescription.prescriberName }}</span>
+              <span class="text-xs text-emerald-600 font-semibold block mt-1"><i class="fa-solid fa-check"></i> Certifiée OptiVision</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Order Timeline Section -->
+        <div *ngIf="activeOrder" class="card-opti p-6 bg-white space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+            <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-hourglass-half text-amber-700"></i> Suivi de votre Équipement Optique
+            </h3>
+            <span class="badge badge-opti-gold font-mono text-xs">{{ activeOrder.orderReference }}</span>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center text-xs font-bold py-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <div class="text-emerald-600">
+              <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-1"><i class="fa-solid fa-check"></i></div>
+              <span>Validée</span>
+            </div>
+            <div class="text-amber-700">
+              <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-1"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+              <span>Taillage Verres</span>
+            </div>
+            <div class="text-slate-400">
+              <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mx-auto mb-1"><i class="fa-solid fa-box"></i></div>
+              <span>Transit</span>
+            </div>
+            <div class="text-slate-400">
+              <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mx-auto mb-1"><i class="fa-solid fa-house"></i></div>
+              <span>Livrée</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 2: COMMANDES LIST -->
+      <div *ngIf="activeTab === 'COMMANDES'" class="space-y-4 animate-fade-in">
+        <h3 class="font-bold text-lg text-slate-900">Historique de mes Commandes</h3>
+        <div *ngFor="let ord of orders" class="card-opti p-6 bg-white space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 text-xs">
+            <div>
+              <span class="font-extrabold text-base text-slate-900 font-mono block">{{ ord.orderReference }}</span>
+              <span class="text-slate-400">Passée le {{ ord.date }}</span>
+            </div>
+            <span class="badge badge-opti-gold font-mono">{{ ord.totalTnd }} DT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: RDV LIST -->
+      <div *ngIf="activeTab === 'RDV'" class="space-y-4 animate-fade-in">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-lg text-slate-900">Mes Rendez-vous Optiques</h3>
+          <a routerLink="/rdv" class="btn-opti btn-opti-gold btn-opti-sm">+ Nouveau RDV</a>
+        </div>
+        <div *ngFor="let app of appointments" class="card-opti p-6 bg-white space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-900 text-base">{{ app.serviceType }}</span>
+            <span class="badge bg-emerald-100 text-emerald-800 font-bold">{{ app.status }}</span>
+          </div>
+          <p class="text-xs text-slate-500">{{ app.storeName }} • {{ app.date }} à {{ app.timeSlot }}</p>
+        </div>
+      </div>
+
+      <!-- TAB 4: FAVORIS GRID -->
+      <div *ngIf="activeTab === 'FAVORIS'" class="space-y-4 animate-fade-in">
+        <h3 class="font-bold text-lg text-slate-900">Mes Montures Favorites ({{ favoriteProducts.length }})</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div *ngFor="let p of favoriteProducts" class="card-opti p-4 bg-white flex items-center gap-4">
+            <img [src]="p.imageUrl" [alt]="p.name" class="w-16 h-16 object-contain bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <div>
+              <span class="text-[10px] font-bold text-amber-700 uppercase font-mono">{{ p.brand }}</span>
+              <h4 class="font-bold text-sm text-slate-900">{{ p.name }}</h4>
+              <span class="text-sm font-extrabold text-slate-900 font-mono">{{ p.priceTnd }} DT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: LOYALTY (#17) -->
+      <div *ngIf="activeTab === 'LOYALTY'" class="card-opti p-8 bg-white space-y-6 animate-fade-in">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+          <div>
+            <span class="badge badge-opti-gold mb-1">Statut {{ loyalty.tier }}</span>
+            <h3 class="text-2xl font-bold text-slate-900 font-serif">Programme de Fidélité OptiVision</h3>
+          </div>
+          <span class="text-3xl font-black text-amber-700 font-mono">{{ loyalty.points }} pts</span>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Chaque dinar dépensé chez OptiVision vous rapporte 1 point de fidélité. Cumulez 1000 points pour obtenir un chèque de réduction de 50 DT sur vos verres optiques ou solaires.
+        </p>
+      </div>
+
+      <!-- TAB 6: NOTIFICATIONS (#18) -->
+      <div *ngIf="activeTab === 'NOTIFS'" class="space-y-3 animate-fade-in">
+        <h3 class="font-bold text-lg text-slate-900">Mes Notifications OptiVision</h3>
+        <div *ngFor="let n of notifications" class="card-opti p-4 bg-white flex items-center gap-4 border-l-4 border-l-amber-600">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+            <i class="fa-regular fa-bell"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-slate-900">{{ n.title }}</h4>
+            <p class="text-xs text-slate-500">{{ n.message }}</p>
+            <span class="text-[10px] text-slate-400 font-mono">{{ n.date }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

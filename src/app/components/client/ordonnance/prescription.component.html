@@ -1,0 +1,166 @@
+<div class="max-w-5xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <span class="badge badge-opti-gold mb-2"><i class="fa-solid fa-file-prescription"></i> Espace Ordonnances Optiques</span>
+      <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif">Votre ordonnance.</h1>
+      <p class="text-slate-500 text-sm mt-1">Déposez votre ordonnance médicale pour la confection sur-mesure de vos verres par nos opticiens.</p>
+    </div>
+
+    <button (click)="isManualEntry = !isManualEntry" class="btn-opti btn-opti-gold">
+      <i class="fa-solid" [class.fa-plus]="!isManualEntry" [class.fa-xmark]="isManualEntry"></i> {{ isManualEntry ? 'Fermer le Formulaire' : 'Ajouter une Ordonnance' }}
+    </button>
+  </div>
+
+  <!-- Medical Validation Notice Banner (#9) -->
+  <div class="bg-amber-50 text-amber-900 border border-amber-200 p-4 rounded-2xl flex items-center gap-3 text-xs font-medium shadow-sm">
+    <i class="fa-solid fa-shield-halved text-amber-700 text-lg shrink-0"></i>
+    <span><strong>Notice Médicale OptiVision :</strong> Votre ordonnance sera systématiquement vérifiée et certifiée par notre équipe d'opticiens diplômés en laboratoire avant la confection et le taillage de vos verres.</span>
+  </div>
+
+  <!-- Success Banner -->
+  <div *ngIf="savedSuccess" class="bg-emerald-900 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between text-xs animate-fade-in font-bold">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+      <span>Ordonnance enregistrée avec succès ! Elle est désormais liée à votre compte.</span>
+    </div>
+  </div>
+
+  <!-- NEW PRESCRIPTION FORM (FILE UPLOAD + MANUAL ENTRY) -->
+  <div *ngIf="isManualEntry" class="card-opti p-6 lg:p-8 bg-white space-y-6 animate-fade-in">
+    <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+      <i class="fa-solid fa-pen-to-square text-amber-700"></i> Nouvelle Ordonnance Optique
+    </h3>
+
+    <!-- File Drag & Drop Section -->
+    <div class="border-2 border-dashed border-slate-300 hover:border-amber-600 rounded-2xl p-8 text-center bg-slate-50 transition cursor-pointer relative">
+      <input type="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" class="absolute inset-0 opacity-0 cursor-pointer">
+      <i class="fa-solid fa-cloud-arrow-up text-4xl text-amber-700 mb-2"></i>
+      <h4 class="font-bold text-sm text-slate-900">Téléverser mon Ordonnance (PDF, JPG, PNG)</h4>
+      <p class="text-xs text-slate-500 mt-1">Glissez votre fichier ici ou cliquez pour parcourir.</p>
+      <span *ngIf="uploadFileName" class="mt-3 inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
+        <i class="fa-solid fa-file"></i> {{ uploadFileName }}
+      </span>
+    </div>
+
+    <!-- Doctor Details -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label text-xs uppercase font-bold text-slate-400">Médecin Ophtalmologue</label>
+        <input type="text" [(ngModel)]="prescriberName" placeholder="Dr. Prénom Nom" class="form-control-opti text-xs">
+      </div>
+      <div>
+        <label class="form-label text-xs uppercase font-bold text-slate-400">Date de la Prescription</label>
+        <input type="date" [(ngModel)]="prescriptionDate" class="form-control-opti text-xs font-mono">
+      </div>
+    </div>
+
+    <!-- OD / OG Prescription Values Table (#9) -->
+    <div class="space-y-4">
+      <h4 class="font-bold text-sm text-slate-900">Valeurs de Correction Médicale</h4>
+
+      <!-- OEIL DROIT (OD) -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+        <span class="font-extrabold text-xs text-amber-700 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-eye"></i> Œil Droit (OD)
+        </span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+          <div>
+            <label class="form-label text-[10px]">SPH (Sphère)</label>
+            <input type="number" step="0.25" [(ngModel)]="odSphere" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">CYL (Cylindre)</label>
+            <input type="number" step="0.25" [(ngModel)]="odCylinder" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">AXE (Degrés °)</label>
+            <input type="number" step="1" [(ngModel)]="odAxis" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">ADD (Addition)</label>
+            <input type="number" step="0.25" [(ngModel)]="odAddition" class="form-control-opti py-1.5 px-2">
+          </div>
+        </div>
+      </div>
+
+      <!-- OEIL GAUCHE (OG) -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+        <span class="font-extrabold text-xs text-teal-700 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-eye"></i> Œil Gauche (OG)
+        </span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+          <div>
+            <label class="form-label text-[10px]">SPH (Sphère)</label>
+            <input type="number" step="0.25" [(ngModel)]="ogSphere" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">CYL (Cylindre)</label>
+            <input type="number" step="0.25" [(ngModel)]="ogCylinder" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">AXE (Degrés °)</label>
+            <input type="number" step="1" [(ngModel)]="ogAxis" class="form-control-opti py-1.5 px-2">
+          </div>
+          <div>
+            <label class="form-label text-[10px]">ADD (Addition)</label>
+            <input type="number" step="0.25" [(ngModel)]="ogAddition" class="form-control-opti py-1.5 px-2">
+          </div>
+        </div>
+      </div>
+
+      <!-- PUPILLARY DISTANCE (PD) -->
+      <div class="max-w-xs">
+        <label class="form-label text-xs uppercase font-bold text-slate-400">Écart Pupillaire (PD in mm)</label>
+        <input type="number" step="0.5" [(ngModel)]="pd" class="form-control-opti font-mono text-sm">
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+      <button (click)="isManualEntry = false" class="btn-opti btn-opti-outline">Annuler</button>
+      <button (click)="savePrescription()" class="btn-opti btn-opti-gold shadow-md">
+        <i class="fa-solid fa-check"></i> Enregistrer l'Ordonnance
+      </button>
+    </div>
+  </div>
+
+  <!-- SAVED PRESCRIPTIONS LIST -->
+  <div class="space-y-4">
+    <h3 class="font-bold text-base text-slate-900">Mes Ordonnances Enregistrées</h3>
+
+    <div *ngFor="let p of prescriptions" class="card-opti p-6 bg-white space-y-4">
+      <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+        <div>
+          <span class="badge badge-opti-gold font-mono text-[10px]">Réf #ORD-{{ p.id }}</span>
+          <h4 class="font-bold text-lg text-slate-900 mt-1">{{ p.prescriberName }}</h4>
+          <span class="text-xs text-slate-400">Délivrée le {{ p.prescriptionDate }}</span>
+        </div>
+        <span class="badge bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold">
+          <i class="fa-solid fa-certificate"></i> Vérifiée par OptiVision
+        </span>
+      </div>
+
+      <!-- Values Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <span class="font-bold text-amber-700 block mb-1">OD (Œil Droit) :</span>
+          <span>Sph: {{ p.odSphere }} | Cyl: {{ p.odCylinder }} | Axe: {{ p.odAxis }}° | Add: +{{ p.odAddition }}</span>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <span class="font-bold text-teal-700 block mb-1">OG (Œil Gauche) :</span>
+          <span>Sph: {{ p.ogSphere }} | Cyl: {{ p.ogCylinder }} | Axe: {{ p.ogAxis }}° | Add: +{{ p.ogAddition }}</span>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center text-xs text-slate-600 pt-2">
+        <span>Écart Pupillaire (PD): <strong>{{ p.pd }} mm</strong></span>
+        <a routerLink="/lunettes" class="btn-opti btn-opti-dark btn-opti-sm">
+          Utiliser pour une commande →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>

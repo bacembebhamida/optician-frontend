@@ -1,0 +1,15 @@
+<div class="min-h-screen flex flex-col justify-between" [class.bg-slate-900]="isAdminRoute" [class.bg-[#FAF9F6]]="!isAdminRoute">
+  <!-- Customer Header Navigation (hidden on Admin route) -->
+  <app-header *ngIf="!isAdminRoute"></app-header>
+
+  <!-- Router Outlet Main Content -->
+  <main class="flex-1" [class.p-0]="isAdminRoute">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- OptiAssistant Floating AI Widget (hidden on Admin route) -->
+  <app-opti-assistant *ngIf="!isAdminRoute"></app-opti-assistant>
+
+  <!-- OptiVision Luxury Footer (hidden on Admin route) -->
+  <app-footer *ngIf="!isAdminRoute"></app-footer>
+</div>

@@ -1,0 +1,180 @@
+<div class="max-w-5xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+  
+  <!-- Header Title -->
+  <div class="text-center max-w-2xl mx-auto space-y-2">
+    <span class="badge badge-opti-gold"><i class="fa-regular fa-calendar-check"></i> Prise de RDV en Ligne</span>
+    <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif">Prenez rendez-vous avec notre équipe.</h1>
+    <p class="text-slate-500 text-sm">Choisissez votre magasin en Tunisie, le service optique souhaité et le créneau idéal.</p>
+  </div>
+
+  <!-- Wizard Step Indicator Bar -->
+  <div *ngIf="!isSubmitted" class="grid grid-cols-5 gap-2 text-center text-xs font-bold font-mono py-2">
+    <div [class.text-amber-700]="currentStep >= 1" [class.text-slate-400]="currentStep < 1">
+      <div [class.bg-amber-600]="currentStep >= 1" [class.text-white]="currentStep >= 1" [class.bg-slate-200]="currentStep < 1" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1 transition">1</div>
+      <span class="hidden sm:inline">1. Service</span>
+    </div>
+
+    <div [class.text-amber-700]="currentStep >= 2" [class.text-slate-400]="currentStep < 2">
+      <div [class.bg-amber-600]="currentStep >= 2" [class.text-white]="currentStep >= 2" [class.bg-slate-200]="currentStep < 2" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1 transition">2</div>
+      <span class="hidden sm:inline">2. Magasin</span>
+    </div>
+
+    <div [class.text-amber-700]="currentStep >= 3" [class.text-slate-400]="currentStep < 3">
+      <div [class.bg-amber-600]="currentStep >= 3" [class.text-white]="currentStep >= 3" [class.bg-slate-200]="currentStep < 3" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1 transition">3</div>
+      <span class="hidden sm:inline">3. Date</span>
+    </div>
+
+    <div [class.text-amber-700]="currentStep >= 4" [class.text-slate-400]="currentStep < 4">
+      <div [class.bg-amber-600]="currentStep >= 4" [class.text-white]="currentStep >= 4" [class.bg-slate-200]="currentStep < 4" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1 transition">4</div>
+      <span class="hidden sm:inline">4. Heure</span>
+    </div>
+
+    <div [class.text-amber-700]="currentStep >= 5" [class.text-slate-400]="currentStep < 5">
+      <div [class.bg-amber-600]="currentStep >= 5" [class.text-white]="currentStep >= 5" [class.bg-slate-200]="currentStep < 5" class="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-1 transition">5</div>
+      <span class="hidden sm:inline">5. Confirmation</span>
+    </div>
+  </div>
+
+  <!-- STEP CONTENT CARDS -->
+  <div *ngIf="!isSubmitted" class="card-opti p-6 lg:p-10 bg-white">
+    
+    <!-- STEP 1: SERVICE SELECTION -->
+    <div *ngIf="currentStep === 1" class="space-y-6 animate-fade-in">
+      <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">1. Sélectionner le Service Optique</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div *ngFor="let s of servicesList" (click)="selectedService = $any(s.type)" [class.border-amber-600]="selectedService === s.type" [class.bg-amber-50]="selectedService === s.type" class="p-5 rounded-2xl border border-slate-200 cursor-pointer hover:border-amber-600 transition flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+            <i [class]="s.icon"></i>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <h4 class="font-bold text-sm text-slate-900">{{ s.title }}</h4>
+              <span class="badge badge-opti-gold font-mono text-[10px]">{{ s.duration }}</span>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ s.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: STORE SELECTION -->
+    <div *ngIf="currentStep === 2" class="space-y-6 animate-fade-in">
+      <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">2. Choisir le Magasin OptiVision</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div *ngFor="let store of stores" (click)="selectedStore = store" [class.border-amber-600]="selectedStore?.id === store.id" [class.bg-amber-50]="selectedStore?.id === store.id" class="p-5 rounded-2xl border border-slate-200 cursor-pointer hover:border-amber-600 transition space-y-3">
+          <div class="flex items-center gap-3">
+            <img [src]="store.imageUrl" [alt]="store.name" class="w-16 h-16 rounded-xl object-cover">
+            <div>
+              <span class="text-xs font-bold text-amber-700 uppercase font-mono">{{ store.city }}</span>
+              <h4 class="font-bold text-base text-slate-900">{{ store.name }}</h4>
+              <p class="text-xs text-slate-500">{{ store.address }}</p>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex justify-between items-center text-xs text-slate-600">
+            <span><i class="fa-solid fa-clock"></i> {{ store.openingHours }}</span>
+            <span class="font-bold text-emerald-600"><i class="fa-solid fa-phone"></i> {{ store.phone }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: DATE SELECTION -->
+    <div *ngIf="currentStep === 3" class="space-y-6 animate-fade-in max-w-lg mx-auto">
+      <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">3. Sélectionner la Date</h3>
+      
+      <div>
+        <label class="form-label font-bold text-xs uppercase text-slate-400">Date du rendez-vous</label>
+        <input type="date" [(ngModel)]="selectedDate" class="form-control-opti text-sm font-mono">
+      </div>
+      <p class="text-xs text-slate-500 text-center">Nos magasins sont ouverts du Lundi au Samedi de 09h00 à 19h30.</p>
+    </div>
+
+    <!-- STEP 4: TIME SLOT SELECTION -->
+    <div *ngIf="currentStep === 4" class="space-y-6 animate-fade-in">
+      <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">4. Choisir l'Heure</h3>
+      
+      <div class="grid grid-cols-3 sm:grid-cols-7 gap-3">
+        <button *ngFor="let slot of timeSlots" (click)="selectedTimeSlot = slot" [class.btn-opti-gold]="selectedTimeSlot === slot" [class.btn-opti-outline]="selectedTimeSlot !== slot" class="btn-opti font-mono text-xs py-3">
+          {{ slot }}
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 5: CONFIRMATION DETAILS -->
+    <div *ngIf="currentStep === 5" class="space-y-6 animate-fade-in max-w-xl mx-auto">
+      <h3 class="font-bold text-lg text-slate-900 border-b border-slate-100 pb-3">5. Vos Coordonnées & Validation</h3>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="form-label text-xs uppercase font-bold text-slate-400">Nom & Prénom</label>
+          <input type="text" [(ngModel)]="clientName" class="form-control-opti text-sm">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label text-xs uppercase font-bold text-slate-400">Email</label>
+            <input type="email" [(ngModel)]="clientEmail" class="form-control-opti text-sm">
+          </div>
+          <div>
+            <label class="form-label text-xs uppercase font-bold text-slate-400">Téléphone (Tunisie)</label>
+            <input type="text" [(ngModel)]="clientPhone" class="form-control-opti text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label text-xs uppercase font-bold text-slate-400">Remarques ou besoins spécifiques</label>
+          <textarea [(ngModel)]="notes" rows="3" placeholder="Ex: Porteur de verres progressifs, examen annuel..." class="form-control-opti text-sm"></textarea>
+        </div>
+      </div>
+
+      <!-- Recap Box -->
+      <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs space-y-1">
+        <span class="font-bold text-amber-900 block">Récapitulatif du RDV :</span>
+        <div class="text-amber-800">
+          • Magasin : <strong>{{ selectedStore?.name }}</strong><br>
+          • Date & Heure : <strong>{{ selectedDate }} à {{ selectedTimeSlot }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons Footer -->
+    <div class="pt-8 border-t border-slate-100 flex justify-between items-center mt-8">
+      <button *ngIf="currentStep > 1" (click)="prevStep()" class="btn-opti btn-opti-outline">
+        <i class="fa-solid fa-arrow-left"></i> Étape Précédente
+      </button>
+
+      <button *ngIf="currentStep < 5" (click)="nextStep()" class="btn-opti btn-opti-gold ml-auto">
+        Continuer <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+      <button *ngIf="currentStep === 5" (click)="confirmBooking()" class="btn-opti btn-opti-dark ml-auto py-3 px-8 shadow-lg">
+        <i class="fa-solid fa-check"></i> Confirmer mon Rendez-vous
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div *ngIf="isSubmitted" class="card-opti p-10 bg-white text-center space-y-6 max-w-xl mx-auto animate-fade-in">
+    <div class="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-4xl mx-auto">
+      <i class="fa-solid fa-calendar-check"></i>
+    </div>
+
+    <h2 class="text-3xl font-extrabold text-slate-900 font-serif">Rendez-vous Confirme !</h2>
+    <p class="text-slate-600 text-sm">
+      Un email et un SMS de confirmation ont été envoyés à <strong>{{ clientEmail }}</strong>. Nos opticiens vous attendent à <strong>{{ createdAppointment?.storeName }}</strong> le <strong>{{ createdAppointment?.date }} à {{ createdAppointment?.timeSlot }}</strong>.
+    </p>
+
+    <div class="pt-4 flex justify-center gap-4">
+      <a routerLink="/mon-compte" class="btn-opti btn-opti-dark">
+        Voir mes rendez-vous
+      </a>
+      <a routerLink="/" class="btn-opti btn-opti-outline">
+        Retour à l'Accueil
+      </a>
+    </div>
+  </div>
+
+</div>

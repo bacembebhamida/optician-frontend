@@ -1,0 +1,503 @@
+<!-- OptiVision Auth Page — Premium Optical Brand Experience -->
+<div [dir]="isRTL ? 'rtl' : 'ltr'" class="auth-root" [class.is-rtl]="isRTL">
+
+  <!-- ── TOAST ─────────────────────────────────────────────────────── -->
+  <div *ngIf="toastMessage"
+       class="auth-toast"
+       [class.toast-success]="toastType === 'success'"
+       [class.toast-error]  ="toastType === 'error'"
+       [class.toast-info]   ="toastType === 'info'"
+       role="alert" aria-live="assertive">
+    <i class="fa-solid"
+       [class.fa-circle-check]="toastType === 'success'"
+       [class.fa-circle-xmark]="toastType === 'error'"
+       [class.fa-circle-info] ="toastType === 'info'"></i>
+    <span>{{ toastMessage }}</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MAIN TWO-COLUMN LAYOUT
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="auth-layout">
+
+    <!-- ══ LEFT — BRAND VISUAL PANEL (48%) ══════════════════════ -->
+    <aside class="auth-brand" aria-hidden="true">
+
+      <!-- Premium eyewear editorial photograph -->
+      <img
+        src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=1200&auto=format&fit=crop&q=85&crop=focalpoint&fp-y=0.35"
+        alt="Collection de lunettes premium OptiVision — lunettes de vue et soleil haut de gamme"
+        class="brand-photo">
+
+      <!-- Layered dark overlay for readability -->
+      <div class="brand-overlay-dark"></div>
+      <div class="brand-overlay-gradient"></div>
+
+      <!-- Subtle optical lens decoration rings -->
+      <div class="optical-ring ring-a" aria-hidden="true"></div>
+      <div class="optical-ring ring-b" aria-hidden="true"></div>
+
+      <!-- Brand content -->
+      <div class="brand-content">
+
+        <!-- Logo mark -->
+        <a routerLink="/" class="brand-logo-mark" tabindex="-1">
+          <span class="brand-logo-icon">
+            <i class="fa-solid fa-glasses"></i>
+          </span>
+          <div class="brand-logo-text">
+            <span class="brand-name">OPTI<span class="brand-accent">VISION</span></span>
+            <span class="brand-sub-name">HAUTE LUNETTERIE</span>
+          </div>
+        </a>
+
+        <!-- Hero copy -->
+        <div class="brand-hero-copy">
+          <h1 class="brand-slogan">
+            Voir le monde<br><em>autrement.</em>
+          </h1>
+          <p class="brand-support-text">
+            Des lunettes qui associent vision,<br>confort et style.
+          </p>
+        </div>
+
+        <!-- Optical trust indicators — real brand values, not fake numbers -->
+        <ul class="brand-trust-list" role="list">
+          <li class="trust-item">
+            <span class="trust-icon"><i class="fa-solid fa-eye"></i></span>
+            <span>Expertise optique professionnelle</span>
+          </li>
+          <li class="trust-item">
+            <span class="trust-icon"><i class="fa-solid fa-glasses"></i></span>
+            <span>Lunettes sélectionnées avec soin</span>
+          </li>
+          <li class="trust-item">
+            <span class="trust-icon"><i class="fa-solid fa-user-tie"></i></span>
+            <span>Conseil personnalisé par nos opticiens</span>
+          </li>
+          <li class="trust-item">
+            <span class="trust-icon"><i class="fa-solid fa-calendar-check"></i></span>
+            <span>Rendez-vous &amp; essayage virtuel disponibles</span>
+          </li>
+        </ul>
+
+        <!-- Subtle collection CTA -->
+        <a routerLink="/lunettes" class="brand-discover-cta" tabindex="-1">
+          Découvrez notre collection
+          <i class="fa-solid fa-arrow-right-long"></i>
+        </a>
+
+      </div>
+    </aside>
+
+    <!-- ══ RIGHT — AUTHENTICATION FORM (52%) ════════════════════ -->
+    <main class="auth-form-panel">
+
+      <!-- Mobile-only compact header (hidden on desktop) -->
+      <div class="auth-mobile-header">
+        <a routerLink="/" class="mobile-brand">
+          <span class="mobile-brand-icon"><i class="fa-solid fa-glasses"></i></span>
+          <div>
+            <span class="mobile-brand-name">OPTI<span class="mobile-brand-accent">VISION</span></span>
+            <span class="mobile-brand-sub">Haute Lunetterie</span>
+          </div>
+        </a>
+        <a routerLink="/" class="mobile-back-link" aria-label="Retour à la boutique">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+      </div>
+
+      <!-- Mobile hero strip (tablet & mobile only, hidden desktop) -->
+      <div class="auth-mobile-hero" aria-hidden="true">
+        <img
+          src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=900&auto=format&fit=crop&q=80"
+          alt="OptiVision — Haute Lunetterie"
+          class="mobile-hero-img">
+        <div class="mobile-hero-scrim"></div>
+        <p class="mobile-hero-tagline">Voir le monde <em>autrement.</em></p>
+      </div>
+
+      <!-- ── Form scroll area ──────────────────────────────────── -->
+      <div class="form-scroll-area">
+        <div class="form-inner">
+
+          <!-- ════════════════════════════════════════════
+               VIEW: LOGIN
+          ════════════════════════════════════════════ -->
+          <div *ngIf="mode === 'LOGIN'" class="form-view animate-in">
+
+            <!-- OptiVision logo mark (desktop form side) -->
+            <div class="form-logo-row">
+              <span class="form-logo-icon"><i class="fa-solid fa-glasses"></i></span>
+              <span class="form-logo-label">OPTI<span class="form-logo-accent">VISION</span></span>
+            </div>
+
+            <div class="form-heading-group">
+              <h2 class="form-heading">{{ t('welcome') }}</h2>
+              <p class="form-subheading">{{ t('subtitle') }}</p>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="errorMessage" class="form-alert form-alert-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+
+            <!-- Backend offline notice (no credentials shown) -->
+            <div *ngIf="isDemoMode" class="form-alert form-alert-offline" role="status">
+              <i class="fa-solid fa-wifi-slash"></i>
+              <div class="alert-text-block">
+                <strong>Service temporairement indisponible</strong>
+                <span>Veuillez réessayer dans quelques instants.</span>
+              </div>
+            </div>
+
+            <form class="auth-fields" (ngSubmit)="submit()" novalidate>
+
+              <!-- Email field -->
+              <div class="field" [class.field--error]="emailInvalid" [class.field--valid]="emailTouched && !!email && !emailInvalid">
+                <label for="email-login" class="field-label">{{ t('emailLabel') }}</label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-envelope"></i>
+                  <input
+                    id="email-login"
+                    name="email"
+                    type="email"
+                    [(ngModel)]="email"
+                    (blur)="emailTouched = true"
+                    autocomplete="email"
+                    required
+                    class="field-control"
+                    [placeholder]="t('emailPlaceholder')"
+                    [attr.aria-invalid]="emailInvalid || null"
+                    aria-describedby="email-login-error">
+                  <i *ngIf="emailTouched && !!email && !emailInvalid"
+                     class="field-trailing-icon field-valid-icon fa-solid fa-circle-check"
+                     aria-hidden="true"></i>
+                </div>
+                <p *ngIf="emailInvalid" id="email-login-error" class="field-msg" role="alert">
+                  Format d'e-mail invalide.
+                </p>
+              </div>
+
+              <!-- Password field -->
+              <div class="field">
+                <div class="field-label-row">
+                  <label for="pw-login" class="field-label">{{ t('passwordLabel') }}</label>
+                  <button type="button" class="link-forgot" (click)="setMode('FORGOT_PASSWORD')">
+                    {{ t('forgotPassword') }}
+                  </button>
+                </div>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-lock"></i>
+                  <input
+                    id="pw-login"
+                    name="password"
+                    [type]="showPassword ? 'text' : 'password'"
+                    [(ngModel)]="password"
+                    autocomplete="current-password"
+                    required
+                    class="field-control"
+                    [placeholder]="t('passwordPlaceholder')">
+                  <button
+                    type="button"
+                    class="field-eye-btn"
+                    (click)="togglePassword()"
+                    [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+                    <i class="fa-regular" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Remember me -->
+              <div class="field-checkbox-row">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" class="sr-only">
+                  <span class="checkbox-box" aria-hidden="true"></span>
+                  <span class="checkbox-text">{{ t('rememberMe') }}</span>
+                </label>
+              </div>
+
+              <!-- Primary submit button -->
+              <button
+                type="submit"
+                id="btn-login-submit"
+                class="btn-login"
+                [disabled]="isSubmitting || !email || !password"
+                [class.btn--loading]="isSubmitting">
+                <span class="btn-inner">
+                  <i *ngIf="!isSubmitting" class="fa-solid fa-arrow-right-to-bracket"></i>
+                  <i *ngIf="isSubmitting"  class="fa-solid fa-circle-notch fa-spin"></i>
+                  {{ isSubmitting ? t('loggingIn') : t('loginBtn') }}
+                </span>
+              </button>
+
+            </form>
+
+            <!-- Guest access (secondary) -->
+            <div class="guest-row">
+              <button type="button" class="btn-guest" (click)="continueAsGuest()">
+                <i class="fa-regular fa-user" aria-hidden="true"></i>
+                {{ t('continueAsGuest') }}
+              </button>
+              <p class="guest-note">{{ t('guestNote') }}</p>
+            </div>
+
+            <!-- Register CTA -->
+            <p class="cta-register">
+              {{ t('noAccount') }}
+              <button type="button" class="link-cta" (click)="setMode('REGISTER')">
+                {{ t('createAccount') }}
+              </button>
+            </p>
+
+            <!-- Security reassurance -->
+            <div class="security-row" aria-label="Sécurité">
+              <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+              <span>{{ t('secureNote') }}</span>
+            </div>
+
+          </div>
+          <!-- /LOGIN -->
+
+          <!-- ════════════════════════════════════════════
+               VIEW: REGISTER
+          ════════════════════════════════════════════ -->
+          <div *ngIf="mode === 'REGISTER'" class="form-view animate-in">
+
+            <div class="form-logo-row">
+              <span class="form-logo-icon"><i class="fa-solid fa-glasses"></i></span>
+              <span class="form-logo-label">OPTI<span class="form-logo-accent">VISION</span></span>
+            </div>
+
+            <div class="form-heading-group">
+              <h2 class="form-heading">{{ t('registerTitle') }}</h2>
+              <p class="form-subheading">{{ t('registerSubtitle') }}</p>
+            </div>
+
+            <div *ngIf="errorMessage" class="form-alert form-alert-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+
+            <form class="auth-fields" (ngSubmit)="submit()" novalidate>
+
+              <!-- Name row -->
+              <div class="field-grid-2">
+                <div class="field">
+                  <label for="reg-firstname" class="field-label">
+                    {{ t('firstName') }} <span class="required-mark">*</span>
+                  </label>
+                  <div class="field-control-wrap">
+                    <i class="field-leading-icon fa-regular fa-user"></i>
+                    <input id="reg-firstname" name="firstName" type="text"
+                           [(ngModel)]="firstName" autocomplete="given-name" required
+                           class="field-control" placeholder="Sonia">
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="reg-lastname" class="field-label">
+                    {{ t('lastName') }} <span class="required-mark">*</span>
+                  </label>
+                  <div class="field-control-wrap">
+                    <i class="field-leading-icon fa-regular fa-user"></i>
+                    <input id="reg-lastname" name="lastName" type="text"
+                           [(ngModel)]="lastName" autocomplete="family-name" required
+                           class="field-control" placeholder="Ben Ammar">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="field" [class.field--error]="emailInvalid">
+                <label for="reg-email" class="field-label">
+                  {{ t('emailLabel') }} <span class="required-mark">*</span>
+                </label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-envelope"></i>
+                  <input id="reg-email" name="email" type="email"
+                         [(ngModel)]="email" (blur)="emailTouched = true"
+                         autocomplete="email" required
+                         class="field-control" [placeholder]="t('emailPlaceholder')"
+                         [attr.aria-invalid]="emailInvalid || null">
+                </div>
+                <p *ngIf="emailInvalid" class="field-msg" role="alert">Format d'e-mail invalide.</p>
+              </div>
+
+              <!-- Phone (optional) -->
+              <div class="field">
+                <label for="reg-phone" class="field-label">{{ t('phone') }}</label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-solid fa-phone"></i>
+                  <input id="reg-phone" name="phone" type="tel"
+                         [(ngModel)]="phone" autocomplete="tel"
+                         class="field-control" placeholder="+216 22 000 000">
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="field">
+                <label for="reg-pw" class="field-label">
+                  {{ t('passwordLabel') }} <span class="required-mark">*</span>
+                </label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-lock"></i>
+                  <input id="reg-pw" name="password"
+                         [type]="showPassword ? 'text' : 'password'"
+                         [(ngModel)]="password" (input)="onPasswordInput()"
+                         autocomplete="new-password" minlength="8" required
+                         class="field-control" placeholder="Minimum 8 caractères">
+                  <button type="button" class="field-eye-btn" (click)="togglePassword()"
+                          [attr.aria-label]="showPassword ? 'Masquer' : 'Afficher'">
+                    <i class="fa-regular" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                  </button>
+                </div>
+                <!-- Strength meter -->
+                <div *ngIf="passwordTouched && password" class="pw-strength-row" role="status">
+                  <div class="pw-strength-bars" aria-hidden="true">
+                    <span *ngFor="let b of [1,2,3,4]" class="pw-bar"
+                          [style.background-color]="b <= passwordStrength ? strengthColor : ''"></span>
+                  </div>
+                  <span class="pw-strength-label" [style.color]="strengthColor">{{ strengthLabel }}</span>
+                </div>
+              </div>
+
+              <!-- Confirm password -->
+              <div class="field" [class.field--error]="passwordMismatch">
+                <label for="reg-pw-confirm" class="field-label">
+                  {{ t('passwordConfirm') }} <span class="required-mark">*</span>
+                </label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-lock"></i>
+                  <input id="reg-pw-confirm" name="passwordConfirm"
+                         [type]="showPasswordConfirm ? 'text' : 'password'"
+                         [(ngModel)]="passwordConfirm"
+                         autocomplete="new-password" required
+                         class="field-control" placeholder="Répétez votre mot de passe">
+                  <button type="button" class="field-eye-btn" (click)="togglePasswordConfirm()"
+                          [attr.aria-label]="showPasswordConfirm ? 'Masquer' : 'Afficher'">
+                    <i class="fa-regular" [class.fa-eye]="!showPasswordConfirm" [class.fa-eye-slash]="showPasswordConfirm"></i>
+                  </button>
+                </div>
+                <p *ngIf="passwordMismatch" class="field-msg" role="alert">Les mots de passe ne correspondent pas.</p>
+              </div>
+
+              <!-- Terms -->
+              <div class="field-checkbox-row" style="margin-top: -0.125rem;">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="acceptTerms" [(ngModel)]="acceptTerms" class="sr-only">
+                  <span class="checkbox-box" aria-hidden="true"></span>
+                  <span class="checkbox-text">{{ t('terms') }}</span>
+                </label>
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" class="btn-login"
+                      [disabled]="isSubmitting"
+                      [class.btn--loading]="isSubmitting">
+                <span class="btn-inner">
+                  <i *ngIf="!isSubmitting" class="fa-solid fa-user-plus"></i>
+                  <i *ngIf="isSubmitting"  class="fa-solid fa-circle-notch fa-spin"></i>
+                  {{ isSubmitting ? t('creatingAccount') : t('registerBtn') }}
+                </span>
+              </button>
+
+            </form>
+
+            <p class="cta-register">
+              {{ t('alreadyAccount') }}
+              <button type="button" class="link-cta" (click)="setMode('LOGIN')">{{ t('signIn') }}</button>
+            </p>
+
+            <div class="security-row">
+              <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+              <span>{{ t('secureNote') }}</span>
+            </div>
+
+          </div>
+          <!-- /REGISTER -->
+
+          <!-- ════════════════════════════════════════════
+               VIEW: FORGOT PASSWORD
+          ════════════════════════════════════════════ -->
+          <div *ngIf="mode === 'FORGOT_PASSWORD'" class="form-view animate-in">
+
+            <div class="forgot-icon-badge">
+              <i class="fa-regular fa-envelope-open"></i>
+            </div>
+
+            <div class="form-heading-group">
+              <h2 class="form-heading">{{ t('forgotTitle') }}</h2>
+              <p class="form-subheading">{{ t('forgotSubtitle') }}</p>
+            </div>
+
+            <div *ngIf="errorMessage" class="form-alert form-alert-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+
+            <form class="auth-fields" (ngSubmit)="submit()" novalidate>
+              <div class="field">
+                <label for="forgot-email" class="field-label">{{ t('emailLabel') }}</label>
+                <div class="field-control-wrap">
+                  <i class="field-leading-icon fa-regular fa-envelope"></i>
+                  <input id="forgot-email" name="email" type="email"
+                         [(ngModel)]="email" autocomplete="email" required
+                         class="field-control" [placeholder]="t('emailPlaceholder')">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-login"
+                      [disabled]="isSubmitting || !email"
+                      [class.btn--loading]="isSubmitting">
+                <span class="btn-inner">
+                  <i *ngIf="!isSubmitting" class="fa-solid fa-paper-plane"></i>
+                  <i *ngIf="isSubmitting"  class="fa-solid fa-circle-notch fa-spin"></i>
+                  {{ isSubmitting ? t('sending') : t('sendLink') }}
+                </span>
+              </button>
+            </form>
+
+            <p class="cta-register" style="margin-top: 1.75rem;">
+              <button type="button" class="link-cta-secondary" (click)="setMode('LOGIN')">
+                <i class="fa-solid fa-arrow-left" style="font-size: .7rem;"></i>
+                {{ t('backToLogin') }}
+              </button>
+            </p>
+
+          </div>
+          <!-- /FORGOT_PASSWORD -->
+
+          <!-- ════════════════════════════════════════════
+               VIEW: FORGOT SUCCESS
+          ════════════════════════════════════════════ -->
+          <div *ngIf="mode === 'FORGOT_SUCCESS'" class="form-view animate-in">
+            <div class="success-badge">
+              <i class="fa-solid fa-envelope-circle-check"></i>
+            </div>
+            <div class="form-heading-group" style="text-align: center;">
+              <h2 class="form-heading">{{ t('forgotSuccessTitle') }}</h2>
+              <p class="form-subheading">{{ t('forgotSuccessMsg') }}</p>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button type="button" class="btn-login" style="max-width: 260px; margin: 0 auto;" (click)="setMode('LOGIN')">
+                <span class="btn-inner">
+                  <i class="fa-solid fa-arrow-left"></i>
+                  {{ t('backToLogin') }}
+                </span>
+              </button>
+            </div>
+          </div>
+          <!-- /FORGOT_SUCCESS -->
+
+        </div>
+        <!-- /form-inner -->
+      </div>
+      <!-- /form-scroll-area -->
+
+    </main>
+    <!-- /auth-form-panel -->
+
+  </div>
+  <!-- /auth-layout -->
+</div>

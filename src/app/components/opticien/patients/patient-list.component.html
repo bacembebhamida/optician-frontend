@@ -1,0 +1,108 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+  
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <div>
+      <span class="badge badge-primary mb-2">
+        <i class="fa-solid fa-folder-user"></i> Base de Données Ophtalmique
+      </span>
+      <h1 class="text-3xl font-extrabold text-white">Gestion des Dossiers Patients</h1>
+      <p class="text-slate-400 text-sm">Consultez l'historique visuel de vos patients, leurs ordonnances et leurs remarques d'équipement.</p>
+    </div>
+
+    <button (click)="showCreateModal = true" class="btn btn-primary">
+      <i class="fa-solid fa-user-plus"></i> Créer Nouveaux Dossier Patient
+    </button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="glass-panel p-4 mb-8 max-w-xl">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="applyFilter()" placeholder="Rechercher par nom, prénom, email..." class="form-control pl-10">
+    </div>
+  </div>
+
+  <!-- Patient Cards Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let patient of filteredPatients" class="glass-card p-6 rounded-2xl border border-slate-700 space-y-4">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center text-lg border border-blue-500/30">
+          {{ patient.firstName[0] }}{{ patient.lastName[0] }}
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-white">{{ patient.firstName }} {{ patient.lastName }}</h3>
+          <span class="text-xs text-slate-400 font-mono">Né(e) le {{ patient.dateOfBirth }}</span>
+        </div>
+      </div>
+
+      <div class="space-y-1 text-xs text-slate-300 bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono">
+        <div><i class="fa-solid fa-envelope text-blue-400 mr-2"></i> {{ patient.email }}</div>
+        <div><i class="fa-solid fa-phone text-teal-400 mr-2"></i> {{ patient.phone }}</div>
+        <div><i class="fa-solid fa-location-dot text-amber-400 mr-2"></i> {{ patient.address }}, {{ patient.city }}</div>
+      </div>
+
+      <p *ngIf="patient.notes" class="text-xs text-slate-400 italic bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+        "{{ patient.notes }}"
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Create Patient Modal -->
+<div *ngIf="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+  <div class="glass-panel w-full max-w-xl p-6 lg:p-8 border-slate-700 relative">
+    
+    <button (click)="showCreateModal = false" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+
+    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-user-plus text-blue-400"></i> Créer un Nouveau Dossier Patient
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="form-group">
+        <label class="form-label">Prénom</label>
+        <input type="text" [(ngModel)]="firstName" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nom</label>
+        <input type="text" [(ngModel)]="lastName" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" [(ngModel)]="email" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Téléphone</label>
+        <input type="tel" [(ngModel)]="phone" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date de Naissance</label>
+        <input type="date" [(ngModel)]="dateOfBirth" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ville</label>
+        <input type="text" [(ngModel)]="city" class="form-control">
+      </div>
+      <div class="form-group md:col-span-2">
+        <label class="form-label">Adresse Civique</label>
+        <input type="text" [(ngModel)]="address" class="form-control">
+      </div>
+      <div class="form-group md:col-span-2">
+        <label class="form-label">Notes Médicales & Préférences Verres</label>
+        <input type="text" [(ngModel)]="notes" class="form-control">
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button (click)="showCreateModal = false" class="btn btn-secondary">Annuler</button>
+      <button (click)="createPatient()" class="btn btn-primary">Enregistrer le Patient</button>
+    </div>
+
+  </div>
+</div>

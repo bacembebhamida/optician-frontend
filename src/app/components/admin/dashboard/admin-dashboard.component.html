@@ -1,0 +1,1001 @@
+<!-- OptiVision Professional Admin Shell -->
+<div class="admin-shell" [class.sidebar-collapsed]="isSidebarCollapsed">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       1. FIXED SIDEBAR
+  ═══════════════════════════════════════════════════════════════════ -->
+  <aside class="admin-sidebar" [class.mobile-open]="isMobileSidebarOpen">
+    
+    <!-- Sidebar Brand Header -->
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon">
+        <i class="fa-solid fa-glasses"></i>
+      </div>
+      <div class="brand-title-wrap" *ngIf="!isSidebarCollapsed">
+        <span class="brand-name">OPTI<span class="brand-accent">VISION</span></span>
+        <span class="brand-tag">ADMINISTRATION</span>
+      </div>
+      <button class="collapse-toggle-btn hidden-mobile" (click)="isSidebarCollapsed = !isSidebarCollapsed" [title]="isSidebarCollapsed ? 'Déplier la barre' : 'Réduire la barre'">
+        <i class="fa-solid" [class.fa-chevron-left]="!isSidebarCollapsed" [class.fa-chevron-right]="isSidebarCollapsed"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Menu Items -->
+    <nav class="sidebar-nav">
+
+      <!-- SECTION: MAIN -->
+      <div class="nav-section-title" *ngIf="!isSidebarCollapsed">Tableau de Bord</div>
+      <button class="nav-item-btn" [class.active]="activeTab === 'OVERVIEW'" (click)="selectTab('OVERVIEW')" title="Dashboard">
+        <i class="fa-solid fa-chart-line nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Dashboard</span>
+      </button>
+
+      <!-- SECTION: COMMERCIAL -->
+      <div class="nav-section-title" *ngIf="!isSidebarCollapsed">GESTION COMMERCIALE</div>
+
+      <!-- CATALOGUE GROUP -->
+      <div class="nav-group-wrap mb-2">
+        <button class="nav-item-btn font-bold flex justify-between items-center w-full" (click)="isCatalogueOpen = !isCatalogueOpen" title="Catalogue">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-boxes-packing nav-icon text-amber-500"></i>
+            <span class="nav-text" *ngIf="!isSidebarCollapsed">Catalogue</span>
+          </div>
+          <i class="fa-solid text-xs text-slate-400" [class.fa-chevron-down]="isCatalogueOpen" [class.fa-chevron-right]="!isCatalogueOpen" *ngIf="!isSidebarCollapsed"></i>
+        </button>
+        
+        <div class="nav-sub-menu pl-8 space-y-1 my-1 border-l border-slate-700/40 ml-4" *ngIf="isCatalogueOpen && !isSidebarCollapsed">
+          <a routerLink="/admin/products" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-glasses text-amber-500 mr-2"></i> Produits
+          </a>
+          <a routerLink="/admin/products/variants" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-layer-group text-slate-400 mr-2"></i> Variantes
+          </a>
+          <a routerLink="/admin/products/brands" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-tags text-slate-400 mr-2"></i> Marques
+          </a>
+          <a routerLink="/admin/products/categories" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-folder-tree text-slate-400 mr-2"></i> Catégories
+          </a>
+          <a routerLink="/admin/products/suppliers" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-truck-field text-slate-400 mr-2"></i> Fournisseurs
+          </a>
+        </div>
+      </div>
+
+      <!-- INVENTAIRE GROUP -->
+      <div class="nav-group-wrap mb-2">
+        <button class="nav-item-btn font-bold flex justify-between items-center w-full" (click)="isInventaireOpen = !isInventaireOpen" title="Inventaire">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-warehouse nav-icon text-amber-500"></i>
+            <span class="nav-text" *ngIf="!isSidebarCollapsed">Inventaire</span>
+          </div>
+          <i class="fa-solid text-xs text-slate-400" [class.fa-chevron-down]="isInventaireOpen" [class.fa-chevron-right]="!isInventaireOpen" *ngIf="!isSidebarCollapsed"></i>
+        </button>
+        
+        <div class="nav-sub-menu pl-8 space-y-1 my-1 border-l border-slate-700/40 ml-4" *ngIf="isInventaireOpen && !isSidebarCollapsed">
+          <a routerLink="/admin/stock/dashboard" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-chart-pie text-blue-400 mr-2"></i> Dashboard Stock
+          </a>
+          <a routerLink="/admin/stock/products" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-boxes-stacked text-slate-400 mr-2"></i> Vue du Stock
+          </a>
+          <a routerLink="/admin/stock/entries" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-arrow-down-to-line text-emerald-400 mr-2"></i> Entrées
+          </a>
+          <a routerLink="/admin/stock/exits" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-arrow-up-from-line text-red-400 mr-2"></i> Sorties
+          </a>
+          <a routerLink="/admin/stock/transfers" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-truck-ramp-box text-amber-400 mr-2"></i> Transferts
+          </a>
+          <a routerLink="/admin/stock/inventory" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-clipboard-check text-slate-400 mr-2"></i> Inventaires
+          </a>
+          <a routerLink="/admin/stock/movements" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-timeline text-slate-400 mr-2"></i> Mouvements
+          </a>
+          <a routerLink="/admin/stock/alerts" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i> Alertes
+          </a>
+          <a routerLink="/admin/stock/replenishment" routerLinkActive="active-sub-item" class="block text-xs py-1.5 px-2 rounded hover:bg-slate-800 text-slate-300 font-semibold">
+            <i class="fa-solid fa-arrows-spin text-blue-400 mr-2"></i> Réapprovisionnement
+          </a>
+        </div>
+      </div>
+
+      <button class="nav-item-btn" [class.active]="activeTab === 'ORDERS'" (click)="selectTab('ORDERS')" title="Commandes Clients">
+        <i class="fa-solid fa-box-archive nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Commandes</span>
+        <span class="nav-badge badge-blue" *ngIf="!isSidebarCollapsed && activeLabOrders > 0">{{ activeLabOrders }}</span>
+      </button>
+
+      <!-- SECTION: CLIENTS & OPTIQUE -->
+      <div class="nav-section-title" *ngIf="!isSidebarCollapsed">Clients &amp; Santé</div>
+      <button class="nav-item-btn" [class.active]="activeTab === 'PRESCRIPTIONS'" (click)="selectTab('PRESCRIPTIONS')" title="Ordonnances Médicales">
+        <i class="fa-solid fa-file-prescription nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Ordonnances</span>
+        <span class="nav-badge badge-gold" *ngIf="!isSidebarCollapsed && pendingPrescriptionsCount > 0">{{ pendingPrescriptionsCount }}</span>
+      </button>
+
+      <button class="nav-item-btn" [class.active]="activeTab === 'APPOINTMENTS'" (click)="selectTab('APPOINTMENTS')" title="Rendez-vous Examens">
+        <i class="fa-solid fa-calendar-check nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Rendez-vous</span>
+      </button>
+
+      <!-- SECTION: BOUTIQUES -->
+      <div class="nav-section-title" *ngIf="!isSidebarCollapsed">Réseau &amp; Magasins</div>
+      <button class="nav-item-btn" [class.active]="activeTab === 'STORES'" (click)="selectTab('STORES')" title="Boutiques OptiVision">
+        <i class="fa-solid fa-store nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Magasins</span>
+      </button>
+
+      <!-- SECTION: SYSTEM & AUDIT -->
+      <div class="nav-section-title" *ngIf="!isSidebarCollapsed">Sécurité &amp; Système</div>
+      <button class="nav-item-btn" [class.active]="activeTab === 'USERS'" (click)="selectTab('USERS')" title="Utilisateurs & Droits RBAC">
+        <i class="fa-solid fa-user-shield nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Droits &amp; Rôles</span>
+      </button>
+
+      <button class="nav-item-btn" [class.active]="activeTab === 'AUDIT_LOG'" (click)="selectTab('AUDIT_LOG')" title="Journal d'Audit">
+        <i class="fa-solid fa-clock-rotate-left nav-icon"></i>
+        <span class="nav-text" *ngIf="!isSidebarCollapsed">Journal d'Audit</span>
+      </button>
+
+    </nav>
+
+    <!-- Sidebar Footer (System Status) -->
+    <div class="sidebar-footer" *ngIf="!isSidebarCollapsed">
+      <div class="system-status-indicator">
+        <span class="status-ping"></span>
+        <span class="status-text">Système ERP Actif</span>
+      </div>
+      <span class="version-text">OptiVision v2.4 Pro</span>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       2. TOP NAVIGATION HEADER
+  ═══════════════════════════════════════════════════════════════════ -->
+  <header class="admin-top-header">
+    
+    <div class="header-left">
+      <!-- Mobile Sidebar Toggle -->
+      <button class="mobile-toggle-btn" (click)="isMobileSidebarOpen = !isMobileSidebarOpen">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Breadcrumbs -->
+      <div class="admin-breadcrumb">
+        <span class="crumb-parent"><i class="fa-solid fa-shield-halved"></i> Administration</span>
+        <i class="fa-solid fa-chevron-right crumb-sep"></i>
+        <span class="crumb-active">{{ currentTabTitle }}</span>
+      </div>
+    </div>
+
+    <!-- Center Search Bar -->
+    <div class="header-center">
+      <div class="admin-search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text"
+               [(ngModel)]="globalSearchQuery"
+               placeholder="Rechercher une référence, client, commande (#OPT)..."
+               class="admin-search-input">
+      </div>
+    </div>
+
+    <!-- Header Actions Right -->
+    <div class="header-right">
+
+      <!-- Store Filter -->
+      <div class="store-selector-dropdown">
+        <i class="fa-solid fa-location-dot store-icon"></i>
+        <select [(ngModel)]="selectedStoreFilter" class="store-select">
+          <option value="ALL">Tous les Magasins</option>
+          <option value="Tunis">Tunis Centre</option>
+          <option value="Marsa">La Marsa</option>
+          <option value="Sousse">Sousse</option>
+          <option value="Sfax">Sfax</option>
+        </select>
+      </div>
+
+      <!-- Notifications Bell -->
+      <div class="header-action-wrap">
+        <button class="header-icon-btn" (click)="isNotificationsOpen = !isNotificationsOpen" title="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+
+        <div *ngIf="isNotificationsOpen" class="notifications-dropdown animate-dropdown">
+          <div class="notif-header">
+            <span>Notifications ERP</span>
+            <button class="mark-read-btn" (click)="isNotificationsOpen = false">Tout fermer</button>
+          </div>
+          <div class="notif-list">
+            <div *ngFor="let n of notifications" class="notif-item">
+              <div class="notif-icon-box" [class.warn]="n.type==='WARNING'" [class.info]="n.type==='INFO'" [class.success]="n.type==='SUCCESS'">
+                <i class="fa-solid" [class.fa-triangle-exclamation]="n.type==='WARNING'" [class.fa-file-prescription]="n.type==='INFO'" [class.fa-check]="n.type==='SUCCESS'"></i>
+              </div>
+              <div class="notif-text">
+                <span class="notif-title">{{ n.title }}</span>
+                <span class="notif-desc">{{ n.message }}</span>
+                <span class="notif-time">{{ n.time }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return to Front Store Link -->
+      <a routerLink="/" target="_blank" class="header-store-link" title="Ouvrir la boutique client">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>Voir le site</span>
+      </a>
+
+      <!-- User Profile Badge -->
+      <div class="admin-user-profile">
+        <div class="profile-avatar">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div class="profile-info hidden-mobile">
+          <span class="profile-name">Super Admin</span>
+          <span class="profile-role">Direction OptiVision</span>
+        </div>
+        <button class="logout-header-btn" (click)="logout()" title="Se déconnecter">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       3. MAIN CONTENT AREA
+  ═══════════════════════════════════════════════════════════════════ -->
+  <main class="admin-main-content">
+
+    <!-- ── TAB 1: OVERVIEW DASHBOARD ──────────────────────────────── -->
+    <div *ngIf="activeTab === 'OVERVIEW'" class="tab-pane animate-fade-in">
+      
+      <!-- Greeting Banner -->
+      <div class="dashboard-banner">
+        <div class="banner-welcome">
+          <h1 class="welcome-heading">Bonjour, Direction OptiVision 👋</h1>
+          <p class="welcome-sub">Voici l'activité commerciale et opérationnelle de votre écosystème d'optique aujourd'hui.</p>
+        </div>
+
+        <div class="banner-controls">
+          <div class="date-chip">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>15 Septembre 2026</span>
+          </div>
+
+          <div class="period-btn-group">
+            <button [class.active]="selectedPeriodFilter==='7D'" (click)="selectedPeriodFilter='7D'">7J</button>
+            <button [class.active]="selectedPeriodFilter==='30D'" (click)="selectedPeriodFilter='30D'">30J</button>
+            <button [class.active]="selectedPeriodFilter==='3M'" (click)="selectedPeriodFilter='3M'">3M</button>
+            <button [class.active]="selectedPeriodFilter==='12M'" (click)="selectedPeriodFilter='12M'">12M</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 KPI Grid Cards -->
+      <div class="kpi-grid">
+        
+        <!-- KPI 1 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Chiffre d'Affaires</span>
+            <div class="kpi-icon-box gold"><i class="fa-solid fa-coins"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ totalRevenueTnd | number:'1.0-0' }} <span class="kpi-unit">DT</span></span>
+            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +12.5%</span>
+          </div>
+          <span class="kpi-subtext">vs. période précédente</span>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Commandes Labo</span>
+            <div class="kpi-icon-box blue"><i class="fa-solid fa-box-archive"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ orders.length }}</span>
+            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +8.4%</span>
+          </div>
+          <span class="kpi-subtext">{{ activeLabOrders }} actuellement au taillage</span>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Rendez-vous Examens</span>
+            <div class="kpi-icon-box teal"><i class="fa-solid fa-calendar-check"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ appointments.length }}</span>
+            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +15.2%</span>
+          </div>
+          <span class="kpi-subtext">Examens de vue &amp; lentilles</span>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Portefeuille Clients</span>
+            <div class="kpi-icon-box purple"><i class="fa-solid fa-users"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">1 248</span>
+            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +6.7%</span>
+          </div>
+          <span class="kpi-subtext">Comptes certifiés</span>
+        </div>
+
+        <!-- KPI 5 -->
+        <div class="kpi-card" [class.kpi-alert]="lowStockProducts.length > 0">
+          <div class="kpi-header">
+            <span class="kpi-label">Alerte Stock Faible</span>
+            <div class="kpi-icon-box red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ lowStockProducts.length }}</span>
+            <span class="kpi-trend negative"><i class="fa-solid fa-circle-exclamation"></i> Réappro</span>
+          </div>
+          <span class="kpi-subtext">Montures à commander</span>
+        </div>
+
+        <!-- KPI 6 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Ordonnances à Valider</span>
+            <div class="kpi-icon-box amber"><i class="fa-solid fa-file-prescription"></i></div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ pendingPrescriptionsCount }}</span>
+            <span class="kpi-trend neutral">En attente</span>
+          </div>
+          <span class="kpi-subtext">Validation par opticien</span>
+        </div>
+
+      </div>
+
+      <!-- Quick Actions Bar -->
+      <div class="quick-actions-bar">
+        <span class="quick-title"><i class="fa-solid fa-bolt"></i> Actions Rapides :</span>
+        <div class="quick-buttons font-bold">
+          <button (click)="selectTab('PRODUCTS'); showAddProductModal = true" class="btn-quick"><i class="fa-solid fa-plus"></i> Nouveau Produit</button>
+          <button (click)="selectTab('STORES')" class="btn-quick"><i class="fa-solid fa-store"></i> Ajouter Magasin</button>
+          <button (click)="selectTab('PRESCRIPTIONS')" class="btn-quick"><i class="fa-solid fa-check-double"></i> Valider Ordonnance</button>
+          <button (click)="selectTab('APPOINTMENTS')" class="btn-quick"><i class="fa-solid fa-calendar-plus"></i> Nouveau Rendez-vous</button>
+        </div>
+      </div>
+
+      <!-- Grid 2 Columns: Revenue Chart + Top Eyewear -->
+      <div class="dashboard-grid-2">
+
+        <!-- Sales Revenue Visual Graph -->
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div>
+              <h3 class="card-title">Évolution du Chiffre d'Affaires</h3>
+              <p class="card-subtitle">Performances des ventes globales de montures et verres en DT</p>
+            </div>
+            <span class="badge-chip gold">Mois courant</span>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-bars">
+              <div class="chart-bar-group">
+                <div class="chart-bar" style="height: 45%;" title="Semaine 1: 5 400 DT"></div>
+                <span class="bar-label">Sem 1</span>
+              </div>
+              <div class="chart-bar-group">
+                <div class="chart-bar" style="height: 65%;" title="Semaine 2: 7 800 DT"></div>
+                <span class="bar-label">Sem 2</span>
+              </div>
+              <div class="chart-bar-group">
+                <div class="chart-bar" style="height: 85%;" title="Semaine 3: 9 200 DT"></div>
+                <span class="bar-label">Sem 3</span>
+              </div>
+              <div class="chart-bar-group">
+                <div class="chart-bar active" style="height: 95%;" title="Semaine 4: 10 450 DT"></div>
+                <span class="bar-label">Sem 4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Selling Products -->
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div>
+              <h3 class="card-title">Montures les plus vendues</h3>
+              <p class="card-subtitle">Best-sellers par chiffre d'affaires généré</p>
+            </div>
+            <button (click)="selectTab('PRODUCTS')" class="link-btn">Voir tout</button>
+          </div>
+
+          <div class="top-products-list">
+            <div *ngFor="let tp of topProducts" class="top-product-item">
+              <img [src]="tp.imageUrl" [alt]="tp.name" class="tp-img">
+              <div class="tp-details">
+                <span class="tp-brand">{{ tp.brand }}</span>
+                <span class="tp-name">{{ tp.name }}</span>
+                <span class="tp-cat">{{ tp.category }}</span>
+              </div>
+              <div class="tp-stats">
+                <span class="tp-sales">{{ tp.unitsSold }} ventes</span>
+                <span class="tp-revenue">{{ tp.revenueTnd | number:'1.0-0' }} DT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Today's Appointments & Low Stock Tables -->
+      <div class="dashboard-grid-2" style="margin-top: 1.5rem;">
+        
+        <!-- Appointments Today -->
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div>
+              <h3 class="card-title">Rendez-vous d'aujourd'hui</h3>
+              <p class="card-subtitle">Examens de vue &amp; consultations optiques en boutique</p>
+            </div>
+            <button (click)="selectTab('APPOINTMENTS')" class="link-btn">Gérer calendrier</button>
+          </div>
+
+          <div class="appointments-list">
+            <div *ngFor="let apt of appointments" class="apt-row">
+              <div class="apt-time-badge">{{ apt.time }}</div>
+              <div class="apt-info">
+                <span class="apt-client">{{ apt.clientName }}</span>
+                <span class="apt-service">{{ apt.service }} · Opticien: {{ apt.opticien }}</span>
+              </div>
+              <div class="apt-status-cell">
+                <span class="badge-chip"
+                      [class.emerald]="apt.status==='CONFIRMED'"
+                      [class.amber]="apt.status==='PENDING'"
+                      [class.blue]="apt.status==='COMPLETED'">
+                  {{ apt.status === 'CONFIRMED' ? 'Confirmé' : apt.status === 'PENDING' ? 'En attente' : 'Terminé' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alert Box -->
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div>
+              <h3 class="card-title">Stock Faible &amp; Recommandations</h3>
+              <p class="card-subtitle">Références nécessitant un réapprovisionnement auprès des fournisseurs</p>
+            </div>
+            <span class="badge-chip red">{{ lowStockProducts.length }} alertes</span>
+          </div>
+
+          <div class="low-stock-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Monture</th>
+                  <th>Marque</th>
+                  <th>Statut</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of lowStockProducts">
+                  <td class="font-bold">{{ p.name }}</td>
+                  <td><span class="brand-tag-sm">{{ p.brand }}</span></td>
+                  <td><span class="badge-chip red">Rupture</span></td>
+                  <td>
+                    <button (click)="toggleStock(p)" class="btn-sm btn-outline-gold">Recharger stock</button>
+                  </td>
+                </tr>
+                <tr *ngIf="lowStockProducts.length === 0">
+                  <td colspan="4" class="empty-cell">Toutes les montures sont actuellement en stock.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- /OVERVIEW TAB -->
+
+    <!-- ── TAB 2: PRODUCTS & INVENTORY ────────────────────────────── -->
+    <div *ngIf="activeTab === 'PRODUCTS'" class="tab-pane animate-fade-in">
+      
+      <!-- Top Action Bar -->
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Catalogue &amp; Inventaire des Montures</h2>
+          <p class="tab-sub">Gérez le catalogue des lunettes de vue, soleil, lentilles et accessoires.</p>
+        </div>
+        <button (click)="showAddProductModal = true" class="btn-primary-admin">
+          <i class="fa-solid fa-plus"></i> Ajouter une référence
+        </button>
+      </div>
+
+      <!-- Add Product Modal / Collapsible Form -->
+      <div *ngIf="showAddProductModal" class="admin-card modal-card animate-fade-in mb-6">
+        <div class="card-header-row border-b pb-3 mb-4">
+          <h3 class="card-title"><i class="fa-solid fa-circle-plus text-amber-600"></i> Nouvelle Monture au Catalogue</h3>
+          <button (click)="showAddProductModal = false" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form (ngSubmit)="addProduct()" class="form-grid-4">
+          <div class="field-group">
+            <label class="field-label">Marque *</label>
+            <input type="text" [(ngModel)]="newProductBrand" name="brand" class="admin-input" placeholder="Ex: RAY-BAN" required>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Nom du Modèle *</label>
+            <input type="text" [(ngModel)]="newProductName" name="name" class="admin-input" placeholder="Ex: Clubmaster Classic" required>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Code Référence SKU</label>
+            <input type="text" [(ngModel)]="newProductModel" name="model" class="admin-input" placeholder="Ex: RX5154-2000">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Prix de Vente (DT) *</label>
+            <input type="number" [(ngModel)]="newProductPrice" name="price" class="admin-input" placeholder="450.000" step="0.001" required>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Catégorie</label>
+            <select [(ngModel)]="newProductCategory" name="category" class="admin-select">
+              <option *ngFor="let c of productCategories" [ngValue]="c.value">{{ c.label }}</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Matière</label>
+            <select [(ngModel)]="newProductMaterial" name="material" class="admin-select">
+              <option *ngFor="let m of productMaterials" [ngValue]="m">{{ m }}</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Forme</label>
+            <select [(ngModel)]="newProductShape" name="shape" class="admin-select">
+              <option *ngFor="let s of productShapes" [ngValue]="s">{{ s }}</option>
+            </select>
+          </div>
+          <!-- Photo Upload & Preview Field -->
+          <div class="field-group col-span-full bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <label class="field-label text-slate-900 font-bold mb-2 block">
+              <i class="fa-solid fa-camera text-amber-600 mr-1.5"></i> Photo du Produit (Téléversement ou URL)
+            </label>
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              <!-- File Upload Input -->
+              <div class="md:col-span-6">
+                <label class="block text-xs text-slate-500 mb-1">Fichier image local (PNG, JPG, WEBP) :</label>
+                <input type="file" accept="image/*" (change)="onProductImageSelected($event)" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer">
+              </div>
+
+              <!-- URL Text Input -->
+              <div class="md:col-span-6">
+                <label class="block text-xs text-slate-500 mb-1">Ou saisir l'URL de l'image :</label>
+                <input type="url" [(ngModel)]="newProductImageUrl" name="imageUrl" class="admin-input text-xs" placeholder="https://images.unsplash.com/photo-...">
+              </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div *ngIf="imagePreviewUrl || newProductImageUrl" class="mt-3 flex items-center gap-3 bg-white p-2.5 rounded-lg border border-slate-200">
+              <img [src]="imagePreviewUrl || newProductImageUrl" alt="Aperçu du produit" class="w-16 h-16 object-cover rounded-lg border border-slate-300">
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">Aperçu visuel sélectionné</span>
+                <span class="text-[11px] text-emerald-600"><i class="fa-solid fa-circle-check"></i> Image valide et prête pour l'affichage catalogue</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer-actions col-span-full">
+            <button type="button" (click)="showAddProductModal = false" class="btn-secondary-admin">Annuler</button>
+            <button type="submit" class="btn-primary-admin"><i class="fa-solid fa-floppy-disk mr-1"></i> Enregistrer la Monture</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filters-row">
+        <div class="search-field-inline">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" [(ngModel)]="globalSearchQuery" placeholder="Filtrer par nom ou marque..." class="admin-input">
+        </div>
+
+        <div class="filter-dropdowns">
+          <select [(ngModel)]="selectedCategoryFilter" class="admin-select">
+            <option value="ALL">Toutes les catégories</option>
+            <option value="LUNETTES_VUE">Lunettes de vue</option>
+            <option value="LUNETTES_SOLEIL">Lunettes de soleil</option>
+            <option value="LENTILLES">Lentilles</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products Data Table -->
+      <div class="admin-card no-padding">
+        <table class="admin-data-table">
+          <thead>
+            <tr>
+              <th>Visuel</th>
+              <th>Produit &amp; Marque</th>
+              <th>SKU / Modèle</th>
+              <th>Catégorie</th>
+              <th>Matière</th>
+              <th>Prix (DT)</th>
+              <th>Statut Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredProducts">
+              <td>
+                <img [src]="p.imageUrl" [alt]="p.name" class="table-product-img">
+              </td>
+              <td>
+                <div class="product-cell-info">
+                  <span class="brand-badge">{{ p.brand }}</span>
+                  <span class="product-title">{{ p.name }}</span>
+                </div>
+              </td>
+              <td class="font-mono text-xs">{{ p.model || 'RX-2026' }}</td>
+              <td><span class="badge-chip grey">{{ p.category.replaceAll('_', ' ') }}</span></td>
+              <td>{{ p.material }}</td>
+              <td class="font-mono font-bold text-slate-900">{{ p.priceTnd | number:'1.3-3' }} DT</td>
+              <td>
+                <button (click)="toggleStock(p)" class="badge-chip cursor-pointer" [class.emerald]="p.inStock" [class.red]="!p.inStock" title="Cliquer pour changer le statut">
+                  {{ p.inStock ? 'En Stock' : 'Rupture' }}
+                </button>
+              </td>
+              <td>
+                <div class="table-actions">
+                  <button (click)="toggleStock(p)" class="action-icon-btn" title="Activer/Désactiver stock">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- /PRODUCTS TAB -->
+
+    <!-- ── TAB 3: ORDERS & LAB ────────────────────────────────────── -->
+    <div *ngIf="activeTab === 'ORDERS'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Suivi des Commandes &amp; Laboratoire de Taillage</h2>
+          <p class="tab-sub">Supervisez l'avancement des verres, le taillage et la livraison client.</p>
+        </div>
+        <span class="badge-chip blue font-bold">{{ activeLabOrders }} commandes en cours de traitement</span>
+      </div>
+
+      <div class="orders-stack">
+        <div *ngFor="let order of orders" class="admin-card order-card">
+          <div class="order-card-header">
+            <div class="order-ref-block">
+              <span class="order-ref-title">{{ order.orderReference }}</span>
+              <span class="badge-chip"
+                    [class.amber]="order.status==='TAILLAGE_VERRES'"
+                    [class.blue]="order.status==='VALIDEE' || order.status==='EXPEDIEE'"
+                    [class.emerald]="order.status==='LIVREE'">
+                {{ orderStatusLabel(order.status) }}
+              </span>
+              <span *ngIf="order.prescriptionAttached" class="badge-chip purple"><i class="fa-solid fa-file-prescription"></i> Ordonnance jointe</span>
+            </div>
+            <div class="order-total-block">
+              <span class="order-price">{{ order.totalTnd | number:'1.3-3' }} DT</span>
+              <span class="payment-method">{{ order.paymentMethod.replaceAll('_', ' ') }}</span>
+            </div>
+          </div>
+
+          <div class="order-body-grid">
+            <div class="order-address-info">
+              <p><i class="fa-solid fa-location-dot"></i> <strong>Adresse :</strong> {{ order.deliveryAddress }}</p>
+              <p><i class="fa-regular fa-clock"></i> <strong>Date :</strong> {{ order.date }}</p>
+            </div>
+
+            <div class="order-items-pills">
+              <span *ngFor="let item of order.items" class="item-pill">
+                {{ item.quantity }}× {{ item.product.name }} ({{ item.product.brand }})
+              </span>
+            </div>
+          </div>
+
+          <div class="order-card-footer" *ngIf="nextOrderAction(order.status) as actionText">
+            <button (click)="advanceOrder(order)" class="btn-primary-admin sm">
+              {{ actionText }} <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /ORDERS TAB -->
+
+    <!-- ── TAB 4: PRESCRIPTIONS ───────────────────────────────────── -->
+    <div *ngIf="activeTab === 'PRESCRIPTIONS'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Validation des Ordonnances Médicales</h2>
+          <p class="tab-sub">Certification des corrections visuelles OD/OG par les opticiens diplômés OptiVision.</p>
+        </div>
+        <span class="badge-chip gold">{{ certifiedPrescriptions }} ordonnances certifiées</span>
+      </div>
+
+      <div class="prescriptions-stack">
+        <div *ngFor="let p of prescriptions" class="admin-card prescription-card">
+          
+          <div class="presc-header">
+            <div>
+              <h3 class="presc-doctor"><i class="fa-solid fa-user-doctor"></i> {{ p.prescriberName }}</h3>
+              <p class="presc-meta">Date d'émission : {{ p.prescriptionDate }} · Écart Pupillaire (PD) : <strong>{{ p.pd }} mm</strong></p>
+            </div>
+
+            <div class="presc-actions">
+              <span *ngIf="p.isVerified" class="badge-chip emerald"><i class="fa-solid fa-circle-check"></i> Certifiée par Opticien</span>
+              <button *ngIf="!p.isVerified" (click)="verifyPrescription(p)" class="btn-primary-admin sm">
+                <i class="fa-solid fa-check"></i> Certifier l'ordonnance
+              </button>
+            </div>
+          </div>
+
+          <!-- Prescription Matrix OD / OG -->
+          <div class="presc-matrix-grid">
+            
+            <div class="eye-box">
+              <span class="eye-label">ŒIL DROIT (OD)</span>
+              <div class="eye-values">
+                <div><span>Sphère</span><strong>{{ p.odSphere > 0 ? '+' : '' }}{{ p.odSphere }}</strong></div>
+                <div><span>Cylindre</span><strong>{{ p.odCylinder > 0 ? '+' : '' }}{{ p.odCylinder }}</strong></div>
+                <div><span>Axe</span><strong>{{ p.odAxis }}°</strong></div>
+                <div><span>Addition</span><strong>{{ p.odAddition ? '+' + p.odAddition : '—' }}</strong></div>
+              </div>
+            </div>
+
+            <div class="eye-box">
+              <span class="eye-label">ŒIL GAUCHE (OG)</span>
+              <div class="eye-values">
+                <div><span>Sphère</span><strong>{{ p.ogSphere > 0 ? '+' : '' }}{{ p.ogSphere }}</strong></div>
+                <div><span>Cylindre</span><strong>{{ p.ogCylinder > 0 ? '+' : '' }}{{ p.ogCylinder }}</strong></div>
+                <div><span>Axe</span><strong>{{ p.ogAxis }}°</strong></div>
+                <div><span>Addition</span><strong>{{ p.ogAddition ? '+' + p.ogAddition : '—' }}</strong></div>
+              </div>
+            </div>
+
+          </div>
+
+          <p *ngIf="p.notes" class="presc-notes"><i class="fa-solid fa-note-sticky text-amber-600"></i> Notes de l'ophtalmologiste : {{ p.notes }}</p>
+
+        </div>
+      </div>
+
+    </div>
+    <!-- /PRESCRIPTIONS TAB -->
+
+    <!-- ── TAB 5: APPOINTMENTS ────────────────────────────────────── -->
+    <div *ngIf="activeTab === 'APPOINTMENTS'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Gestion des Rendez-vous en Boutique</h2>
+          <p class="tab-sub">Planning des examens de vue, contrôles et conseils optiques.</p>
+        </div>
+      </div>
+
+      <div class="admin-card no-padding">
+        <table class="admin-data-table">
+          <thead>
+            <tr>
+              <th>Heure</th>
+              <th>Client</th>
+              <th>Téléphone</th>
+              <th>Prestation</th>
+              <th>Opticien Référent</th>
+              <th>Boutique</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let apt of appointments">
+              <td class="font-bold text-slate-900 font-mono">{{ apt.time }}</td>
+              <td class="font-bold">{{ apt.clientName }}</td>
+              <td class="font-mono text-xs">{{ apt.clientPhone }}</td>
+              <td><span class="badge-chip grey">{{ apt.service }}</span></td>
+              <td>{{ apt.opticien }}</td>
+              <td>{{ apt.storeCity }}</td>
+              <td>
+                <span class="badge-chip"
+                      [class.emerald]="apt.status==='CONFIRMED'"
+                      [class.amber]="apt.status==='PENDING'"
+                      [class.blue]="apt.status==='COMPLETED'">
+                  {{ apt.status === 'CONFIRMED' ? 'Confirmé' : apt.status === 'PENDING' ? 'En attente' : 'Terminé' }}
+                </span>
+              </td>
+              <td>
+                <button *ngIf="apt.status==='PENDING'" (click)="updateAppointmentStatus(apt, 'CONFIRMED')" class="btn-sm btn-outline-gold">Valider</button>
+                <button *ngIf="apt.status==='CONFIRMED'" (click)="updateAppointmentStatus(apt, 'COMPLETED')" class="btn-sm btn-outline-dark">Terminer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- /APPOINTMENTS TAB -->
+
+    <!-- ── TAB 6: STORES NETWORK ─────────────────────────────────── -->
+    <div *ngIf="activeTab === 'STORES'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Réseau des Boutiques OptiVision</h2>
+          <p class="tab-sub">Points de vente, horaires d'ouverture et ateliers de taillage.</p>
+        </div>
+      </div>
+
+      <!-- Add Store Card -->
+      <div class="admin-card mb-6">
+        <h3 class="card-title mb-4">+ Ajouter une nouvelle boutique</h3>
+        <form (ngSubmit)="addStore()" class="form-grid-3">
+          <input type="text" [(ngModel)]="newStoreName" name="sName" placeholder="Nom du magasin (Ex: OptiVision Sousse)" class="admin-input" required>
+          <input type="text" [(ngModel)]="newStoreCity" name="sCity" placeholder="Ville (Ex: Sousse)" class="admin-input" required>
+          <input type="text" [(ngModel)]="newStorePhone" name="sPhone" placeholder="Téléphone (+216...)" class="admin-input">
+          <input type="text" [(ngModel)]="newStoreAddress" name="sAddr" placeholder="Adresse complète" class="admin-input col-span-2">
+          <input type="text" [(ngModel)]="newStoreHours" name="sHours" placeholder="Lun - Sam : 09:00 - 19:30" class="admin-input">
+          
+          <div class="col-span-full">
+            <button type="submit" class="btn-primary-admin">Créer le Point de Vente</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="stores-grid">
+        <div *ngFor="let s of stores" class="admin-card store-card">
+          <img [src]="s.imageUrl" [alt]="s.name" class="store-img">
+          <div class="store-info">
+            <span class="store-city-badge">{{ s.city }}</span>
+            <h3 class="store-name">{{ s.name }}</h3>
+            <p class="store-address"><i class="fa-solid fa-location-dot"></i> {{ s.address }}</p>
+            <p class="store-phone"><i class="fa-solid fa-phone"></i> {{ s.phone }}</p>
+            <p class="store-hours"><i class="fa-regular fa-clock"></i> {{ s.openingHours }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /STORES TAB -->
+
+    <!-- ── TAB 7: USERS & RBAC PERMISSIONS ───────────────────────── -->
+    <div *ngIf="activeTab === 'USERS'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Gestion des Comptes &amp; Rôles RBAC</h2>
+          <p class="tab-sub">Matrice d'habilitation pour administrateurs, opticiens et collaborateurs.</p>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="admin-card no-padding mb-6">
+        <table class="admin-data-table">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Email / Identifiant</th>
+              <th>Téléphone</th>
+              <th>Affectation</th>
+              <th>Rôle Système</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of usersList">
+              <td class="font-bold text-slate-900">{{ u.fullName }}</td>
+              <td>{{ u.email }}</td>
+              <td class="font-mono text-xs">{{ u.phone }}</td>
+              <td>{{ u.city }}</td>
+              <td><span class="badge-chip gold">{{ u.role }}</span></td>
+              <td><span class="badge-chip emerald">{{ u.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RBAC Permission Matrix -->
+      <div class="admin-card">
+        <h3 class="card-title mb-4"><i class="fa-solid fa-matrix text-amber-600"></i> Matrice des Habilitations ERP</h3>
+        <table class="admin-data-table border">
+          <thead>
+            <tr>
+              <th>Module Système</th>
+              <th class="text-center">SUPER_ADMIN</th>
+              <th class="text-center">ADMIN</th>
+              <th class="text-center">OPTICIEN</th>
+              <th class="text-center">VENDEUR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let perm of rolePermissions">
+              <td class="font-bold">{{ perm.module }}</td>
+              <td class="text-center"><i class="fa-solid fa-check text-emerald-600"></i></td>
+              <td class="text-center"><i class="fa-solid fa-check text-emerald-600"></i></td>
+              <td class="text-center">
+                <i class="fa-solid" [class.fa-check]="perm.opticien" [class.text-emerald-600]="perm.opticien" [class.fa-xmark]="!perm.opticien" [class.text-slate-300]="!perm.opticien"></i>
+              </td>
+              <td class="text-center">
+                <i class="fa-solid" [class.fa-check]="perm.vendeur" [class.text-emerald-600]="perm.vendeur" [class.fa-xmark]="!perm.vendeur" [class.text-slate-300]="!perm.vendeur"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- /USERS TAB -->
+
+    <!-- ── TAB 8: AUDIT LOG ──────────────────────────────────────── -->
+    <div *ngIf="activeTab === 'AUDIT_LOG'" class="tab-pane animate-fade-in">
+      
+      <div class="tab-header-bar">
+        <div>
+          <h2 class="tab-heading">Journal d'Audit Système &amp; Sécurité</h2>
+          <p class="tab-sub">Traçabilité complète des actions effectuées sur le back-office OptiVision.</p>
+        </div>
+      </div>
+
+      <div class="admin-card no-padding">
+        <table class="admin-data-table">
+          <thead>
+            <tr>
+              <th>ID Log</th>
+              <th>Date &amp; Heure</th>
+              <th>Utilisateur</th>
+              <th>Rôle</th>
+              <th>Action Effectuée</th>
+              <th>Module</th>
+              <th>Cible</th>
+              <th>Adresse IP</th>
+              <th>Résultat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of auditLogs">
+              <td class="font-mono text-xs font-bold text-slate-500">{{ log.id }}</td>
+              <td class="font-mono text-xs">{{ log.timestamp }}</td>
+              <td class="font-bold text-slate-900">{{ log.user }}</td>
+              <td><span class="badge-chip grey text-[10px]">{{ log.role }}</span></td>
+              <td>{{ log.action }}</td>
+              <td><span class="badge-chip gold">{{ log.module }}</span></td>
+              <td class="text-xs text-slate-600">{{ log.target }}</td>
+              <td class="font-mono text-xs text-slate-400">{{ log.ipAddress }}</td>
+              <td>
+                <span class="badge-chip" [class.emerald]="log.status==='SUCCESS'" [class.amber]="log.status==='WARNING'" [class.red]="log.status==='FAILED'">
+                  {{ log.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- /AUDIT_LOG TAB -->
+
+  </main>
+
+</div>

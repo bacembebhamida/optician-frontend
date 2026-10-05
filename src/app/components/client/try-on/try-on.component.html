@@ -1,0 +1,233 @@
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8 relative select-none">
+  
+  <!-- UNAUTHENTICATED WALL / OVERLAY MODAL -->
+  <div *ngIf="!isAuthenticated" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-2xl animate-fade-in">
+    <div class="bg-slate-900 border border-slate-700/80 text-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative text-center space-y-6">
+      
+      <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-3xl shadow-inner">
+        <i class="fa-solid fa-glasses animate-pulse"></i>
+      </div>
+
+      <div class="space-y-2">
+        <span class="badge bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono px-3 py-1 rounded-full uppercase tracking-wider">
+          <i class="fa-solid fa-shield-halved mr-1"></i> Espace Membre OptiVision
+        </span>
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-white font-serif">Essayage Virtuel 3D Gratuit</h2>
+        <p class="text-slate-300 text-sm leading-relaxed">
+          Afin de personnaliser la détection faciale MediaPipe 3D et sauvegarder vos ajustements de montures, l'accès à l'essayage virtuel est réservé aux membres connectés.
+        </p>
+      </div>
+
+      <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-left space-y-1">
+        <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">Compte de Test Rapide :</span>
+        <div class="text-xs text-slate-300 font-mono">Email: <span class="text-white font-bold">client&#64;optivision.tn</span></div>
+        <div class="text-xs text-slate-300 font-mono">Mot de passe: <span class="text-white font-bold">client123</span></div>
+      </div>
+
+      <div class="pt-2 space-y-3">
+        <button (click)="goToLogin()" class="btn-opti btn-opti-gold w-full py-3.5 text-sm font-bold shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Se Connecter à mon Compte
+        </button>
+
+        <button (click)="goToRegister()" class="btn-opti bg-slate-800 text-white hover:bg-slate-700 w-full py-3.5 text-sm font-bold border border-slate-700 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-user-plus"></i> Créer un Compte Gratuit
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500 pt-1">
+        <a routerLink="/catalogue" class="text-amber-400 hover:underline font-semibold"><i class="fa-solid fa-arrow-left mr-1"></i> Parcourir le catalogue de montures</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <span class="badge badge-opti-gold mb-2"><i class="fa-solid fa-vr-cardboard"></i> MediaPipe + Three.js WebGL 3D</span>
+      <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 font-serif">Essayage Virtuel 3D Temps Réel</h1>
+      <p class="text-slate-500 text-sm mt-1">Détection faciale 478 points & rendu 3D GLB directement dans votre navigateur sans serveur cloud.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <button (click)="isAuthenticated ? startCamera() : goToLogin()" [class.bg-amber-600]="isCameraActive" [class.text-white]="isCameraActive" class="btn-opti btn-opti-outline flex items-center gap-2">
+        <i class="fa-solid fa-video"></i> {{ isCameraActive ? 'Caméra Active (30 FPS)' : 'Activer la Caméra' }}
+      </button>
+      <button (click)="useAvatarMode = true; stopCamera()" [class.bg-slate-900]="useAvatarMode" [class.text-white]="useAvatarMode" class="btn-opti btn-opti-outline flex items-center gap-2">
+        <i class="fa-solid fa-user"></i> Mode Mannequin
+      </button>
+      <button (click)="toggleComparison()" class="btn-opti btn-opti-outline flex items-center gap-2">
+        <i class="fa-solid fa-columns"></i> {{ isComparing ? 'Quitter Comparateur' : 'Comparer 2 Montures' }}
+      </button>
+      <button (click)="isAuthenticated ? captureSnapshot() : goToLogin()" class="btn-opti btn-opti-dark flex items-center gap-2">
+        <i class="fa-solid fa-camera"></i> Capturer Photo
+      </button>
+    </div>
+  </div>
+
+  <!-- Snapshot Notification -->
+  <div *ngIf="snapshotSuccess" class="bg-emerald-950 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between text-xs animate-fade-in font-bold border border-emerald-600/40">
+    <div class="flex items-center gap-3">
+      <i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
+      <span>Capture photo HD enregistrée avec succès !</span>
+    </div>
+    <a routerLink="/mon-compte" class="underline text-emerald-300 hover:text-white">Voir mes photos</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- STAGE CANVAS (Col 8) -->
+    <div class="lg:col-span-8 space-y-6">
+      
+      <div (mousedown)="onDragStart($event)"
+           (mousemove)="onDragMove($event)"
+           (mouseup)="onDragEnd()"
+           (mouseleave)="onDragEnd()"
+           (touchstart)="onDragStart($event)"
+           (touchmove)="onDragMove($event)"
+           (touchend)="onDragEnd()"
+           class="relative bg-slate-950 rounded-3xl overflow-hidden min-h-[520px] flex items-center justify-center border border-slate-800 shadow-2xl cursor-grab active:cursor-grabbing">
+        
+        <!-- Live Webcam Stream View -->
+        <div *ngIf="isCameraActive" class="relative w-full h-[520px] flex items-center justify-center overflow-hidden">
+          <video #videoElement autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100 rounded-3xl"></video>
+          
+          <!-- Three.js WebGL 3D Canvas Overlay -->
+          <canvas #threeCanvas class="absolute inset-0 w-full h-full pointer-events-none transform -scale-x-100"></canvas>
+
+          <!-- 2D Overlay Fallback Image if WebGL loading -->
+          <div *ngIf="selectedProduct && !threeCanvas" class="absolute pointer-events-none transition-transform duration-75 select-none"
+               [style.transform]="'translate(' + calibration.positionX + 'px, ' + calibration.positionY + 'px) scale(' + calibration.scale + ')'">
+            <img [src]="selectedProduct.imageUrl" [alt]="selectedProduct.name"
+                 class="w-80 max-w-full filter drop-shadow-[0_25px_25px_rgba(0,0,0,0.95)]">
+          </div>
+        </div>
+
+        <!-- Avatar Model Mode View -->
+        <div *ngIf="useAvatarMode" class="relative w-full h-[520px] flex items-center justify-center overflow-hidden">
+          <img [src]="selectedAvatar" alt="Face model" class="w-full h-full object-cover rounded-3xl filter brightness-90">
+          
+          <!-- Eyewear 3D Overlay on Avatar -->
+          <div *ngIf="selectedProduct && !isComparing" class="absolute top-[28%] pointer-events-none transition-transform duration-75 select-none"
+               [style.transform]="'translate(' + calibration.positionX + 'px, ' + calibration.positionY + 'px) scale(' + calibration.scale + ')'">
+            <img [src]="selectedProduct.imageUrl" [alt]="selectedProduct.name"
+                 class="w-80 max-w-full filter drop-shadow-[0_25px_25px_rgba(0,0,0,0.95)]">
+          </div>
+
+          <!-- Comparison Side by Side Mode -->
+          <div *ngIf="isComparing" class="absolute inset-0 flex justify-between p-4 pointer-events-none bg-slate-950/30">
+            <div class="w-1/2 flex flex-col items-center justify-center border-r border-white/20 p-2">
+              <span class="bg-slate-900/90 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 border border-slate-700 shadow-md">{{ selectedProduct?.name }}</span>
+              <img *ngIf="selectedProduct" [src]="selectedProduct.imageUrl" class="w-64 max-w-full filter drop-shadow-2xl">
+            </div>
+            <div class="w-1/2 flex flex-col items-center justify-center p-2">
+              <span class="bg-amber-600/90 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 shadow-md">{{ comparisonProduct?.name || 'Sélectionner 2ème monture' }}</span>
+              <img *ngIf="comparisonProduct" [src]="comparisonProduct.imageUrl" class="w-64 max-w-full filter drop-shadow-2xl">
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera Error Notification -->
+        <div *ngIf="cameraError" class="absolute top-4 left-4 right-4 bg-amber-950/90 text-amber-200 p-3 rounded-xl backdrop-blur-md text-xs border border-amber-500/40">
+          <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-2"></i> {{ cameraError }}
+        </div>
+
+        <!-- Live AR Detection Badge -->
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-slate-700/80 flex items-center gap-2.5 text-xs text-white font-mono shadow-lg">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>MediaPipe Face Landmarker (478 points) + Three.js WebGL</span>
+        </div>
+
+      </div>
+
+      <!-- Fitting Control Sliders & Presets Bar -->
+      <div class="card-opti p-6 bg-white space-y-4 border border-slate-200">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-amber-700"></i> Calibration 3D & Positionnement Temps Réel
+          </h3>
+          <button (click)="resetPosition()" class="text-xs text-amber-700 font-bold hover:underline flex items-center gap-1">
+            <i class="fa-solid fa-rotate-left"></i> Réinitialiser Calibration
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+          <div>
+            <label class="form-label flex justify-between">
+              <span>Échelle Taille Monture</span>
+              <span class="font-mono font-bold text-amber-700">{{ (calibration.scale * 100) | number:'1.0-0' }}%</span>
+            </label>
+            <input type="range" min="0.6" max="1.6" step="0.05" [(ngModel)]="calibration.scale" (ngModelChange)="onCalibrationChange()" class="w-full accent-amber-700">
+          </div>
+
+          <div>
+            <label class="form-label flex justify-between">
+              <span>Position Hauteur (Yeux/Nez)</span>
+              <span class="font-mono font-bold text-amber-700">{{ calibration.positionY | number:'1.0-1' }}</span>
+            </label>
+            <input type="range" min="-10" max="10" step="0.2" [(ngModel)]="calibration.positionY" (ngModelChange)="onCalibrationChange()" class="w-full accent-amber-700">
+          </div>
+
+          <div>
+            <label class="form-label flex justify-between">
+              <span>Position Horizontale</span>
+              <span class="font-mono font-bold text-amber-700">{{ calibration.positionX | number:'1.0-1' }}</span>
+            </label>
+            <input type="range" min="-10" max="10" step="0.2" [(ngModel)]="calibration.positionX" (ngModelChange)="onCalibrationChange()" class="w-full accent-amber-700">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR: FRAME SELECTION LIST (Col 4) -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <!-- Avatar Model Picker -->
+      <div *ngIf="useAvatarMode" class="card-opti p-5 bg-white border border-slate-200">
+        <h3 class="font-bold text-xs uppercase text-slate-400 mb-3 tracking-wider">Sélectionnez un Modèle Visage</h3>
+        <div class="grid grid-cols-3 gap-2">
+          <div *ngFor="let model of avatarModels" (click)="selectAvatar(model.url)"
+               [class.ring-2]="selectedAvatar === model.url"
+               [class.ring-amber-600]="selectedAvatar === model.url"
+               class="cursor-pointer rounded-xl overflow-hidden border border-slate-200 hover:opacity-100 transition">
+            <img [src]="model.url" [alt]="model.name" class="w-full h-16 object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Eyewear Catalog Picker -->
+      <div class="card-opti p-5 bg-white space-y-4 border border-slate-200">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-glasses text-amber-700"></i> Montures Compatibles 3D
+          </h3>
+          <span class="text-xs font-mono font-bold text-slate-400">{{ products.length }} modèles</span>
+        </div>
+
+        <div class="space-y-3 max-h-[440px] overflow-y-auto pr-1">
+          <div *ngFor="let product of products" (click)="selectProduct(product)"
+               [class.border-amber-600]="selectedProduct?.id === product.id"
+               [class.bg-amber-50]="selectedProduct?.id === product.id"
+               class="p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-slate-400 transition flex items-center gap-3">
+            <img [src]="product.imageUrl" [alt]="product.name" class="w-16 h-12 object-contain bg-slate-50 rounded-xl p-1 border border-slate-100 shrink-0">
+            <div class="flex-1 min-w-0">
+              <span class="text-[10px] font-bold text-amber-700 block uppercase font-mono">{{ product.brand }}</span>
+              <h4 class="font-bold text-xs text-slate-900 truncate">{{ product.name }}</h4>
+              <span class="text-xs text-slate-900 font-extrabold font-mono">{{ product.priceTnd }} DT</span>
+            </div>
+            <i *ngIf="selectedProduct?.id === product.id" class="fa-solid fa-circle-check text-amber-700 text-lg"></i>
+          </div>
+        </div>
+
+        <div *ngIf="selectedProduct" class="pt-4 border-t border-slate-100">
+          <button (click)="addToCart(selectedProduct)" class="btn-opti btn-opti-gold w-full shadow-md py-3 text-xs font-bold">
+            <i class="fa-solid fa-bag-shopping"></i> Commander cette monture
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
