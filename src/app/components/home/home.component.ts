@@ -1,8 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { OptiVisionService } from '../../services/optivision.service';
 import { Product, StyleCategory } from '../../models/optivision.models';
+
+export interface HeroSlide {
+  id: number;
+  badge: string;
+  titleLine1: string;
+  titleHighlight: string;
+  subtitle: string;
+  imageUrl: string;
+  ctaText: string;
+  ctaRoute: string;
+  secondaryCtaText: string;
+  secondaryCtaRoute: string;
+  perksBadgeTitle: string;
+  perksBadgeDesc: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -11,12 +26,75 @@ import { Product, StyleCategory } from '../../models/optivision.models';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   featuredProducts: Product[] = [];
   selectedStyleFilter: StyleCategory | 'ALL' = 'ALL';
   selectedProductForModal: Product | null = null;
   favoriteIds: number[] = [];
+
+  // ── HERO DYNAMIC CAROUSEL SLIDES ──────────────────────────────────
+  heroSlides: HeroSlide[] = [
+    {
+      id: 1,
+      badge: 'Collection Haute Lunetterie 2026',
+      titleLine1: 'Voir le monde',
+      titleHighlight: 'autrement.',
+      subtitle: 'L\'excellence de la haute lunetterie internationale alliée au taillage de précision suisse et à l\'essai virtuel en temps réel 3D.',
+      imageUrl: 'https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1920&auto=format&fit=crop&q=90',
+      ctaText: 'Découvrir la Collection',
+      ctaRoute: '/catalogue',
+      secondaryCtaText: 'Essayage Virtuel 3D',
+      secondaryCtaRoute: '/try-on',
+      perksBadgeTitle: 'Verres Optiques Premium',
+      perksBadgeDesc: 'Surfaçage HD & Anti-Lumière Bleue'
+    },
+    {
+      id: 2,
+      badge: 'Nouvelle Saison Solaire 2026',
+      titleLine1: 'L\'Élégance Solaire',
+      titleHighlight: 'Haute Couture.',
+      subtitle: 'Découvrez les dernières montures de soleil signées Ray-Ban, Tom Ford, Gucci, Prada & Persol.',
+      imageUrl: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1920&auto=format&fit=crop&q=90',
+      ctaText: 'Lunettes de Soleil',
+      ctaRoute: '/lunettes-de-soleil',
+      secondaryCtaText: 'Essayage Virtuel',
+      secondaryCtaRoute: '/try-on',
+      perksBadgeTitle: 'Protection UV400 Totale',
+      perksBadgeDesc: 'Verres Polarisés & Antireflet HD'
+    },
+    {
+      id: 3,
+      badge: 'Innovations Optiques 3D',
+      titleLine1: 'Essayez vos montures',
+      titleHighlight: 'directement en 3D.',
+      subtitle: 'Une technologie de miroir virtuel révolutionnaire. Simulez votre ajustement et votre style en temps réel avec votre webcam.',
+      imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=1920&auto=format&fit=crop&q=90',
+      ctaText: 'Démarrer le Try-On 3D',
+      ctaRoute: '/try-on',
+      secondaryCtaText: 'Prendre Rendez-vous',
+      secondaryCtaRoute: '/rdv',
+      perksBadgeTitle: 'Ajustement Morphologique',
+      perksBadgeDesc: 'Calcul d\'écart pupillaire en direct'
+    },
+    {
+      id: 4,
+      badge: 'Sur-Mesure & Expertise Optique',
+      titleLine1: 'Examen de Vue &',
+      titleHighlight: 'Conseil VIP.',
+      subtitle: 'Prenez rendez-vous dans nos boutiques avec nos maîtres opticiens et bénéficiez d\'un examen de vue offert et personnalisé.',
+      imageUrl: 'https://images.unsplash.com/photo-1577803645773-f96470509666?w=1920&auto=format&fit=crop&q=90',
+      ctaText: 'Prendre Rendez-vous',
+      ctaRoute: '/rdv',
+      secondaryCtaText: 'Nos Boutiques',
+      secondaryCtaRoute: '/magasins',
+      perksBadgeTitle: 'Examen Offert',
+      perksBadgeDesc: 'Optométristes diplômés d\'État'
+    }
+  ];
+
+  currentSlideIndex: number = 0;
+  private slideTimer: any = null;
 
   styleCategories: { name: StyleCategory; label: string; desc: string; icon: string }[] = [
     { name: 'MINIMALISTE', label: 'Minimaliste', desc: 'Finesse et titane épuré', icon: 'fa-solid fa-feather' },
@@ -37,6 +115,39 @@ export class HomeComponent implements OnInit {
     this.optiService.favoriteIds$.subscribe(ids => {
       this.favoriteIds = ids;
     });
+
+    this.startAutoSlide();
+  }
+
+  ngOnDestroy(): void {
+    this.stopAutoSlide();
+  }
+
+  startAutoSlide(): void {
+    this.stopAutoSlide();
+    this.slideTimer = setInterval(() => {
+      this.nextSlide();
+    }, 6000);
+  }
+
+  stopAutoSlide(): void {
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+      this.slideTimer = null;
+    }
+  }
+
+  nextSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.heroSlides.length;
+  }
+
+  prevSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.heroSlides.length) % this.heroSlides.length;
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlideIndex = index;
+    this.startAutoSlide();
   }
 
   isFavorite(productId: number): boolean {

@@ -4,94 +4,125 @@
 
 <div class="space-y-8 pb-12">
 
-  <!-- 1. HERO SECTION -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
-    <div class="hero-luxury-wrapper relative">
+  <!-- 1. HERO SECTION (FULL WIDTH DYNAMIC ANIMATED SLIDER) -->
+  <section class="relative w-full min-h-[580px] lg:min-h-[640px] bg-slate-950 overflow-hidden" 
+           (mouseenter)="stopAutoSlide()" 
+           (mouseleave)="startAutoSlide()">
+    
+    <!-- Dynamic Slide Background Images with Smooth Animation -->
+    <div *ngFor="let slide of heroSlides; let i = index" 
+         class="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out"
+         [class.opacity-100]="i === currentSlideIndex"
+         [class.opacity-0]="i !== currentSlideIndex"
+         [class.pointer-events-none]="i !== currentSlideIndex">
       
-      <!-- Background Ambient Glows -->
-      <div class="hero-glow-bg"></div>
-      <div class="hero-glow-secondary"></div>
+      <img [src]="slide.imageUrl" 
+           [alt]="slide.titleLine1" 
+           class="w-full h-full object-cover object-center transform transition-transform duration-[10000ms] ease-out"
+           [class.scale-105]="i === currentSlideIndex"
+           [class.scale-100]="i !== currentSlideIndex">
+      
+      <!-- Gradient Overlays for High Contrast Typography -->
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"></div>
+    </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[540px] items-center">
+    <!-- Hero Content Container (Overlay Content) -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[580px] lg:min-h-[640px] flex flex-col justify-center py-12">
+      
+      <div class="max-w-2xl text-white space-y-6">
         
-        <!-- Left Hero Content (Col 7) -->
-        <div class="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center z-10">
-          
-          <div class="flex items-center gap-3 mb-4">
-            <span class="hero-badge-gold">
-              <i class="fa-solid fa-sparkles text-amber-400"></i> Collection Haute Lunetterie 2026
-            </span>
-            <span class="inline-flex items-center gap-1.5 text-xs text-slate-300 font-medium bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              En Stock en Tunisie
-            </span>
-          </div>
-
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-4 font-serif-luxury">
-            Voir le monde <br class="hidden sm:inline">
-            <span class="text-gradient-gold italic">autrement.</span>
-          </h1>
-
-          <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal mb-8 leading-relaxed">
-            L'excellence de la haute lunetterie internationale alliée au taillage de précision suisse et à l'essai virtuel en temps réel 3D.
-          </p>
-
-          <!-- Hero Action Buttons -->
-          <div class="flex flex-wrap gap-4 items-center">
-            <a routerLink="/lunettes" class="btn-hero-primary text-base">
-              <i class="fa-solid fa-glasses"></i> Découvrir la Collection
-            </a>
-            <a routerLink="/try-on" class="btn-hero-secondary text-base">
-              <i class="fa-solid fa-camera text-amber-400"></i> Essayage Virtuel 3D
-            </a>
-          </div>
-
-          <!-- Hero 4 Perks Bar -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 pt-6 border-t border-white/10">
-            <div class="hero-feature-item">
-              <i class="fa-solid fa-eye text-amber-400"></i>
-              <span>Examen offert</span>
-            </div>
-            <div class="hero-feature-item">
-              <i class="fa-solid fa-bolt text-indigo-400"></i>
-              <span>Taillage 1h</span>
-            </div>
-            <div class="hero-feature-item">
-              <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-              <span>Garantie 2 ans</span>
-            </div>
-            <div class="hero-feature-item">
-              <i class="fa-solid fa-truck-fast text-sky-400"></i>
-              <span>Livraison Tunisie</span>
-            </div>
-          </div>
-
+        <!-- Animated Badge -->
+        <div class="flex items-center gap-3">
+          <span class="hero-badge-gold">
+            <i class="fa-solid fa-sparkles text-amber-400"></i> {{ heroSlides[currentSlideIndex].badge }}
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-xs text-slate-300 font-medium bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            En Stock en Tunisie
+          </span>
         </div>
 
-        <!-- Right Hero Image (Col 5) -->
-        <div class="lg:col-span-5 relative min-h-[380px] lg:h-full overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?w=1600&auto=format&fit=crop&q=85" 
-               alt="Haute lunetterie opticien luxe" 
-               class="absolute inset-0 w-full h-full object-cover object-center filter brightness-95 transform scale-105 hover:scale-100 transition duration-1000">
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent lg:bg-gradient-to-r lg:from-slate-950 lg:via-transparent lg:to-transparent"></div>
+        <!-- Animated Main Title -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white font-serif-luxury transition-all duration-700">
+          {{ heroSlides[currentSlideIndex].titleLine1 }} <br class="hidden sm:inline">
+          <span class="text-gradient-gold italic">{{ heroSlides[currentSlideIndex].titleHighlight }}</span>
+        </h1>
 
-          <!-- Floating Luxury Badge Overlay -->
-          <div class="absolute bottom-6 right-6 bg-slate-900/85 backdrop-blur-xl p-3.5 rounded-2xl border border-white/15 shadow-2xl max-w-xs text-white hidden sm:block">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-lg shadow-lg">
-                <i class="fa-solid fa-gem"></i>
-              </div>
-              <div>
-                <span class="font-bold text-xs block text-amber-300 uppercase tracking-wider">Verres Optiques Premium</span>
-                <span class="text-[11px] text-slate-300 block">Surfaçage HD & Anti-Lumière Bleue</span>
-              </div>
-            </div>
+        <!-- Subtitle -->
+        <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal leading-relaxed">
+          {{ heroSlides[currentSlideIndex].subtitle }}
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap gap-4 items-center pt-2">
+          <a [routerLink]="heroSlides[currentSlideIndex].ctaRoute" class="btn-hero-primary text-base">
+            <i class="fa-solid fa-glasses"></i> {{ heroSlides[currentSlideIndex].ctaText }}
+          </a>
+          <a [routerLink]="heroSlides[currentSlideIndex].secondaryCtaRoute" class="btn-hero-secondary text-base">
+            <i class="fa-solid fa-camera text-amber-400"></i> {{ heroSlides[currentSlideIndex].secondaryCtaText }}
+          </a>
+        </div>
+
+        <!-- Hero 4 Perks Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/15">
+          <div class="hero-feature-item">
+            <i class="fa-solid fa-eye text-amber-400"></i>
+            <span>Examen offert</span>
           </div>
-
+          <div class="hero-feature-item">
+            <i class="fa-solid fa-bolt text-indigo-400"></i>
+            <span>Taillage 1h</span>
+          </div>
+          <div class="hero-feature-item">
+            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+            <span>Garantie 2 ans</span>
+          </div>
+          <div class="hero-feature-item">
+            <i class="fa-solid fa-truck-fast text-sky-400"></i>
+            <span>Livraison Tunisie</span>
+          </div>
         </div>
 
       </div>
+
+      <!-- Floating Badge on Right -->
+      <div class="absolute bottom-10 right-8 bg-slate-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/15 shadow-2xl max-w-xs text-white hidden lg:block z-20">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-lg shadow-lg">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <div>
+            <span class="font-bold text-xs block text-amber-300 uppercase tracking-wider">{{ heroSlides[currentSlideIndex].perksBadgeTitle }}</span>
+            <span class="text-[11px] text-slate-300 block">{{ heroSlides[currentSlideIndex].perksBadgeDesc }}</span>
+          </div>
+        </div>
+      </div>
+
     </div>
+
+    <!-- PREV / NEXT NAV BUTTONS -->
+    <button (click)="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/60 hover:bg-amber-600 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition shadow-lg" aria-label="Slide Précédent">
+      <i class="fa-solid fa-chevron-left text-sm"></i>
+    </button>
+    <button (click)="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/60 hover:bg-amber-600 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition shadow-lg" aria-label="Slide Suivant">
+      <i class="fa-solid fa-chevron-right text-sm"></i>
+    </button>
+
+    <!-- SLIDE DOTS INDICATORS -->
+    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+      <button *ngFor="let s of heroSlides; let i = index" 
+              (click)="goToSlide(i)"
+              class="h-2 rounded-full transition-all duration-300"
+              [class.w-8]="i === currentSlideIndex"
+              [class.bg-amber-500]="i === currentSlideIndex"
+              [class.w-2]="i !== currentSlideIndex"
+              [class.bg-white]="i !== currentSlideIndex"
+              [class.opacity-40]="i !== currentSlideIndex"
+              [attr.aria-label]="'Aller au slide ' + (i + 1)">
+      </button>
+    </div>
+
   </section>
 
   <!-- 2. BRAND MARQUEE TICKER -->
