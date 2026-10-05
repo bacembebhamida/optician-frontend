@@ -13,7 +13,8 @@ import { adminAuthGuard, clientAuthGuard } from './guards/auth.guard';
 import { AdminLayoutComponent } from './components/admin/layout/admin-layout.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'lunettes', component: CatalogueComponent },
+  { path: 'catalogue', component: CatalogueComponent },
+  { path: 'lunettes', redirectTo: 'catalogue', pathMatch: 'full' },
   { path: 'lunettes-de-vue', component: CatalogueComponent },
   { path: 'lunettes-de-vue/:sub', component: CatalogueComponent },
   { path: 'lunettes-de-soleil', component: CatalogueComponent },

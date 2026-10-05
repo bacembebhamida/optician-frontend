@@ -1,82 +1,147 @@
-<aside class="category-sidebar-wrapper" aria-label="Navigation des catégories optiques">
+<aside class="category-sidebar-wrapper" aria-label="Navigation catalogue et filtres">
   
   <div class="category-sidebar-card">
     
-    <!-- Sidebar Header -->
-    <div class="sidebar-header flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-4 bg-amber-600 rounded-full"></span>
+    <!-- ── PARTIE 1 : CATÉGORIES ────────────────────────────────────── -->
+    <div class="sidebar-section mb-6 pb-6 border-b border-slate-100">
+      
+      <div class="section-title-row mb-4">
         <h3 class="font-extrabold text-xs tracking-widest uppercase text-slate-900 font-serif-luxury">
-          Catégories
+          Catalogue
         </h3>
+        <span class="w-8 h-[2px] bg-amber-600 rounded-full block mt-1"></span>
       </div>
-      <span class="text-[10px] text-amber-700 font-mono font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
-        OptiVision
-      </span>
-    </div>
 
-    <!-- Loading State Skeleton -->
-    <div *ngIf="isLoading" class="space-y-3 py-2 animate-pulse">
-      <div class="h-6 bg-slate-100 rounded-lg w-full"></div>
-      <div class="h-6 bg-slate-100 rounded-lg w-4/5"></div>
-      <div class="h-6 bg-slate-100 rounded-lg w-3/4"></div>
-    </div>
+      <!-- Loading Skeleton -->
+      <div *ngIf="isLoading" class="space-y-3 py-2 animate-pulse">
+        <div class="h-5 bg-slate-100 rounded w-full"></div>
+        <div class="h-5 bg-slate-100 rounded w-4/5"></div>
+        <div class="h-5 bg-slate-100 rounded w-3/4"></div>
+      </div>
 
-    <!-- Category Tree List -->
-    <ul *ngIf="!isLoading" class="category-tree-list" role="tree">
-      <li *ngFor="let cat of categories" class="category-parent-node" role="treeitem" [attr.aria-expanded]="cat.isOpen">
-        
-        <!-- Parent Header Row -->
-        <div class="parent-row" 
-             [class.active-parent]="isParentActive(cat)"
-             (click)="onSelectCategory(cat, $event)">
+      <!-- Category Tree Navigation -->
+      <ul *ngIf="!isLoading" class="category-tree-list space-y-1" role="tree">
+        <li *ngFor="let cat of categories" class="category-parent-node" role="treeitem" [attr.aria-expanded]="cat.isOpen">
           
-          <span class="parent-label flex items-center gap-2">
-            <span *ngIf="isParentActive(cat)" class="active-dot"></span>
-            <span class="font-bold text-xs text-slate-800 hover:text-amber-700 transition font-serif-luxury">
-              {{ cat.name }}
-            </span>
-          </span>
-
-          <!-- Expand Toggle Button -->
-          <button *ngIf="cat.children && cat.children.length > 0" 
-                  type="button"
-                  (click)="toggleExpand(cat, $event)"
-                  class="toggle-expand-btn"
-                  [attr.aria-label]="'Toggle ' + cat.name">
-            <i class="fa-solid" [class.fa-chevron-down]="cat.isOpen" [class.fa-chevron-right]="!cat.isOpen"></i>
-          </button>
-        </div>
-
-        <!-- Subcategories Animated Container -->
-        <ul *ngIf="cat.children && cat.children.length > 0 && cat.isOpen" 
-            class="subcategory-list space-y-1 mt-1 mb-2 pl-3 border-l border-slate-100">
-          <li *ngFor="let sub of cat.children" role="treeitem">
-            <a (click)="onSelectCategory(sub, $event)" 
-               class="sub-item-link"
-               [class.active-sub]="isCategoryActive(sub)">
-              <i class="fa-solid fa-angle-right text-[10px] text-slate-300 transition-transform group-hover:translate-x-0.5"></i>
-              <span class="text-xs font-medium text-slate-600 hover:text-amber-700 transition">
-                {{ sub.name }}
+          <!-- Parent Row -->
+          <div class="parent-row" 
+               [class.active-parent]="isParentActive(cat)"
+               (click)="onSelectCategory(cat, $event)">
+            
+            <div class="flex items-center gap-2">
+              <button *ngIf="cat.children && cat.children.length > 0" 
+                      type="button"
+                      (click)="toggleExpand(cat, $event)"
+                      class="toggle-chevron-btn">
+                <i class="fa-solid" [class.fa-caret-down]="cat.isOpen" [class.fa-caret-right]="!cat.isOpen"></i>
+              </button>
+              <span class="font-bold text-xs text-slate-800 hover:text-amber-700 transition font-serif-luxury">
+                {{ cat.name }}
               </span>
-            </a>
-          </li>
-        </ul>
+            </div>
 
-      </li>
-    </ul>
+            <span *ngIf="isParentActive(cat)" class="active-gold-indicator"></span>
+          </div>
 
-    <!-- Quick Optical Service Callout Box -->
-    <div class="mt-6 p-4 rounded-xl bg-slate-900 text-white text-xs space-y-2 border border-slate-800">
-      <div class="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
-        <i class="fa-solid fa-shield-halved"></i> Service Opticien Certifié
+          <!-- Subcategories Indented List -->
+          <ul *ngIf="cat.children && cat.children.length > 0 && cat.isOpen" 
+              class="subcategory-list space-y-1 mt-1 mb-2 pl-6 border-l border-slate-100">
+            <li *ngFor="let sub of cat.children" role="treeitem">
+              <a (click)="onSelectCategory(sub, $event)" 
+                 class="sub-item-link"
+                 [class.active-sub]="isCategoryActive(sub)">
+                <span class="text-xs font-medium text-slate-600 hover:text-amber-700 transition">
+                  {{ sub.name }}
+                </span>
+              </a>
+            </li>
+          </ul>
+
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- ── PARTIE 2 : FILTRES PRODUITS ─────────────────────────────── -->
+    <div class="sidebar-section space-y-4">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <h3 class="font-extrabold text-xs tracking-widest uppercase text-slate-900 font-serif-luxury flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-amber-600 text-[11px]"></i> Filtres
+        </h3>
+        <button (click)="onReset()" class="text-[11px] text-amber-700 font-bold hover:underline">
+          Réinitialiser
+        </button>
       </div>
-      <p class="text-[11px] text-slate-300 leading-relaxed">
-        Besoin d'aide pour choisir la bonne réfraction ou monture ?
-      </p>
-      <a routerLink="/rdv" class="inline-flex items-center gap-1.5 text-xs text-amber-400 font-bold hover:underline pt-1">
-        Prendre rendez-vous <i class="fa-solid fa-arrow-right text-[10px]"></i>
-      </a>
+
+      <!-- Genre -->
+      <div>
+        <label class="sidebar-label">Genre</label>
+        <select [(ngModel)]="filters.gender" (change)="onModelChange()" class="sidebar-select">
+          <option value="ALL">Tous les Genres</option>
+          <option value="HOMME">Homme</option>
+          <option value="FEMME">Femme</option>
+          <option value="ENFANT">Enfant</option>
+          <option value="UNISEX">Unisexe</option>
+        </select>
+      </div>
+
+      <!-- Marque -->
+      <div>
+        <label class="sidebar-label">Marque</label>
+        <select [(ngModel)]="filters.brand" (change)="onModelChange()" class="sidebar-select">
+          <option value="ALL">Toutes les Marques</option>
+          <option *ngFor="let b of brandsList" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+
+      <!-- Forme -->
+      <div>
+        <label class="sidebar-label">Forme de monture</label>
+        <select [(ngModel)]="filters.shape" (change)="onModelChange()" class="sidebar-select">
+          <option value="ALL">Toutes les Formes</option>
+          <option value="CARRE">Carrée</option>
+          <option value="ROND">Ronde</option>
+          <option value="OVALE">Ovale</option>
+          <option value="PAPILLON">Papillon</option>
+          <option value="AVIATEUR">Aviateur</option>
+          <option value="RECTANGLE">Rectangle</option>
+        </select>
+      </div>
+
+      <!-- Matière -->
+      <div>
+        <label class="sidebar-label">Matière</label>
+        <select [(ngModel)]="filters.material" (change)="onModelChange()" class="sidebar-select">
+          <option value="ALL">Toutes les Matières</option>
+          <option value="TITANE">Titane Pure</option>
+          <option value="ACETATE">Acétate Fait Main</option>
+          <option value="METAL">Métal Brossé</option>
+        </select>
+      </div>
+
+      <!-- Prix Maximum -->
+      <div class="pt-2">
+        <div class="flex justify-between items-center text-xs mb-1">
+          <span class="sidebar-label mb-0">Prix Max</span>
+          <span class="font-bold text-slate-900 font-mono text-xs">{{ filters.maxPrice }} DT</span>
+        </div>
+        <input type="range" min="150" max="1500" step="50" [(ngModel)]="filters.maxPrice" (change)="onModelChange()" class="w-full accent-amber-600">
+      </div>
+
+      <!-- Toggles: 3D Try-On & Stock -->
+      <div class="space-y-2 pt-2 border-t border-slate-100">
+        <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
+          <input type="checkbox" [(ngModel)]="filters.only3dAvailable" (change)="onModelChange()" class="rounded text-amber-600 focus:ring-amber-500">
+          <span class="font-medium">Essayage 3D Uniquement</span>
+        </label>
+
+        <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
+          <input type="checkbox" [(ngModel)]="filters.inStockOnly" (change)="onModelChange()" class="rounded text-amber-600 focus:ring-amber-500">
+          <span class="font-medium">En stock uniquement</span>
+        </label>
+      </div>
+
     </div>
 
   </div>

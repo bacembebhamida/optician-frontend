@@ -1,36 +1,51 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { OptiVisionService } from '../../../../services/optivision.service';
-import { CategoryTreeItem } from '../../../../models/optivision.models';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CategoryService } from '../../../../services/category.service';
+import { CategoryTreeItem, Gender, FrameShape, Material } from '../../../../models/optivision.models';
+import { FilterState } from '../filter-panel/filter-panel.component';
 
 @Component({
   selector: 'app-category-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './category-sidebar.component.html',
   styleUrls: ['./category-sidebar.component.css']
 })
 export class CategorySidebarComponent implements OnInit {
 
-  @Input() currentRoutePath: string = '';
+  @Input() currentRoutePath: string = '/catalogue';
   @Input() activeGender: string = 'ALL';
   @Input() activeBrand: string = 'ALL';
-  @Input() activeType: string = 'ALL';
-  
+
+  @Input() filters: FilterState = {
+    searchQuery: '',
+    gender: 'ALL',
+    brand: 'ALL',
+    shape: 'ALL',
+    material: 'ALL',
+    maxPrice: 1500,
+    only3dAvailable: false,
+    inStockOnly: false
+  };
+
+  @Input() brandsList: string[] = ['Ray-Ban', 'Gucci', 'Tom Ford', 'Oakley', 'Persol', 'Air Optix', 'Prada'];
+
   @Output() categorySelected = new EventEmitter<{ route: string; queryParams?: Record<string, string> }>();
+  @Output() filterChange = new EventEmitter<FilterState>();
+  @Output() resetFilters = new EventEmitter<void>();
 
   categories: CategoryTreeItem[] = [];
   isLoading: boolean = true;
 
   constructor(
-    private optiService: OptiVisionService,
-    private router: Router,
-    private route: ActivatedRoute
+    private categoryService: CategoryService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.optiService.getCategories().subscribe(items => {
+    this.categoryService.getCategories().subscribe(items => {
       this.categories = items;
       this.isLoading = false;
       this.autoExpandActiveCategory();
@@ -48,7 +63,7 @@ export class CategorySidebarComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-    const route = item.route || '/lunettes';
+    const route = item.route || '/catalogue';
     const queryParams = item.queryParams || {};
     this.categorySelected.emit({ route, queryParams });
     this.router.navigate([route], { queryParams });
@@ -63,7 +78,6 @@ export class CategorySidebarComponent implements OnInit {
         const val = item.queryParams[key];
         if (key === 'gender' && this.activeGender === val) return true;
         if (key === 'brand' && this.activeBrand === val) return true;
-        if (key === 'type' && this.activeType === val) return true;
       }
     }
 
@@ -79,6 +93,14 @@ export class CategorySidebarComponent implements OnInit {
       return parent.children.some(child => this.isCategoryActive(child));
     }
     return false;
+  }
+
+  onModelChange(): void {
+    this.filterChange.emit(this.filters);
+  }
+
+  onReset(): void {
+    this.resetFilters.emit();
   }
 
   private autoExpandActiveCategory(): void {
