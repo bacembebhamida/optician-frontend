@@ -134,34 +134,37 @@
 }
 
 .logo-emblem-zn {
-  width: 2.6rem;
-  height: 2.6rem;
-  background: #111111;
-  border: 2px solid #C5A059;
+  width: 3.2rem;
+  height: 3.2rem;
+  background: radial-gradient(circle at center, #1F1C18 0%, #0D0C0B 100%);
+  border: 2.5px solid #C5A059;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 16px rgba(197, 160, 89, 0.45);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 20px rgba(197, 160, 89, 0.55), inset 0 0 10px rgba(197, 160, 89, 0.2);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .zn-circle-text {
-  color: #C5A059;
-  font-weight: 800;
-  font-size: 1.15rem;
+  color: #E6C875;
+  font-weight: 900;
+  font-size: 1.4rem;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
+  text-shadow: 0 0 10px rgba(197, 160, 89, 0.8);
 }
 
 .header-logo:hover .logo-emblem-zn {
   background: #C5A059;
-  border-color: #E6C875;
-  box-shadow: 0 0 24px rgba(197, 160, 89, 0.75);
+  border-color: #F3E0A7;
+  transform: scale(1.06);
+  box-shadow: 0 0 30px rgba(197, 160, 89, 0.85);
 }
 
 .header-logo:hover .zn-circle-text {
-  color: #111111;
+  color: #0D0C0B;
+  text-shadow: none;
 }
 
 .logo-typography {
@@ -171,30 +174,30 @@
 
 .logo-title-zn {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1.45rem;
+  font-size: 1.85rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #111827;
+  letter-spacing: -0.03em;
+  color: #0F172A;
   line-height: 1;
 }
 
 .zn-bold {
-  color: #111827;
-  font-weight: 800;
+  color: #0F172A;
+  font-weight: 900;
 }
 
 .zn-optic-text {
   color: #C5A059;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .logo-subtitle {
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: #9A7B35;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 /* Header Right Group: Navigation + Actions */
