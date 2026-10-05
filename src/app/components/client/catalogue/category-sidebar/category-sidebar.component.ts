@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CategoryService } from '../../../../services/category.service';
 import { CategoryTreeItem, Gender, FrameShape, Material } from '../../../../models/optivision.models';
 import { FilterState } from '../filter-panel/filter-panel.component';
@@ -9,7 +9,7 @@ import { FilterState } from '../filter-panel/filter-panel.component';
 @Component({
   selector: 'app-category-sidebar',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './category-sidebar.component.html',
   styleUrls: ['./category-sidebar.component.css']
 })
