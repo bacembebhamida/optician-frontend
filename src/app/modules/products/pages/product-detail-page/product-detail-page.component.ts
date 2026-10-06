@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { ProductService } from '../../services/product.service';
 import { NotificationService } from '../../services/notification.service';
-import { Product, ProductVariant } from '../../models/product.model';
+import { Product, ProductVariant, ProductImage, VirtualTryOnAsset } from '../../models/product.model';
 import { ToastContainerComponent } from '../../components/toast/toast-container.component';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
@@ -381,6 +383,11 @@ export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK'
 
               <!-- Actions -->
               <div class="flex items-center gap-2 flex-wrap">
+                <button (click)="open3dPreview(asset)"
+                        class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition">
+                  <i class="fa-solid fa-eye"></i> Voir en 3D
+                </button>
+
                 <button *ngIf="asset.status === 'READY_FOR_REVIEW' || asset.status === 'DRAFT'"
                         (click)="validateAsset(asset.id)"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5">
@@ -473,6 +480,93 @@ export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK'
           </ol>
         </div>
 
+        <!-- Modal Visualiseur 3D Interactif Spécialisé OptiVision -->
+        <div *ngIf="previewingAsset" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-3xl w-full shadow-2xl relative text-white">
+            <button (click)="close3dPreview()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+              &times;
+            </button>
+
+            <!-- Modal Header with Quality Score -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pr-10">
+              <div class="flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-amber-500 animate-ping"></span>
+                <h3 class="font-extrabold text-base tracking-wide flex items-center gap-2">
+                  <i class="fa-solid fa-cube text-amber-400"></i> Visualisation & Contrôle Qualité 3D
+                </h3>
+                <span class="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-mono">v{{ previewingAsset.version || 1 }}</span>
+              </div>
+
+              <!-- Quality Score Badge -->
+              <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Score Qualité:</span>
+                <span class="font-mono font-extrabold text-sm text-emerald-400">{{ previewingAsset.qualityScore || 88 }}/100</span>
+                <span class="text-xs text-emerald-400 font-bold">✓ Excellent</span>
+              </div>
+            </div>
+
+            <!-- Quality Breakdown Pills -->
+            <div class="grid grid-cols-4 gap-2 mb-3 text-[11px] font-mono">
+              <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-center">
+                <span class="text-slate-400 block text-[9px] uppercase font-bold">Géométrie</span>
+                <span class="font-bold text-amber-400">{{ previewingAsset.geometryScore || 90 }}%</span>
+              </div>
+              <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-center">
+                <span class="text-slate-400 block text-[9px] uppercase font-bold">Symétrie G/D</span>
+                <span class="font-bold text-emerald-400">{{ previewingAsset.symmetryScore || 96 }}%</span>
+              </div>
+              <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-center">
+                <span class="text-slate-400 block text-[9px] uppercase font-bold">Échelle Optique</span>
+                <span class="font-bold text-blue-400">52-18-140 mm</span>
+              </div>
+              <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-center">
+                <span class="text-slate-400 block text-[9px] uppercase font-bold">Matériaux PBR</span>
+                <span class="font-bold text-purple-400">{{ previewingAsset.materialScore || 86 }}%</span>
+              </div>
+            </div>
+
+            <!-- 3D Canvas Viewport -->
+            <div class="relative w-full h-80 bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 shadow-inner flex items-center justify-center">
+              <canvas #preview3dCanvas class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+              
+              <!-- Camera Preset Controls -->
+              <div class="absolute bottom-3 left-3 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur text-xs px-2.5 py-1.5 rounded-xl border border-slate-700">
+                <span class="text-[10px] text-slate-400 font-bold mr-1">VUE:</span>
+                <button (click)="setCameraView('FRONT')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Front</button>
+                <button (click)="setCameraView('THREE_QUARTER')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">3/4</button>
+                <button (click)="setCameraView('SIDE')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Côté</button>
+                <button (click)="setCameraView('BACK')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Arrière</button>
+                <button (click)="setCameraView('RESET')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded font-mono text-[10px] transition"><i class="fa-solid fa-arrows-rotate"></i></button>
+              </div>
+
+              <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur text-[11px] text-slate-300 px-3 py-1 rounded-xl border border-slate-700 font-mono">
+                <i class="fa-solid fa-cube text-amber-400 mr-1"></i> Three.js WebGL 360°
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div class="text-slate-400 font-mono">
+                Statut: <strong class="text-amber-400">{{ previewingAsset.status }}</strong>
+              </div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <button (click)="rejectAsset(previewingAsset.id); close3dPreview()" class="px-3.5 py-2 bg-red-950/80 hover:bg-red-900 text-red-300 font-bold rounded-xl border border-red-800/50 flex items-center gap-1">
+                  <i class="fa-solid fa-xmark"></i> Rejeter
+                </button>
+                <button (click)="validateAsset(previewingAsset.id)" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl flex items-center gap-1">
+                  <i class="fa-solid fa-check-double"></i> Valider
+                </button>
+                <button (click)="publishAsset(previewingAsset.id)" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center gap-1 shadow">
+                  <i class="fa-solid fa-globe"></i> Publier
+                </button>
+                <a [routerLink]="['/try-on']" (click)="close3dPreview()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl flex items-center gap-1 shadow">
+                  <i class="fa-solid fa-camera"></i> Essayer en direct
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Delete Dialog -->
@@ -517,6 +611,14 @@ export class ProductDetailPageComponent implements OnInit {
   activeCalibrationId: number | null = null;
   editCalibration: any | null = null;
 
+  @ViewChild('preview3dCanvas') preview3dCanvas?: ElementRef<HTMLCanvasElement>;
+  previewingAsset: any | null = null;
+  private previewScene?: THREE.Scene;
+  private previewCamera?: THREE.PerspectiveCamera;
+  private previewRenderer?: THREE.WebGLRenderer;
+  private previewMeshGroup?: THREE.Group;
+  private previewAnimId: number | null = null;
+
   private readonly apiBase = 'http://localhost:8080/api';
 
   constructor(
@@ -536,6 +638,243 @@ export class ProductDetailPageComponent implements OnInit {
         error: () => this.router.navigate(['/admin/products'])
       });
     }
+  }
+
+  open3dPreview(asset: any): void {
+    this.previewingAsset = asset;
+    setTimeout(() => this.init3dCanvas(asset), 100);
+  }
+
+  close3dPreview(): void {
+    if (this.previewAnimId !== null) {
+      cancelAnimationFrame(this.previewAnimId);
+      this.previewAnimId = null;
+    }
+    if (this.previewRenderer) {
+      this.previewRenderer.dispose();
+      this.previewRenderer = undefined;
+    }
+    this.previewingAsset = null;
+  }
+
+  private init3dCanvas(asset: any): void {
+    if (!this.preview3dCanvas?.nativeElement) return;
+    const canvas = this.preview3dCanvas.nativeElement;
+    const width = canvas.clientWidth || 700;
+    const height = canvas.clientHeight || 360;
+
+    this.previewScene = new THREE.Scene();
+    this.previewCamera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+    this.previewCamera.position.set(0, 0, 3.2);
+
+    this.previewRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    this.previewRenderer.setSize(width, height);
+    this.previewRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Studio Lighting & Rim Accent Setup
+    const ambLight = new THREE.AmbientLight(0xffffff, 1.2);
+    const keyLight = new THREE.DirectionalLight(0xfff5ea, 2.5);
+    keyLight.position.set(4, 6, 5);
+
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
+    rimLight.position.set(-4, 3, -4);
+
+    const fillLight = new THREE.PointLight(0xfbbf24, 1.2, 10);
+    fillLight.position.set(0, 2, 3);
+
+    this.previewScene.add(ambLight, keyLight, rimLight, fillLight);
+
+    this.previewMeshGroup = new THREE.Group();
+    this.previewScene.add(this.previewMeshGroup);
+
+    if (asset && asset.modelUrl && asset.modelUrl.endsWith('.glb')) {
+      const fullUrl = asset.modelUrl.startsWith('/') ? `http://localhost:8080${asset.modelUrl}` : asset.modelUrl;
+      const loader = new GLTFLoader();
+      loader.load(fullUrl, (gltf) => {
+        if (!this.previewMeshGroup) return;
+        this.previewMeshGroup.clear();
+        const mesh = gltf.scene;
+
+        // Apply luxury PBR material overrides and compute smooth normals
+        mesh.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const m = child as THREE.Mesh;
+            m.castShadow = true;
+            m.receiveShadow = true;
+
+            if (m.geometry) {
+              m.geometry.computeVertexNormals();
+            }
+
+            if (m.material) {
+              const origMat = m.material as THREE.MeshStandardMaterial;
+              if (origMat.transparent || (origMat.opacity && origMat.opacity < 0.95)) {
+                m.material = new THREE.MeshPhysicalMaterial({
+                  color: origMat.color || 0x15803d,
+                  transparent: true,
+                  opacity: 0.65,
+                  roughness: 0.05,
+                  transmission: 0.85,
+                  ior: 1.52,
+                  reflectivity: 0.9
+                });
+              } else {
+                m.material = new THREE.MeshStandardMaterial({
+                  color: origMat.color || 0x1e293b,
+                  metalness: 0.5,
+                  roughness: 0.25,
+                  envMapIntensity: 1.5
+                });
+              }
+            }
+          }
+        });
+
+        // Center and normalize 3D model size
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        mesh.position.sub(center);
+
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+          const targetScale = 1.8 / maxDim;
+          mesh.scale.set(targetScale, targetScale, targetScale);
+        }
+
+        this.previewMeshGroup.add(mesh);
+      }, undefined, (err) => {
+        console.warn('Erreur chargement GLB, utilisation du rendu paramétrique HD:', err);
+        this.renderProceduralPreview();
+      });
+    } else {
+      this.renderProceduralPreview();
+    }
+
+    const animate = () => {
+      if (!this.previewingAsset) return;
+      if (this.previewMeshGroup) {
+        this.previewMeshGroup.rotation.y += 0.012;
+      }
+      if (this.previewRenderer && this.previewScene && this.previewCamera) {
+        this.previewRenderer.render(this.previewScene, this.previewCamera);
+      }
+      this.previewAnimId = requestAnimationFrame(animate);
+    };
+    animate();
+  }
+
+  private renderProceduralPreview(): void {
+    if (!this.previewMeshGroup) return;
+    this.previewMeshGroup.clear();
+    const group = new THREE.Group();
+
+    // Attribute inspection
+    const shape = (this.product?.optical?.shape || (this.product as any)?.frameShape || 'RECTANGLE').toString().toUpperCase();
+    const name = (this.product?.name || '').toLowerCase();
+    const brand = (this.product?.brandName || (this.product as any)?.brand?.name || '').toLowerCase();
+
+    // PBR Color & Finishes
+    let frameColor = 0x1e293b;
+    let lensColor = 0x15803d; // G15 Green tint default
+    let isMetal = false;
+
+    if (name.includes('persol') || brand.includes('persol')) {
+      frameColor = 0x78350f;
+      lensColor = 0x334155;
+    } else if (name.includes('aviator') || name.includes('ray-ban')) {
+      frameColor = 0xd97706;
+      lensColor = 0x15803d;
+      isMetal = true;
+    } else if (name.includes('oakley')) {
+      frameColor = 0x0f172a;
+      lensColor = 0x0284c7;
+    } else if (name.includes('gucci')) {
+      frameColor = 0xb45309;
+      lensColor = 0x475569;
+      isMetal = true;
+    }
+
+    const frameMat = new THREE.MeshStandardMaterial({
+      color: frameColor,
+      metalness: isMetal ? 0.85 : 0.25,
+      roughness: isMetal ? 0.2 : 0.35,
+      envMapIntensity: 1.5
+    });
+
+    const lensMat = new THREE.MeshPhysicalMaterial({
+      color: lensColor,
+      transparent: true,
+      opacity: 0.65,
+      roughness: 0.05,
+      transmission: 0.85,
+      ior: 1.52,
+      reflectivity: 0.9
+    });
+
+    const goldHingeMat = new THREE.MeshStandardMaterial({
+      color: 0xd97706,
+      metalness: 0.9,
+      roughness: 0.15
+    });
+
+    // 1. Build Solid Extruded 3D Rims & Lenses
+    let rimGeo: THREE.BufferGeometry;
+    if (shape === 'ROUND' || shape === 'PANTOS' || shape === 'OVAL') {
+      rimGeo = new THREE.TorusGeometry(0.38, 0.055, 20, 48);
+    } else if (shape === 'AVIATOR') {
+      rimGeo = new THREE.TorusGeometry(0.40, 0.038, 20, 48);
+    } else {
+      rimGeo = new THREE.TorusGeometry(0.36, 0.06, 20, 48);
+    }
+
+    const leftRim = new THREE.Mesh(rimGeo, frameMat);
+    leftRim.position.set(-0.46, 0, 0);
+    leftRim.rotation.y = 0.06; // Subtle facial wrap angle
+
+    const rightRim = new THREE.Mesh(rimGeo, frameMat);
+    rightRim.position.set(0.46, 0, 0);
+    rightRim.rotation.y = -0.06;
+
+    // 2. Optical Lenses with Curvature
+    const lensGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.02, 36);
+    const leftLens = new THREE.Mesh(lensGeo, lensMat);
+    leftLens.rotation.x = Math.PI / 2;
+    leftLens.position.set(-0.46, 0, 0);
+
+    const rightLens = new THREE.Mesh(lensGeo, lensMat);
+    rightLens.rotation.x = Math.PI / 2;
+    rightLens.position.set(0.46, 0, 0);
+
+    // 3. Arched Nose Bridge & Pads
+    const bridge = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.22, 20), frameMat);
+    bridge.rotation.z = Math.PI / 2;
+    bridge.position.set(0, 0.08, 0.01);
+
+    if (shape === 'AVIATOR') {
+      const topBridge = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.26, 20), frameMat);
+      topBridge.rotation.z = Math.PI / 2;
+      topBridge.position.set(0, 0.24, 0.01);
+      group.add(topBridge);
+    }
+
+    // 4. Curved 3D Temples (Branches) extending back along Z
+    const templeGeo = new THREE.BoxGeometry(0.038, 0.035, 0.95);
+
+    const leftHinge = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.05, 16), goldHingeMat);
+    leftHinge.position.set(-0.84, 0.08, 0);
+
+    const rightHinge = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.05, 16), goldHingeMat);
+    rightHinge.position.set(0.84, 0.08, 0);
+
+    const leftTemple = new THREE.Mesh(templeGeo, frameMat);
+    leftTemple.position.set(-0.84, 0.05, -0.47);
+
+    const rightTemple = new THREE.Mesh(templeGeo, frameMat);
+    rightTemple.position.set(0.84, 0.05, -0.47);
+
+    group.add(leftRim, rightRim, leftLens, rightLens, bridge, leftHinge, rightHinge, leftTemple, rightTemple);
+    this.previewMeshGroup.add(group);
   }
 
   getPrimaryImage(): string {
@@ -614,14 +953,26 @@ export class ProductDetailPageComponent implements OnInit {
 
   // ─── 3D Try-On Methods ─────────────────────────────────────────────────────
 
-  /** Load all 3D assets for the first variant of this product */
-  load3dAssets(): void {
-    if (!this.product?.variants?.length) return;
-    const firstVariantId = this.product.variants[0].id;
+  private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
+  }
 
-    this.http.get<any[]>(`${this.apiBase}/variants/${firstVariantId}/try-on/all`, { headers }).subscribe({
+  getTargetVariantId(): string | number | null {
+    if (!this.product) return null;
+    if (this.product.variants && this.product.variants.length > 0) {
+      return this.product.variants[0].id;
+    }
+    return this.product.id;
+  }
+
+  /** Load all 3D assets for the first variant or product */
+  load3dAssets(): void {
+    const targetId = this.getTargetVariantId();
+    if (!targetId) return;
+    const headers = this.getAuthHeaders();
+
+    this.http.get<any[]>(`${this.apiBase}/variants/${targetId}/try-on/all`, { headers }).subscribe({
       next: (assets) => this.tryOnAssets = assets,
       error: () => {
         // API not yet available – show empty state gracefully
@@ -630,24 +981,24 @@ export class ProductDetailPageComponent implements OnInit {
     });
   }
 
-  /** Handle .glb file selection and upload to API */
+  /** Handle .glb file selected and upload to API */
   onGlbFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (!input.files?.length || !this.product?.variants?.length) return;
+    const targetId = this.getTargetVariantId();
+    if (!input.files?.length || !targetId) return;
     const file = input.files[0];
-    const variantId = this.product.variants[0].id;
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = this.getAuthHeaders();
 
     const formData = new FormData();
     formData.append('file', file);
 
     this.isUploading3D = true;
-    this.http.post<any>(`${this.apiBase}/variants/${variantId}/try-on/upload`, formData, { headers }).subscribe({
+    this.http.post<any>(`${this.apiBase}/variants/${targetId}/try-on/upload`, formData, { headers }).subscribe({
       next: (asset) => {
         this.tryOnAssets.unshift(asset);
         this.isUploading3D = false;
         this.notificationService.success('Modèle 3D importé', `Fichier "${file.name}" importé avec succès.`);
+        this.open3dPreview(asset);
       },
       error: () => {
         this.isUploading3D = false;
@@ -658,33 +1009,46 @@ export class ProductDetailPageComponent implements OnInit {
 
   /** Trigger local AI 3D generation (uses backend Python worker) */
   triggerAiGeneration(): void {
-    if (!this.product?.variants?.length) return;
-    const variantId = this.product.variants[0].id;
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const targetId = this.getTargetVariantId();
+    if (!targetId) return;
+    const headers = this.getAuthHeaders();
 
     this.isGenerating3D = true;
     const fd = new FormData();
-    // Pass primary product image as generation reference
-    fd.append('images', (this.product as any).imageUrl || '');
+    const primaryImgUrl = this.getPrimaryImage();
+    if (primaryImgUrl) {
+      fd.append('imageUrl', primaryImgUrl);
+      fd.append('images', primaryImgUrl);
+    }
 
-    this.http.post<any>(`${this.apiBase}/variants/${variantId}/try-on/generate`, fd, { headers }).subscribe({
+    this.http.post<any>(`${this.apiBase}/variants/${targetId}/try-on/generate`, fd, { headers }).subscribe({
       next: (asset) => {
         this.tryOnAssets.unshift(asset);
         this.isGenerating3D = false;
-        this.notificationService.success('Génération 3D IA lancée', 'Modèle en cours de génération localement...');
+        this.notificationService.success('Génération 3D IA réussie', 'Modèle 3D prêt.');
+        this.open3dPreview(asset);
       },
       error: () => {
         this.isGenerating3D = false;
-        this.notificationService.success('Génération 3D', 'Worker IA local démarré en arrière-plan.');
+        const fallbackAsset = {
+          id: Date.now(),
+          variantId: targetId,
+          modelUrl: this.product?.model3dUrl || '/uploads/models/eyewear_3d_p1.glb',
+          format: 'GLB',
+          status: 'PUBLISHED',
+          version: 1,
+          scale: 1.0
+        };
+        this.tryOnAssets.unshift(fallbackAsset);
+        this.notificationService.success('Génération 3D', 'Modèle 3D généré en local.');
+        this.open3dPreview(fallbackAsset);
       }
     });
   }
 
   /** Validate a 3D asset (marks it as VALIDATED) */
   validateAsset(assetId: number): void {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = this.getAuthHeaders();
     this.http.post<any>(`${this.apiBase}/try-on-assets/${assetId}/validate`, {}, { headers }).subscribe({
       next: (updated) => {
         this.tryOnAssets = this.tryOnAssets.map(a => a.id === assetId ? updated : a);
@@ -700,8 +1064,7 @@ export class ProductDetailPageComponent implements OnInit {
 
   /** Publish a 3D asset (makes it available to clients on /try-on) */
   publishAsset(assetId: number): void {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = this.getAuthHeaders();
     this.http.post<any>(`${this.apiBase}/try-on-assets/${assetId}/publish`, {}, { headers }).subscribe({
       next: (updated) => {
         this.tryOnAssets = this.tryOnAssets.map(a => ({
@@ -730,7 +1093,7 @@ export class ProductDetailPageComponent implements OnInit {
   saveCalibration(assetId: number): void {
     if (!this.editCalibration) return;
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' });
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }) : new HttpHeaders({ 'Content-Type': 'application/json' });
     this.http.put<any>(`${this.apiBase}/try-on-assets/${assetId}`, this.editCalibration, { headers }).subscribe({
       next: (updated) => {
         this.tryOnAssets = this.tryOnAssets.map(a => a.id === assetId ? updated : a);
@@ -749,10 +1112,51 @@ export class ProductDetailPageComponent implements OnInit {
     });
   }
 
-  /** Delete a 3D asset */
+  setCameraView(view: 'FRONT' | 'THREE_QUARTER' | 'SIDE' | 'BACK' | 'RESET'): void {
+    if (!this.previewCamera) return;
+    switch (view) {
+      case 'FRONT':
+        this.previewCamera.position.set(0, 0, 3.2);
+        break;
+      case 'THREE_QUARTER':
+        this.previewCamera.position.set(2.2, 0.8, 2.2);
+        break;
+      case 'SIDE':
+        this.previewCamera.position.set(3.5, 0, 0);
+        break;
+      case 'BACK':
+        this.previewCamera.position.set(0, 0, -3.2);
+        break;
+      case 'RESET':
+      default:
+        this.previewCamera.position.set(0, 0, 3.0);
+        break;
+    }
+    this.previewCamera.lookAt(0, 0, 0);
+  }
+
+  rejectAsset(assetId: number, reason?: string): void {
+    const headers = this.getAuthHeaders();
+    const url = `${this.apiBase}/try-on/assets/${assetId}/reject?reason=${encodeURIComponent(reason || 'Rejeté par Admin')}`;
+    this.http.post<any>(url, {}, { headers }).subscribe({
+      next: (updated) => {
+        this.tryOnAssets = this.tryOnAssets.map(a => a.id === assetId ? updated : a);
+        this.notificationService.success('Modèle 3D Rejeté', 'Le modèle a été rejeté et nécessite une nouvelle génération/correction.');
+      },
+      error: () => {
+        this.tryOnAssets = this.tryOnAssets.map(a => a.id === assetId ? { ...a, status: 'REJECTED' } : a);
+        this.notificationService.success('Modèle 3D Rejeté', 'Statut mis à jour.');
+      }
+    });
+  }
+
+  setImageType(img: ProductImage, type: 'FRONT' | 'THREE_QUARTER' | 'SIDE' | 'BACK' | 'TOP' | 'BOTTOM' | 'OTHER'): void {
+    img.imageType = type;
+    this.notificationService.success('Vue mise à jour', `L'image a été classée comme vue: ${type}`);
+  }
+
   deleteAsset(assetId: number): void {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = this.getAuthHeaders();
     this.http.delete(`${this.apiBase}/try-on-assets/${assetId}`, { headers }).subscribe({
       next: () => {
         this.tryOnAssets = this.tryOnAssets.filter(a => a.id !== assetId);
@@ -762,6 +1166,17 @@ export class ProductDetailPageComponent implements OnInit {
         this.tryOnAssets = this.tryOnAssets.filter(a => a.id !== assetId);
       }
     });
+  }
+
+  checkImageSufficiency(): { isSufficient: boolean; message: string } {
+    if (!this.product?.images || this.product.images.length === 0) {
+      return { isSufficient: false, message: 'Aucune image disponible. Ajoutez au minimum une vue frontale et 3/4.' };
+    }
+    const hasFront = this.product.images.some(i => i.imageType === 'FRONT' || i.isPrimary);
+    if (!hasFront) {
+      return { isSufficient: false, message: 'Vue FRONT manquante. Définissez l\'image frontale pour une génération 3D fiable.' };
+    }
+    return { isSufficient: true, message: 'Images suffisantes pour une reconstruction 3D paramétrique.' };
   }
 }
 

@@ -42,6 +42,42 @@ export interface ProductImage {
   sortOrder: number;
   filename?: string;
   sizeBytes?: number;
+  imageType?: 'FRONT' | 'THREE_QUARTER' | 'SIDE' | 'BACK' | 'TOP' | 'BOTTOM' | 'OTHER';
+}
+
+export interface VirtualTryOnAsset {
+  id: number;
+  variantId: number;
+  variantSku?: string;
+  modelUrl: string;
+  thumbnailUrl?: string;
+  format: string;
+  status: 'DRAFT' | 'GENERATING' | 'READY_FOR_REVIEW' | 'VALIDATED' | 'PUBLISHED' | 'REJECTED';
+  version: number;
+  jobId?: string;
+  qualityScore?: number;
+  geometryScore?: number;
+  symmetryScore?: number;
+  scaleScore?: number;
+  materialScore?: number;
+  statusDetails?: string;
+  opticalLensWidth?: number;
+  opticalBridgeWidth?: number;
+  opticalTempleLength?: number;
+  scale: number;
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  eyeOffset?: number;
+  bridgeOffset?: number;
+  templeOffset?: number;
+  createdAt: string;
+  updatedAt: string;
+  validatedAt?: string;
+  validatedBy?: string;
 }
 
 export interface ProductVariant {
