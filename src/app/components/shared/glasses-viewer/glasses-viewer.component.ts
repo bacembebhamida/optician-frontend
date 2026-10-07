@@ -289,6 +289,37 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  public isAutoRotating: boolean = false;
+
+  public toggleAutoRotate(): void {
+    this.isAutoRotating = !this.isAutoRotating;
+    if (this.controls) {
+      this.controls.autoRotate = this.isAutoRotating;
+      this.controls.autoRotateSpeed = 2.5;
+    }
+  }
+
+  public setFrontView(): void {
+    if (!this.camera || !this.controls) return;
+    this.camera.position.set(0, 0, 3.2);
+    this.controls.target.set(0, 0, 0);
+    this.controls.update();
+  }
+
+  public setSideView(): void {
+    if (!this.camera || !this.controls) return;
+    this.camera.position.set(3.2, 0.2, 0.5);
+    this.controls.target.set(0, 0, 0);
+    this.controls.update();
+  }
+
+  public setThreeQuarterView(): void {
+    if (!this.camera || !this.controls) return;
+    this.camera.position.set(2.2, 1.2, 2.2);
+    this.controls.target.set(0, 0, 0);
+    this.controls.update();
+  }
+
   private onWindowResize = () => {
     if (!this.camera || !this.renderer || !this.canvasRef) return;
     

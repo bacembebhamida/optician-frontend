@@ -526,28 +526,45 @@ export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK'
             </div>
 
             <!-- 3D Canvas Viewport via Generic Viewer -->
-            <div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center bg-transparent">
+            <div class="relative w-full h-[420px] rounded-2xl overflow-hidden shadow-inner flex items-center justify-center bg-transparent">
               <app-glasses-viewer 
                 #viewer
                 [modelUrl]="getAssetUrl(previewingAsset.modelUrl)"
                 class="w-full h-full">
                 
-                <!-- Customization Controls Overlay -->
-                <div class="flex flex-col gap-2 p-2 bg-white/70 backdrop-blur rounded-xl shadow-sm border border-white/50">
+                <!-- Customization & View Controls Overlay -->
+                <div class="flex flex-col gap-2 p-3 bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-700 text-white">
+                   <!-- Frame Color Swatches -->
                    <div class="flex gap-2 items-center">
-                     <span class="text-[10px] font-bold text-slate-600 uppercase pr-2">Monture</span>
-                     <button (click)="viewer.changeFrameColor('#d97706')" class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow-sm hover:scale-110 transition" title="Dorée"></button>
-                     <button (click)="viewer.changeFrameColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white shadow-sm hover:scale-110 transition" title="Sombre"></button>
-                     <button (click)="viewer.changeFrameColor('#ef4444')" class="w-6 h-6 rounded-full bg-red-500 border-2 border-white shadow-sm hover:scale-110 transition" title="Rouge"></button>
-                     <button (click)="viewer.changeFrameColor('#3b82f6')" class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white shadow-sm hover:scale-110 transition" title="Bleu"></button>
+                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider pr-1">Monture</span>
+                     <button (click)="viewer.changeFrameColor('#d97706')" class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow hover:scale-110 transition" title="Dorée"></button>
+                     <button (click)="viewer.changeFrameColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white shadow hover:scale-110 transition" title="Sombre / Noir"></button>
+                     <button (click)="viewer.changeFrameColor('#ef4444')" class="w-6 h-6 rounded-full bg-red-500 border-2 border-white shadow hover:scale-110 transition" title="Rouge"></button>
+                     <button (click)="viewer.changeFrameColor('#3b82f6')" class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white shadow hover:scale-110 transition" title="Bleu"></button>
+                     <button (click)="viewer.changeFrameColor('#94a3b8')" class="w-6 h-6 rounded-full bg-slate-300 border-2 border-white shadow hover:scale-110 transition" title="Argent"></button>
                    </div>
-                   <div class="w-full h-px bg-slate-300"></div>
+
+                   <div class="w-full h-px bg-slate-700/60"></div>
+
+                   <!-- Lens Color Swatches -->
                    <div class="flex gap-2 items-center">
-                     <span class="text-[10px] font-bold text-slate-600 uppercase pr-2">Verres</span>
-                     <button (click)="viewer.changeLensesColor('#15803d', 0.6)" class="w-6 h-6 rounded-full bg-green-700/60 border-2 border-white shadow-sm hover:scale-110 transition" title="Vert G15"></button>
-                     <button (click)="viewer.changeLensesColor('#3b82f6', 0.7)" class="w-6 h-6 rounded-full bg-blue-500/70 border-2 border-white shadow-sm hover:scale-110 transition" title="Bleu"></button>
-                     <button (click)="viewer.changeLensesColor('#1e293b', 0.8)" class="w-6 h-6 rounded-full bg-slate-800/80 border-2 border-white shadow-sm hover:scale-110 transition" title="Sombre"></button>
-                     <button (click)="viewer.changeLensesColor('#ffffff', 0.3)" class="w-6 h-6 rounded-full bg-white/50 border-2 border-slate-200 shadow-sm hover:scale-110 transition" title="Transparents"></button>
+                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider pr-1">Verres</span>
+                     <button (click)="viewer.changeLensesColor('#15803d', 0.65)" class="w-6 h-6 rounded-full bg-green-700/80 border-2 border-white shadow hover:scale-110 transition" title="Vert G15"></button>
+                     <button (click)="viewer.changeLensesColor('#3b82f6', 0.7)" class="w-6 h-6 rounded-full bg-blue-500/80 border-2 border-white shadow hover:scale-110 transition" title="Bleu Tinté"></button>
+                     <button (click)="viewer.changeLensesColor('#1e293b', 0.85)" class="w-6 h-6 rounded-full bg-slate-900 border-2 border-white shadow hover:scale-110 transition" title="Foncé Solaires"></button>
+                     <button (click)="viewer.changeLensesColor('#ffffff', 0.25)" class="w-6 h-6 rounded-full bg-white/60 border-2 border-slate-300 shadow hover:scale-110 transition" title="Optique Transparent"></button>
+                   </div>
+
+                   <div class="w-full h-px bg-slate-700/60"></div>
+
+                   <!-- Camera Angle Preset Actions -->
+                   <div class="flex gap-1.5 justify-center items-center font-mono text-[10px]">
+                     <button (click)="viewer.toggleAutoRotate()" class="px-2.5 py-1 bg-amber-500/20 text-amber-400 hover:bg-amber-500/40 rounded-lg font-bold flex items-center gap-1 transition">
+                       <i class="fa-solid fa-sync" [class.fa-spin]="viewer.isAutoRotating"></i> 360° Auto
+                     </button>
+                     <button (click)="viewer.setFrontView()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition">Face</button>
+                     <button (click)="viewer.setThreeQuarterView()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition">3/4</button>
+                     <button (click)="viewer.setSideView()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition">Profil</button>
                    </div>
                 </div>
               </app-glasses-viewer>
