@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { ProductService } from '../../services/product.service';
 import { NotificationService } from '../../services/notification.service';
 import { Product, ProductVariant, ProductImage, VirtualTryOnAsset } from '../../models/product.model';
@@ -12,6 +10,7 @@ import { ToastContainerComponent } from '../../components/toast/toast-container.
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
 import { ProductVariantsComponent } from '../../components/product-variants/product-variants.component';
+import { GlassesViewerComponent } from '../../../../components/shared/glasses-viewer/glasses-viewer.component';
 
 export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK' | 'MOUVEMENTS' | 'HISTORIQUE' | 'ESSAYAGE_3D';
 
@@ -25,7 +24,8 @@ export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK'
     ToastContainerComponent,
     ConfirmationDialogComponent,
     HasPermissionDirective,
-    ProductVariantsComponent
+    ProductVariantsComponent,
+    GlassesViewerComponent
   ],
   template: `
     <div class="page-container font-sans animate-fade-in p-6" *ngIf="product">
@@ -525,23 +525,32 @@ export type ProductDetailTab = 'APERCU' | 'INFORMATIONS' | 'VARIANTES' | 'STOCK'
               </div>
             </div>
 
-            <!-- 3D Canvas Viewport -->
-            <div class="relative w-full h-80 bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 shadow-inner flex items-center justify-center">
-              <canvas #preview3dCanvas class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-              
-              <!-- Camera Preset Controls -->
-              <div class="absolute bottom-3 left-3 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur text-xs px-2.5 py-1.5 rounded-xl border border-slate-700">
-                <span class="text-[10px] text-slate-400 font-bold mr-1">VUE:</span>
-                <button (click)="setCameraView('FRONT')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Front</button>
-                <button (click)="setCameraView('THREE_QUARTER')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">3/4</button>
-                <button (click)="setCameraView('SIDE')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Côté</button>
-                <button (click)="setCameraView('BACK')" class="px-2 py-0.5 bg-slate-800 hover:bg-amber-600 text-white rounded font-mono text-[10px] transition">Arrière</button>
-                <button (click)="setCameraView('RESET')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded font-mono text-[10px] transition"><i class="fa-solid fa-arrows-rotate"></i></button>
-              </div>
-
-              <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur text-[11px] text-slate-300 px-3 py-1 rounded-xl border border-slate-700 font-mono">
-                <i class="fa-solid fa-cube text-amber-400 mr-1"></i> Three.js WebGL 360°
-              </div>
+            <!-- 3D Canvas Viewport via Generic Viewer -->
+            <div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center bg-transparent">
+              <app-glasses-viewer 
+                #viewer
+                [modelUrl]="getAssetUrl(previewingAsset.modelUrl)"
+                class="w-full h-full">
+                
+                <!-- Customization Controls Overlay -->
+                <div class="flex flex-col gap-2 p-2 bg-white/70 backdrop-blur rounded-xl shadow-sm border border-white/50">
+                   <div class="flex gap-2 items-center">
+                     <span class="text-[10px] font-bold text-slate-600 uppercase pr-2">Monture</span>
+                     <button (click)="viewer.changeFrameColor('#d97706')" class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow-sm hover:scale-110 transition" title="Dorée"></button>
+                     <button (click)="viewer.changeFrameColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white shadow-sm hover:scale-110 transition" title="Sombre"></button>
+                     <button (click)="viewer.changeFrameColor('#ef4444')" class="w-6 h-6 rounded-full bg-red-500 border-2 border-white shadow-sm hover:scale-110 transition" title="Rouge"></button>
+                     <button (click)="viewer.changeFrameColor('#3b82f6')" class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white shadow-sm hover:scale-110 transition" title="Bleu"></button>
+                   </div>
+                   <div class="w-full h-px bg-slate-300"></div>
+                   <div class="flex gap-2 items-center">
+                     <span class="text-[10px] font-bold text-slate-600 uppercase pr-2">Verres</span>
+                     <button (click)="viewer.changeLensesColor('#15803d', 0.6)" class="w-6 h-6 rounded-full bg-green-700/60 border-2 border-white shadow-sm hover:scale-110 transition" title="Vert G15"></button>
+                     <button (click)="viewer.changeLensesColor('#3b82f6', 0.7)" class="w-6 h-6 rounded-full bg-blue-500/70 border-2 border-white shadow-sm hover:scale-110 transition" title="Bleu"></button>
+                     <button (click)="viewer.changeLensesColor('#1e293b', 0.8)" class="w-6 h-6 rounded-full bg-slate-800/80 border-2 border-white shadow-sm hover:scale-110 transition" title="Sombre"></button>
+                     <button (click)="viewer.changeLensesColor('#ffffff', 0.3)" class="w-6 h-6 rounded-full bg-white/50 border-2 border-slate-200 shadow-sm hover:scale-110 transition" title="Transparents"></button>
+                   </div>
+                </div>
+              </app-glasses-viewer>
             </div>
 
             <!-- Footer Actions -->
@@ -613,11 +622,6 @@ export class ProductDetailPageComponent implements OnInit {
 
   @ViewChild('preview3dCanvas') preview3dCanvas?: ElementRef<HTMLCanvasElement>;
   previewingAsset: any | null = null;
-  private previewScene?: THREE.Scene;
-  private previewCamera?: THREE.PerspectiveCamera;
-  private previewRenderer?: THREE.WebGLRenderer;
-  private previewMeshGroup?: THREE.Group;
-  private previewAnimId: number | null = null;
 
   private readonly apiBase = 'http://localhost:8080/api';
 
@@ -642,239 +646,15 @@ export class ProductDetailPageComponent implements OnInit {
 
   open3dPreview(asset: any): void {
     this.previewingAsset = asset;
-    setTimeout(() => this.init3dCanvas(asset), 100);
   }
 
   close3dPreview(): void {
-    if (this.previewAnimId !== null) {
-      cancelAnimationFrame(this.previewAnimId);
-      this.previewAnimId = null;
-    }
-    if (this.previewRenderer) {
-      this.previewRenderer.dispose();
-      this.previewRenderer = undefined;
-    }
     this.previewingAsset = null;
   }
-
-  private init3dCanvas(asset: any): void {
-    if (!this.preview3dCanvas?.nativeElement) return;
-    const canvas = this.preview3dCanvas.nativeElement;
-    const width = canvas.clientWidth || 700;
-    const height = canvas.clientHeight || 360;
-
-    this.previewScene = new THREE.Scene();
-    this.previewCamera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-    this.previewCamera.position.set(0, 0, 3.2);
-
-    this.previewRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    this.previewRenderer.setSize(width, height);
-    this.previewRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // Studio Lighting & Rim Accent Setup
-    const ambLight = new THREE.AmbientLight(0xffffff, 1.2);
-    const keyLight = new THREE.DirectionalLight(0xfff5ea, 2.5);
-    keyLight.position.set(4, 6, 5);
-
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
-    rimLight.position.set(-4, 3, -4);
-
-    const fillLight = new THREE.PointLight(0xfbbf24, 1.2, 10);
-    fillLight.position.set(0, 2, 3);
-
-    this.previewScene.add(ambLight, keyLight, rimLight, fillLight);
-
-    this.previewMeshGroup = new THREE.Group();
-    this.previewScene.add(this.previewMeshGroup);
-
-    if (asset && asset.modelUrl && asset.modelUrl.endsWith('.glb')) {
-      const fullUrl = asset.modelUrl.startsWith('/') ? `http://localhost:8080${asset.modelUrl}` : asset.modelUrl;
-      const loader = new GLTFLoader();
-      loader.load(fullUrl, (gltf) => {
-        if (!this.previewMeshGroup) return;
-        this.previewMeshGroup.clear();
-        const mesh = gltf.scene;
-
-        // Apply luxury PBR material overrides and compute smooth normals
-        mesh.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const m = child as THREE.Mesh;
-            m.castShadow = true;
-            m.receiveShadow = true;
-
-            if (m.geometry) {
-              m.geometry.computeVertexNormals();
-            }
-
-            if (m.material) {
-              const origMat = m.material as THREE.MeshStandardMaterial;
-              if (origMat.transparent || (origMat.opacity && origMat.opacity < 0.95)) {
-                m.material = new THREE.MeshPhysicalMaterial({
-                  color: origMat.color || 0x15803d,
-                  transparent: true,
-                  opacity: 0.65,
-                  roughness: 0.05,
-                  transmission: 0.85,
-                  ior: 1.52,
-                  reflectivity: 0.9
-                });
-              } else {
-                m.material = new THREE.MeshStandardMaterial({
-                  color: origMat.color || 0x1e293b,
-                  metalness: 0.5,
-                  roughness: 0.25,
-                  envMapIntensity: 1.5
-                });
-              }
-            }
-          }
-        });
-
-        // Center and normalize 3D model size
-        const box = new THREE.Box3().setFromObject(mesh);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        mesh.position.sub(center);
-
-        const maxDim = Math.max(size.x, size.y, size.z);
-        if (maxDim > 0) {
-          const targetScale = 1.8 / maxDim;
-          mesh.scale.set(targetScale, targetScale, targetScale);
-        }
-
-        this.previewMeshGroup.add(mesh);
-      }, undefined, (err) => {
-        console.warn('Erreur chargement GLB, utilisation du rendu paramétrique HD:', err);
-        this.renderProceduralPreview();
-      });
-    } else {
-      this.renderProceduralPreview();
-    }
-
-    const animate = () => {
-      if (!this.previewingAsset) return;
-      if (this.previewMeshGroup) {
-        this.previewMeshGroup.rotation.y += 0.012;
-      }
-      if (this.previewRenderer && this.previewScene && this.previewCamera) {
-        this.previewRenderer.render(this.previewScene, this.previewCamera);
-      }
-      this.previewAnimId = requestAnimationFrame(animate);
-    };
-    animate();
-  }
-
-  private renderProceduralPreview(): void {
-    if (!this.previewMeshGroup) return;
-    this.previewMeshGroup.clear();
-    const group = new THREE.Group();
-
-    // Attribute inspection
-    const shape = (this.product?.optical?.shape || (this.product as any)?.frameShape || 'RECTANGLE').toString().toUpperCase();
-    const name = (this.product?.name || '').toLowerCase();
-    const brand = (this.product?.brandName || (this.product as any)?.brand?.name || '').toLowerCase();
-
-    // PBR Color & Finishes
-    let frameColor = 0x1e293b;
-    let lensColor = 0x15803d; // G15 Green tint default
-    let isMetal = false;
-
-    if (name.includes('persol') || brand.includes('persol')) {
-      frameColor = 0x78350f;
-      lensColor = 0x334155;
-    } else if (name.includes('aviator') || name.includes('ray-ban')) {
-      frameColor = 0xd97706;
-      lensColor = 0x15803d;
-      isMetal = true;
-    } else if (name.includes('oakley')) {
-      frameColor = 0x0f172a;
-      lensColor = 0x0284c7;
-    } else if (name.includes('gucci')) {
-      frameColor = 0xb45309;
-      lensColor = 0x475569;
-      isMetal = true;
-    }
-
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: frameColor,
-      metalness: isMetal ? 0.85 : 0.25,
-      roughness: isMetal ? 0.2 : 0.35,
-      envMapIntensity: 1.5
-    });
-
-    const lensMat = new THREE.MeshPhysicalMaterial({
-      color: lensColor,
-      transparent: true,
-      opacity: 0.65,
-      roughness: 0.05,
-      transmission: 0.85,
-      ior: 1.52,
-      reflectivity: 0.9
-    });
-
-    const goldHingeMat = new THREE.MeshStandardMaterial({
-      color: 0xd97706,
-      metalness: 0.9,
-      roughness: 0.15
-    });
-
-    // 1. Build Solid Extruded 3D Rims & Lenses
-    let rimGeo: THREE.BufferGeometry;
-    if (shape === 'ROUND' || shape === 'PANTOS' || shape === 'OVAL') {
-      rimGeo = new THREE.TorusGeometry(0.38, 0.055, 20, 48);
-    } else if (shape === 'AVIATOR') {
-      rimGeo = new THREE.TorusGeometry(0.40, 0.038, 20, 48);
-    } else {
-      rimGeo = new THREE.TorusGeometry(0.36, 0.06, 20, 48);
-    }
-
-    const leftRim = new THREE.Mesh(rimGeo, frameMat);
-    leftRim.position.set(-0.46, 0, 0);
-    leftRim.rotation.y = 0.06; // Subtle facial wrap angle
-
-    const rightRim = new THREE.Mesh(rimGeo, frameMat);
-    rightRim.position.set(0.46, 0, 0);
-    rightRim.rotation.y = -0.06;
-
-    // 2. Optical Lenses with Curvature
-    const lensGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.02, 36);
-    const leftLens = new THREE.Mesh(lensGeo, lensMat);
-    leftLens.rotation.x = Math.PI / 2;
-    leftLens.position.set(-0.46, 0, 0);
-
-    const rightLens = new THREE.Mesh(lensGeo, lensMat);
-    rightLens.rotation.x = Math.PI / 2;
-    rightLens.position.set(0.46, 0, 0);
-
-    // 3. Arched Nose Bridge & Pads
-    const bridge = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.22, 20), frameMat);
-    bridge.rotation.z = Math.PI / 2;
-    bridge.position.set(0, 0.08, 0.01);
-
-    if (shape === 'AVIATOR') {
-      const topBridge = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.26, 20), frameMat);
-      topBridge.rotation.z = Math.PI / 2;
-      topBridge.position.set(0, 0.24, 0.01);
-      group.add(topBridge);
-    }
-
-    // 4. Curved 3D Temples (Branches) extending back along Z
-    const templeGeo = new THREE.BoxGeometry(0.038, 0.035, 0.95);
-
-    const leftHinge = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.05, 16), goldHingeMat);
-    leftHinge.position.set(-0.84, 0.08, 0);
-
-    const rightHinge = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.05, 16), goldHingeMat);
-    rightHinge.position.set(0.84, 0.08, 0);
-
-    const leftTemple = new THREE.Mesh(templeGeo, frameMat);
-    leftTemple.position.set(-0.84, 0.05, -0.47);
-
-    const rightTemple = new THREE.Mesh(templeGeo, frameMat);
-    rightTemple.position.set(0.84, 0.05, -0.47);
-
-    group.add(leftRim, rightRim, leftLens, rightLens, bridge, leftHinge, rightHinge, leftTemple, rightTemple);
-    this.previewMeshGroup.add(group);
+  
+  getAssetUrl(url: string | undefined): string {
+    if (!url) return '';
+    return url.startsWith('/') ? `http://localhost:8080${url}` : url;
   }
 
   getPrimaryImage(): string {
@@ -1112,28 +892,7 @@ export class ProductDetailPageComponent implements OnInit {
     });
   }
 
-  setCameraView(view: 'FRONT' | 'THREE_QUARTER' | 'SIDE' | 'BACK' | 'RESET'): void {
-    if (!this.previewCamera) return;
-    switch (view) {
-      case 'FRONT':
-        this.previewCamera.position.set(0, 0, 3.2);
-        break;
-      case 'THREE_QUARTER':
-        this.previewCamera.position.set(2.2, 0.8, 2.2);
-        break;
-      case 'SIDE':
-        this.previewCamera.position.set(3.5, 0, 0);
-        break;
-      case 'BACK':
-        this.previewCamera.position.set(0, 0, -3.2);
-        break;
-      case 'RESET':
-      default:
-        this.previewCamera.position.set(0, 0, 3.0);
-        break;
-    }
-    this.previewCamera.lookAt(0, 0, 0);
-  }
+
 
   rejectAsset(assetId: number, reason?: string): void {
     const headers = this.getAuthHeaders();
