@@ -128,24 +128,22 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.25;
 
-    // Studio Lighting setup
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x334155, 0.7);
-    this.scene.add(hemiLight);
+    // 1. Lumière ambiante pour déboucher les ombres
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    this.scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    keyLight.position.set(5, 8, 5);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    this.scene.add(keyLight);
-    
-    const fillLight = new THREE.DirectionalLight(0x93c5fd, 0.5);
-    fillLight.position.set(-5, 2, 4);
-    this.scene.add(fillLight);
+    // 2. Lumière directionnelle principale avant pour les reflets
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(5, 10, 7);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    this.scene.add(dirLight);
 
-    const rimLight = new THREE.DirectionalLight(0xfef08a, 0.6);
-    rimLight.position.set(0, -4, -6);
-    this.scene.add(rimLight);
+    // 3. Lumière arrière pour détacher le contour de la monture
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    backLight.position.set(-5, -5, -5);
+    this.scene.add(backLight);
 
     // Controls
     this.controls = new OrbitControls(this.camera, canvas);
@@ -162,6 +160,8 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
     this.animate();
   }
 
+  public detectedShape: string = 'STANDARD';
+
   public loadModel(url: string): void {
     if (!url) return;
     this.isLoading = true;
@@ -176,49 +176,54 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         
         this.model = gltf.scene;
         
-        // 1. Calculate raw bounding box
+        // 1. Calculer la boîte englobante (Bounding Box)
         const box = new THREE.Box3().setFromObject(this.model);
+        const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         
-        // 2. Normalize scale based on frame width (size.x) so glasses width is 2.2 units
-        const widthDim = size.x > 0 ? size.x : Math.max(size.y, size.z);
-        if (widthDim > 0) {
-          const desiredScale = 2.2 / widthDim;
-          this.model.scale.set(desiredScale, desiredScale, desiredScale);
+        // 2. Recentrer automatiquement le modèle au centre (0, 0, 0)
+        this.model.position.x -= center.x;
+        this.model.position.y -= center.y;
+        this.model.position.z -= center.z;
+
+        // 3. Ajustement d'échelle proportionnel
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+          const targetScale = 2.2 / maxDim;
+          this.model.scale.set(targetScale, targetScale, targetScale);
         }
 
-        // 3. Re-center model at (0, 0, 0) based on front frame (max Z is front of frame)
-        const scaledBox = new THREE.Box3().setFromObject(this.model);
-        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-        // Align X and Y to center, but place front of frame at Z = 0
-        this.model.position.set(-scaledCenter.x, -scaledCenter.y, -scaledBox.max.z + 0.1);
+        // 4. Classification automatique de la forme par Ratio (Largeur / Hauteur)
+        const ratio = size.y > 0 ? (size.x / size.y) : 1.2;
+        this.detectedShape = ratio >= 1.3 ? 'RECTANGLE' : (ratio <= 1.15 ? 'CARRE' : 'OVALE');
 
-        // Set camera angle to a elegant studio 3/4 view facing the front frame
-        if (this.camera && this.controls) {
-          this.camera.position.set(1.4, 0.5, 2.6);
-          this.controls.target.set(0, 0, 0);
-          this.controls.update();
-        }
-
-        // 4. Enhance PBR Materials & Shadows
-        this.model.traverse((node) => {
-          if ((node as THREE.Mesh).isMesh) {
-            const mesh = node as THREE.Mesh;
+        // 5. Matériaux PBR Spécifiques (Verres transparents vs Acier/Métal)
+        this.model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             
             const name = mesh.name.toLowerCase();
-            // Enhance lens material transmission if identified as glass/lens
-            if (name.includes('lens') || name.includes('glass')) {
+            
+            // Verres : transmission, reflets et réfraction optique
+            if (name.includes('lens') || name.includes('verre') || name.includes('glass')) {
               mesh.material = new THREE.MeshPhysicalMaterial({
-                color: new THREE.Color(0x15803d),
-                transparent: true,
-                opacity: 0.65,
-                roughness: 0.05,
-                metalness: 0.1,
+                color: new THREE.Color(0x334455),
                 transmission: 0.85,
+                opacity: 1,
+                transparent: true,
+                roughness: 0.08,
                 ior: 1.5,
-                clearcoat: 1.0
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
+              });
+            } else {
+              // Monture & Branches : Effet Acier / Métal / Acétate PBR
+              mesh.material = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(0x222222),
+                metalness: 0.85,
+                roughness: 0.25
               });
             }
           }
@@ -227,10 +232,13 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         this.scene.add(this.model);
         this.isLoading = false;
 
-        // Reset camera & OrbitControls target
-        this.camera.position.set(0, 0.2, 3.2);
-        this.controls.target.set(0, 0, 0);
-        this.controls.update();
+        // 6. Positionner la caméra automatiquement
+        if (this.camera && this.controls) {
+          this.camera.position.set(0, 0.1, 3.2);
+          this.camera.lookAt(0, 0, 0);
+          this.controls.target.set(0, 0, 0);
+          this.controls.update();
+        }
       },
       undefined,
       (error) => {
