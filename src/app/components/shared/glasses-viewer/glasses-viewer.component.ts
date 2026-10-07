@@ -215,7 +215,6 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
             const name = mesh.name.toLowerCase();
             const matName = (mesh.material && (mesh.material as THREE.Material).name) ? (mesh.material as THREE.Material).name.toLowerCase() : '';
             
-            // Verres Persol : translucidité vert bouteille et réfraction optique (ior = 1.52)
             if (name.includes('lens') || name.includes('verre') || name.includes('glass') || matName.includes('lens') || matName.includes('verre') || matName.includes('glass')) {
               mesh.material = new THREE.MeshPhysicalMaterial({
                 color: new THREE.Color('#1f3328'),
@@ -226,6 +225,16 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
                 ior: 1.52,
                 clearcoat: 1.0,
                 clearcoatRoughness: 0.1
+              });
+            } else if (name.includes('pad') || matName.includes('nose') || matName.includes('pad')) {
+              // Plaquettes nasales optiques
+              mesh.material = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color('#ffffff'),
+                transmission: 0.90, // Très transparent plastifié
+                opacity: 1,
+                transparent: true,
+                roughness: 0.3,
+                ior: 1.45
               });
             } else {
               // Monture dorée Persol / Gold Wire
