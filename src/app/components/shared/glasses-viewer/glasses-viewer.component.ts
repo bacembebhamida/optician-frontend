@@ -180,17 +180,25 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         const box = new THREE.Box3().setFromObject(this.model);
         const size = box.getSize(new THREE.Vector3());
         
-        // 2. Normalize scale so max dimension is 2.2 units
-        const maxDim = Math.max(size.x, size.y, size.z);
-        if (maxDim > 0) {
-          const desiredScale = 2.2 / maxDim;
+        // 2. Normalize scale based on frame width (size.x) so glasses width is 2.2 units
+        const widthDim = size.x > 0 ? size.x : Math.max(size.y, size.z);
+        if (widthDim > 0) {
+          const desiredScale = 2.2 / widthDim;
           this.model.scale.set(desiredScale, desiredScale, desiredScale);
         }
 
-        // 3. Re-center model at (0, 0, 0)
+        // 3. Re-center model at (0, 0, 0) based on front frame (max Z is front of frame)
         const scaledBox = new THREE.Box3().setFromObject(this.model);
         const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-        this.model.position.sub(scaledCenter);
+        // Align X and Y to center, but place front of frame at Z = 0
+        this.model.position.set(-scaledCenter.x, -scaledCenter.y, -scaledBox.max.z + 0.1);
+
+        // Set camera angle to a elegant studio 3/4 view facing the front frame
+        if (this.camera && this.controls) {
+          this.camera.position.set(1.4, 0.5, 2.6);
+          this.controls.target.set(0, 0, 0);
+          this.controls.update();
+        }
 
         // 4. Enhance PBR Materials & Shadows
         this.model.traverse((node) => {
@@ -301,21 +309,21 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
 
   public setFrontView(): void {
     if (!this.camera || !this.controls) return;
-    this.camera.position.set(0, 0, 3.2);
+    this.camera.position.set(0, 0, 3.0);
     this.controls.target.set(0, 0, 0);
     this.controls.update();
   }
 
   public setSideView(): void {
     if (!this.camera || !this.controls) return;
-    this.camera.position.set(3.2, 0.2, 0.5);
+    this.camera.position.set(3.0, 0.1, -0.8);
     this.controls.target.set(0, 0, 0);
     this.controls.update();
   }
 
   public setThreeQuarterView(): void {
     if (!this.camera || !this.controls) return;
-    this.camera.position.set(2.2, 1.2, 2.2);
+    this.camera.position.set(1.4, 0.5, 2.6);
     this.controls.target.set(0, 0, 0);
     this.controls.update();
   }
