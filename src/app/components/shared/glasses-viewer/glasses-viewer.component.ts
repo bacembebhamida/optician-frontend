@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input } fro
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 @Component({
   selector: 'app-glasses-viewer',
@@ -128,11 +129,18 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.25;
 
-    // 1. Lumière ambiante pour déboucher les ombres
+    // 1. Environment Map (PMREMGenerator + RoomEnvironment for PBR Metal Reflections)
+    const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const roomEnv = new RoomEnvironment();
+    this.scene.environment = pmremGenerator.fromScene(roomEnv).texture;
+    pmremGenerator.dispose();
+
+    // 2. Lumière ambiante pour déboucher les ombres
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     this.scene.add(ambientLight);
 
-    // 2. Lumière directionnelle principale avant pour les reflets
+    // 3. Lumière directionnelle principale avant
     const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
     dirLight.position.set(5, 10, 7);
     dirLight.castShadow = true;
@@ -140,7 +148,7 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
     dirLight.shadow.mapSize.height = 1024;
     this.scene.add(dirLight);
 
-    // 3. Lumière arrière pour détacher le contour de la monture
+    // 4. Lumière arrière pour détacher le contour
     const backLight = new THREE.DirectionalLight(0xffffff, 0.8);
     backLight.position.set(-5, -5, -5);
     this.scene.add(backLight);
@@ -175,16 +183,16 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         }
         
         this.model = gltf.scene;
-        
-        // 1. Calculer la boîte englobante (Bounding Box)
+
+        // 1. Rotation pour placer les verres face à l'écran
+        this.model.rotation.set(0, 0, 0);
+
+        // 2. Calculer la boîte englobante et recentrer
         const box = new THREE.Box3().setFromObject(this.model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        
-        // 2. Recentrer automatiquement le modèle au centre (0, 0, 0)
-        this.model.position.x -= center.x;
-        this.model.position.y -= center.y;
-        this.model.position.z -= center.z;
+
+        this.model.position.sub(center);
 
         // 3. Ajustement d'échelle proportionnel
         const maxDim = Math.max(size.x, size.y, size.z);
@@ -197,7 +205,7 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         const ratio = size.y > 0 ? (size.x / size.y) : 1.2;
         this.detectedShape = ratio >= 1.3 ? 'RECTANGLE' : (ratio <= 1.15 ? 'CARRE' : 'OVALE');
 
-        // 5. Matériaux PBR Spécifiques (Verres transparents vs Acier/Métal)
+        // 5. Appliquer les matériaux réalistes (Monture dorée Persol & Verres vert bouteille)
         this.model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
@@ -206,24 +214,24 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
             
             const name = mesh.name.toLowerCase();
             
-            // Verres : transmission, reflets et réfraction optique
+            // Verres Persol : translucidité vert bouteille et réfraction optique (ior = 1.52)
             if (name.includes('lens') || name.includes('verre') || name.includes('glass')) {
               mesh.material = new THREE.MeshPhysicalMaterial({
-                color: new THREE.Color(0x334455),
-                transmission: 0.85,
+                color: new THREE.Color('#1f3328'),
+                transmission: 0.65,
                 opacity: 1,
                 transparent: true,
-                roughness: 0.08,
-                ior: 1.5,
+                roughness: 0.05,
+                ior: 1.52,
                 clearcoat: 1.0,
                 clearcoatRoughness: 0.1
               });
             } else {
-              // Monture & Branches : Effet Acier / Métal / Acétate PBR
+              // Monture dorée Persol / Gold Wire
               mesh.material = new THREE.MeshStandardMaterial({
-                color: new THREE.Color(0x222222),
-                metalness: 0.85,
-                roughness: 0.25
+                color: new THREE.Color('#d4af37'),
+                metalness: 0.95,
+                roughness: 0.2
               });
             }
           }
@@ -232,9 +240,9 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
         this.scene.add(this.model);
         this.isLoading = false;
 
-        // 6. Positionner la caméra automatiquement
+        // 6. Caméra face / légèrement 3/4
         if (this.camera && this.controls) {
-          this.camera.position.set(0, 0.1, 3.2);
+          this.camera.position.set(0, 0.4, 3.2);
           this.camera.lookAt(0, 0, 0);
           this.controls.target.set(0, 0, 0);
           this.controls.update();
