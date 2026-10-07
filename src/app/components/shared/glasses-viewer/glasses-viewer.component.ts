@@ -213,9 +213,10 @@ export class GlassesViewerComponent implements AfterViewInit, OnDestroy {
             mesh.receiveShadow = true;
             
             const name = mesh.name.toLowerCase();
+            const matName = (mesh.material && (mesh.material as THREE.Material).name) ? (mesh.material as THREE.Material).name.toLowerCase() : '';
             
             // Verres Persol : translucidité vert bouteille et réfraction optique (ior = 1.52)
-            if (name.includes('lens') || name.includes('verre') || name.includes('glass')) {
+            if (name.includes('lens') || name.includes('verre') || name.includes('glass') || matName.includes('lens') || matName.includes('verre') || matName.includes('glass')) {
               mesh.material = new THREE.MeshPhysicalMaterial({
                 color: new THREE.Color('#1f3328'),
                 transmission: 0.65,
